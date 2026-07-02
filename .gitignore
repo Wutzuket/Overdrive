@@ -28,5 +28,11 @@ logs/
 crash-reports/
 *.miz
 
+# AI Assist
+.ollamassist/
+
+# References (submodules)
+.reference/
+
 # Env
 .env

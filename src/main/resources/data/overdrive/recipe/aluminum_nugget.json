@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "overdrive:aluminum_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "overdrive:aluminum_nugget"
+  }
+}

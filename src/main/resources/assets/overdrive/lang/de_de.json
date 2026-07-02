@@ -1,0 +1,26 @@
+{
+  "itemGroup.overdrive": "Overdrive",
+
+  "block.overdrive.scanner": "Scanner",
+  "block.overdrive.aluminum_ore": "Aluminiumerz",
+  "block.overdrive.deepslate_aluminum_ore": "Tiefenschiefer-Aluminiumerz",
+  "block.overdrive.aluminum_block": "Aluminiumblock",
+
+  "item.overdrive.raw_aluminum": "Rohaluminium",
+  "item.overdrive.aluminum_ingot": "Aluminiumbarren",
+  "item.overdrive.aluminum_nugget": "Aluminiumklumpen",
+
+  "block.overdrive.creative_energy_cube": "Kreativ-Energie-Würfel",
+
+  "jei.overdrive.scanner.title": "Scanner",
+  "jei.overdrive.scanner.energy": "Energie: %s FE",
+  "jei.overdrive.scanner.structure": "Struktur",
+  "jei.overdrive.scanner.layer": "Schicht %s / %s",
+  "jei.overdrive.scanner.all_layers": "Alle Schichten",
+  "jei.overdrive.scanner.prev_layer": "Vorherige Schicht",
+  "jei.overdrive.scanner.next_layer": "Nächste Schicht",
+  "jei.overdrive.scanner.costs": "Kosten",
+  "jei.overdrive.scanner.result_tab": "Ergebnis",
+  "jei.overdrive.scanner.result": "Ergebnis",
+  "jei.overdrive.scanner.mirrored": "Gespiegelte Anordnung erlaubt"
+}

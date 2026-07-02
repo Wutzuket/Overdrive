@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+!src/generated/resources/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Minecraft
+run/
+logs/
+crash-reports/
+*.miz
+
+# Env
+.env

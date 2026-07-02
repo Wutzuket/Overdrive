@@ -1,0 +1,4 @@
+{
+  "type": "overdrive:add_aluminum_ore",
+  "features": "overdrive:ore_aluminum"
+}

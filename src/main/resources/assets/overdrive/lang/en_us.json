@@ -1,0 +1,26 @@
+{
+  "itemGroup.overdrive": "Overdrive",
+
+  "block.overdrive.scanner": "Scanner",
+  "block.overdrive.aluminum_ore": "Aluminum Ore",
+  "block.overdrive.deepslate_aluminum_ore": "Deepslate Aluminum Ore",
+  "block.overdrive.aluminum_block": "Block of Aluminum",
+
+  "item.overdrive.raw_aluminum": "Raw Aluminum",
+  "item.overdrive.aluminum_ingot": "Aluminum Ingot",
+  "item.overdrive.aluminum_nugget": "Aluminum Nugget",
+
+  "block.overdrive.creative_energy_cube": "Creative Energy Cube",
+
+  "jei.overdrive.scanner.title": "Scanner",
+  "jei.overdrive.scanner.energy": "Energy: %s FE",
+  "jei.overdrive.scanner.structure": "Structure",
+  "jei.overdrive.scanner.layer": "Layer %s / %s",
+  "jei.overdrive.scanner.all_layers": "All layers",
+  "jei.overdrive.scanner.prev_layer": "Previous layer",
+  "jei.overdrive.scanner.next_layer": "Next layer",
+  "jei.overdrive.scanner.costs": "Costs",
+  "jei.overdrive.scanner.result_tab": "Result",
+  "jei.overdrive.scanner.result": "Result",
+  "jei.overdrive.scanner.mirrored": "Mirrored layout accepted"
+}

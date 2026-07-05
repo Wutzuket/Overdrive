@@ -15,19 +15,33 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import de.wutzuket.overdrive.block.scanner.scanner_renderer;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
+import de.wutzuket.overdrive.block.vacuum.VacuumPumpRenderer;
 import de.wutzuket.overdrive.config.ODConfig;
+import de.wutzuket.overdrive.fluid.ODFluidBlocks;
+import de.wutzuket.overdrive.fluid.ODFluidTypes;
+import de.wutzuket.overdrive.fluid.ODFluids;
+import de.wutzuket.overdrive.fluid.ODItemsFluid;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.index.ODBlocks;
 import de.wutzuket.overdrive.index.ODCreativeTab;
+import de.wutzuket.overdrive.integration.top.VacuumPumpProbeInfoProvider;
 import de.wutzuket.overdrive.index.ODItems;
+import de.wutzuket.overdrive.index.ODMenuTypes;
+import de.wutzuket.overdrive.menu.VacuumPumpScreen;
+import de.wutzuket.overdrive.recipe.ODRecipeSerializers;
+import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import de.wutzuket.overdrive.worldgen.ODBiomeModifiers;
 import de.wutzuket.overdrive.worldgen.ODWorldGen;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.config.ModConfig;
 
 @Mod(Overdrive.MODID)
@@ -45,6 +59,13 @@ public class Overdrive {
         ODBlockEntities.register(modEventBus);
         ODItems.register(modEventBus);
         ODCreativeTab.register(modEventBus);
+        ODMenuTypes.register(modEventBus);
+        ODRecipeTypes.register(modEventBus);
+        ODRecipeSerializers.register(modEventBus);
+        ODFluidTypes.register(modEventBus);
+        ODFluids.register(modEventBus);
+        ODFluidBlocks.register(modEventBus);
+        ODItemsFluid.register(modEventBus);
         ODWorldGen.register(modEventBus);
         ODBiomeModifiers.register(modEventBus);
 
@@ -59,7 +80,21 @@ public class Overdrive {
                     ODBlockEntities.SCANNER_BLOCK_ENTITY.get(),
                     (blockEntity, side) -> blockEntity
             );
+            event.registerBlockEntity(
+                    Capabilities.EnergyStorage.BLOCK,
+                    ODBlockEntities.VACUUM_PUMP_BLOCK_ENTITY.get(),
+                    (blockEntity, side) -> blockEntity
+            );
+            event.registerBlockEntity(
+                    Capabilities.EnergyStorage.BLOCK,
+                    ODBlockEntities.ENERGY_INPUT_PORT_BLOCK_ENTITY.get(),
+                    (blockEntity, side) -> blockEntity
+            );
         });
+    }
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     @SubscribeEvent
@@ -69,6 +104,13 @@ public class Overdrive {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
+        event.enqueueWork(() -> {
+            net.neoforged.fml.InterModComms.sendTo("theoneprobe", "getTheOneProbe",
+                    () -> (java.util.function.Function<mcjty.theoneprobe.api.ITheOneProbe, Void>) probe -> {
+                        probe.registerProvider(new VacuumPumpProbeInfoProvider());
+                        return null;
+                    });
+        });
     }
 
     @SubscribeEvent
@@ -85,6 +127,27 @@ public class Overdrive {
         @SubscribeEvent
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerBlockEntityRenderer(ODBlockEntities.SCANNER_BLOCK_ENTITY.get(), scanner_renderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.VACUUM_PUMP_BLOCK_ENTITY.get(), VacuumPumpRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerScreens(RegisterMenuScreensEvent event) {
+            event.register(ODMenuTypes.VACUUM_PUMP_MENU.get(), VacuumPumpScreen::new);
+        }
+
+        @SubscribeEvent
+        public static void registerFluidTypeExtensions(RegisterClientExtensionsEvent event) {
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public ResourceLocation getStillTexture() {
+                    return ResourceLocation.withDefaultNamespace("block/water_still");
+                }
+
+                @Override
+                public ResourceLocation getFlowingTexture() {
+                    return ResourceLocation.withDefaultNamespace("block/water_flow");
+                }
+            }, ODFluidTypes.ANTIPROTONS_TYPE.get());
         }
     }
 }

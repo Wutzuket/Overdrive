@@ -38,6 +38,36 @@ public class ODItems {
                     .rarity(Rarity.EPIC)
                     .stacksTo(1)));
 
+    public static final Supplier<Item> IRIDIUM_ORE = ITEMS.register("iridium_ore",
+            () -> new BlockItem(ODBlocks.IRIDIUM_ORE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> DEEPSLATE_IRIDIUM_ORE = ITEMS.register("deepslate_iridium_ore",
+            () -> new BlockItem(ODBlocks.DEEPSLATE_IRIDIUM_ORE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> IRIDIUM_BLOCK = ITEMS.register("iridium_block",
+            () -> new BlockItem(ODBlocks.IRIDIUM_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> RAW_IRIDIUM = ITEMS.register("raw_iridium",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> IRIDIUM_INGOT = ITEMS.register("iridium_ingot",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> VACUUM_PUMP = ITEMS.register("vacuum_pump",
+            () -> new BlockItem(ODBlocks.VACUUM_PUMP.get(), new Item.Properties()));
+
+    public static final Supplier<Item> PUMP_CASING = ITEMS.register("pump_casing",
+            () -> new BlockItem(ODBlocks.PUMP_CASING.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ENERGY_INPUT_PORT = ITEMS.register("energy_input_port",
+            () -> new BlockItem(ODBlocks.ENERGY_INPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> VACUUM_OUTPUT_PORT = ITEMS.register("vacuum_output_port",
+            () -> new BlockItem(ODBlocks.VACUUM_OUTPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> VACUUM_PIPE = ITEMS.register("vacuum_pipe",
+            () -> new BlockItem(ODBlocks.VACUUM_PIPE.get(), new Item.Properties()));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

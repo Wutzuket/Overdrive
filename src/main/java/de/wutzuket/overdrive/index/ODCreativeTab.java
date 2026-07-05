@@ -1,6 +1,7 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.fluid.ODItemsFluid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -25,6 +26,17 @@ public class ODCreativeTab {
                 output.accept(ODItems.ALUMINUM_NUGGET.get());
                 output.accept(ODItems.ALUMINUM_BLOCK.get());
                 output.accept(ODItems.CREATIVE_ENERGY_CUBE.get());
+                output.accept(ODItems.IRIDIUM_ORE.get());
+                output.accept(ODItems.DEEPSLATE_IRIDIUM_ORE.get());
+                output.accept(ODItems.RAW_IRIDIUM.get());
+                output.accept(ODItems.IRIDIUM_INGOT.get());
+                output.accept(ODItems.IRIDIUM_BLOCK.get());
+                output.accept(ODItems.VACUUM_PUMP.get());
+                output.accept(ODItems.PUMP_CASING.get());
+                output.accept(ODItems.ENERGY_INPUT_PORT.get());
+                output.accept(ODItems.VACUUM_OUTPUT_PORT.get());
+                output.accept(ODItems.VACUUM_PIPE.get());
+                output.accept(ODItemsFluid.ANTIPROTONS_BUCKET.get());
             })
             .build());
 

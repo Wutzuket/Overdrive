@@ -12,6 +12,31 @@
 
   "block.overdrive.creative_energy_cube": "Creative Energy Cube",
 
+  "block.overdrive.iridium_ore": "Iridium Ore",
+  "block.overdrive.deepslate_iridium_ore": "Deepslate Iridium Ore",
+  "block.overdrive.iridium_block": "Block of Iridium",
+  "item.overdrive.raw_iridium": "Raw Iridium",
+  "item.overdrive.iridium_ingot": "Iridium Ingot",
+
+  "block.overdrive.vacuum_pump": "Vacuum Pump",
+  "block.overdrive.pump_casing": "Pump Casing",
+  "block.overdrive.energy_input_port": "Energy Input Port",
+  "block.overdrive.vacuum_output_port": "Vacuum Output Port",
+  "block.overdrive.vacuum_pipe": "Vacuum Pipe",
+
+  "fluid.overdrive.antiprotons": "Antiprotons",
+  "item.overdrive.antiprotons_bucket": "Antiproton Bucket",
+
+  "container.overdrive.vacuum_pump": "Vacuum Pump",
+  "container.overdrive.vacuum_pump.energy": "Energy",
+  "container.overdrive.vacuum_pump.vacuum": "Vacuum",
+  "container.overdrive.vacuum_pump.offline": "\u26AA Offline",
+  "container.overdrive.vacuum_pump.evacuating": "\uD83D\uDFE1 Evacuating...",
+  "container.overdrive.vacuum_pump.stable": "\uD83D\uDFE2 Stable",
+  "container.overdrive.vacuum_pump.leak": "\u26A0\uFE0F Leak detected!",
+  "container.overdrive.vacuum_pump.volume": "Volume: %s",
+  "container.overdrive.vacuum_pump.usage": "Usage: %s FE/t",
+
   "jei.overdrive.scanner.title": "Scanner",
   "jei.overdrive.scanner.energy": "Energy: %s FE",
   "jei.overdrive.scanner.structure": "Structure",
@@ -22,5 +47,13 @@
   "jei.overdrive.scanner.costs": "Costs",
   "jei.overdrive.scanner.result_tab": "Result",
   "jei.overdrive.scanner.result": "Result",
-  "jei.overdrive.scanner.mirrored": "Mirrored layout accepted"
+  "jei.overdrive.scanner.mirrored": "Mirrored layout accepted",
+
+  "jei.overdrive.collision.title": "Particle Collision",
+  "jei.overdrive.collision.energy": "Energy: %s FE",
+  "jei.overdrive.collision.time": "Time: %s ticks",
+  "jei.overdrive.collision.durability": "Durability cost: %s",
+  "jei.overdrive.collision.fluid": "Output: %s x %s mB",
+  "jei.overdrive.collision.target": "Target",
+  "jei.overdrive.collision.result": "Result"
 }

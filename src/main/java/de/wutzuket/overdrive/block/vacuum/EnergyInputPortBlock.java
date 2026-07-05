@@ -1,0 +1,33 @@
+package de.wutzuket.overdrive.block.vacuum;
+
+import de.wutzuket.overdrive.index.ODBlockEntities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+public class EnergyInputPortBlock extends Block implements EntityBlock {
+    public EnergyInputPortBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new EnergyInputPortBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide) return null;
+        return (lvl, pos, st, be) -> {
+            if (be instanceof EnergyInputPortBlockEntity port) {
+                EnergyInputPortBlockEntity.tick(lvl, pos, st, port);
+            }
+        };
+    }
+}

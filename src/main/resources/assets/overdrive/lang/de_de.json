@@ -22,5 +22,15 @@
   "jei.overdrive.scanner.costs": "Kosten",
   "jei.overdrive.scanner.result_tab": "Ergebnis",
   "jei.overdrive.scanner.result": "Ergebnis",
-  "jei.overdrive.scanner.mirrored": "Gespiegelte Anordnung erlaubt"
+  "jei.overdrive.scanner.mirrored": "Gespiegelte Anordnung erlaubt",
+
+  "container.overdrive.vacuum_pump": "Vakuumpumpe",
+  "container.overdrive.vacuum_pump.energy": "Energie",
+  "container.overdrive.vacuum_pump.vacuum": "Vakuum",
+  "container.overdrive.vacuum_pump.offline": "\u26AA Aus",
+  "container.overdrive.vacuum_pump.evacuating": "\uD83D\uDFE1 Evakuiere...",
+  "container.overdrive.vacuum_pump.stable": "\uD83D\uDFE2 Stabil",
+  "container.overdrive.vacuum_pump.leak": "\u26A0\uFE0F Leck erkannt!",
+  "container.overdrive.vacuum_pump.volume": "Volumen: %s",
+  "container.overdrive.vacuum_pump.usage": "Verbrauch: %s FE/t"
 }

@@ -7,6 +7,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -38,7 +39,6 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.index.ODBlocks;
 import de.wutzuket.overdrive.index.ODCreativeTab;
 import de.wutzuket.overdrive.index.ODDataComponents;
-import de.wutzuket.overdrive.integration.top.VacuumPumpProbeInfoProvider;
 import de.wutzuket.overdrive.index.ODItems;
 import de.wutzuket.overdrive.index.ODMenuTypes;
 import de.wutzuket.overdrive.menu.AcceleratorControllerScreen;
@@ -144,13 +144,9 @@ public class Overdrive {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
-        event.enqueueWork(() -> {
-            net.neoforged.fml.InterModComms.sendTo("theoneprobe", "getTheOneProbe",
-                    () -> (java.util.function.Function<mcjty.theoneprobe.api.ITheOneProbe, Void>) probe -> {
-                        probe.registerProvider(new VacuumPumpProbeInfoProvider());
-                        return null;
-                    });
-        });
+        if (ModList.get().isLoaded("theoneprobe")) {
+            de.wutzuket.overdrive.integration.top.TOPCompatibility.register();
+        }
     }
 
     @SubscribeEvent

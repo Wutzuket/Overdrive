@@ -13,7 +13,7 @@ public class ODRecipeTypes {
             DeferredRegister.create(Registries.RECIPE_TYPE, Overdrive.MODID);
 
     public static final Supplier<RecipeType<CollisionRecipe>> COLLISION =
-            RECIPE_TYPES.register("collision", () -> RecipeType.simple(Overdrive.id("collision")));
+            RECIPE_TYPES.register("accelerator_collision", () -> RecipeType.simple(Overdrive.id("accelerator_collision")));
 
     public static void register(IEventBus modEventBus) {
         RECIPE_TYPES.register(modEventBus);

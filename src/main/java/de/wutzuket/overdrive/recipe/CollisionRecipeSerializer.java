@@ -9,15 +9,17 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.List;
+
 public class CollisionRecipeSerializer implements RecipeSerializer<CollisionRecipe> {
     private static final MapCodec<CollisionRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Ingredient.CODEC.fieldOf("input_target").forGetter(CollisionRecipe::inputTarget),
                     Codec.INT.fieldOf("energy_cost").forGetter(CollisionRecipe::energyCost),
                     Codec.INT.fieldOf("process_time").forGetter(CollisionRecipe::processTime),
-                    Codec.INT.fieldOf("durability_cost").forGetter(CollisionRecipe::durabilityCost),
-                    FluidStack.OPTIONAL_CODEC.fieldOf("output_fluid").forGetter(CollisionRecipe::outputFluid)
-            ).apply(instance, CollisionRecipe::new)
+                    Codec.list(FluidStack.CODEC).fieldOf("results").forGetter(r -> List.of(r.outputFluid()))
+            ).apply(instance, (input, energy, time, results) ->
+                    new CollisionRecipe(input, energy, time, results.isEmpty() ? FluidStack.EMPTY : results.getFirst()))
     );
 
     private static final StreamCodec<RegistryFriendlyByteBuf, CollisionRecipe> STREAM_CODEC =
@@ -40,16 +42,14 @@ public class CollisionRecipeSerializer implements RecipeSerializer<CollisionReci
         Ingredient inputTarget = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         int energyCost = buffer.readInt();
         int processTime = buffer.readInt();
-        int durabilityCost = buffer.readInt();
         FluidStack outputFluid = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
-        return new CollisionRecipe(inputTarget, energyCost, processTime, durabilityCost, outputFluid);
+        return new CollisionRecipe(inputTarget, energyCost, processTime, outputFluid);
     }
 
     private static void toNetwork(RegistryFriendlyByteBuf buffer, CollisionRecipe recipe) {
         Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.inputTarget());
         buffer.writeInt(recipe.energyCost());
         buffer.writeInt(recipe.processTime());
-        buffer.writeInt(recipe.durabilityCost());
         FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, recipe.outputFluid());
     }
 }

@@ -1,6 +1,12 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorCasing;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorEnergyInputPortBlock;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorOutputBlock;
+import de.wutzuket.overdrive.block.accelerator.IridiumTargetBlock;
+import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerBlock;
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlock;
 import de.wutzuket.overdrive.block.scanner.scanner_block;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlock;
@@ -96,6 +102,36 @@ public class ODBlocks {
                     .strength(2.0F, 3.0F)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
+
+    public static final Supplier<Block> ACCELERATOR_CASING = BLOCKS.register("accelerator_casing",
+            () -> new AcceleratorCasing(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
+
+    public static final Supplier<Block> ACCELERATOR_ENERGY_INPUT_PORT = BLOCKS.register("accelerator_energy_input_port",
+            () -> new AcceleratorEnergyInputPortBlock(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
+
+    public static final Supplier<Block> ACCELERATOR_VACUUM_INPUT_PORT = BLOCKS.register("accelerator_vacuum_input_port",
+            () -> new AcceleratorVacuumInputPortBlock(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
+
+    public static final Supplier<Block> PARTICLE_ACCELERATOR_CONTROLLER = BLOCKS.register("particle_accelerator_controller",
+            () -> new ParticleAcceleratorControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(5.0F, 8.0F)
+                    .sound(SoundType.METAL)));
+
+    public static final Supplier<Block> IRIDIUM_TARGET = BLOCKS.register("iridium_target",
+            () -> new IridiumTargetBlock(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
+
+    public static final Supplier<Block> ACCELERATOR_OUTPUT = BLOCKS.register("accelerator_output",
+            () -> new AcceleratorOutputBlock(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
 
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);

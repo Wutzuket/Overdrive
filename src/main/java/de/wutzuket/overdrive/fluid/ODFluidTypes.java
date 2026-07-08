@@ -15,7 +15,7 @@ public class ODFluidTypes {
     public static final Supplier<FluidType> ANTIPROTONS_TYPE = FLUID_TYPES.register("antiprotons",
             () -> new FluidType(
                     FluidType.Properties.create()
-                            .descriptionId("block.overdrive.antiprotons")
+                            .descriptionId("fluid.overdrive.antiprotons")
                             .canSwim(false)
                             .canDrown(false)
                             .viscosity(100)

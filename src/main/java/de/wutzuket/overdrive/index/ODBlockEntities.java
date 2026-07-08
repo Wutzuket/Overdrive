@@ -1,6 +1,11 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorEnergyInputPortEntity;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorOutputEntity;
+import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortEntity;
+import de.wutzuket.overdrive.block.accelerator.IridiumTargetEntity;
+import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEntity;
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlockEntity;
 import de.wutzuket.overdrive.block.scanner.scanner_blockentity;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlockEntity;
@@ -50,6 +55,36 @@ public class ODBlockEntities {
             BLOCK_ENTITY_TYPES.register(
                     "vacuum_pipe",
                     () -> BlockEntityType.Builder.of(VacuumPipeBlockEntity::new, ODBlocks.VACUUM_PIPE.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<ParticleAcceleratorControllerEntity>> PARTICLE_ACCELERATOR_CONTROLLER =
+            BLOCK_ENTITY_TYPES.register(
+                    "particle_accelerator_controller",
+                    () -> BlockEntityType.Builder.of(ParticleAcceleratorControllerEntity::new, ODBlocks.PARTICLE_ACCELERATOR_CONTROLLER.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<AcceleratorEnergyInputPortEntity>> ACCELERATOR_ENERGY_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register(
+                    "accelerator_energy_input_port",
+                    () -> BlockEntityType.Builder.of(AcceleratorEnergyInputPortEntity::new, ODBlocks.ACCELERATOR_ENERGY_INPUT_PORT.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<AcceleratorVacuumInputPortEntity>> ACCELERATOR_VACUUM_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register(
+                    "accelerator_vacuum_input_port",
+                    () -> BlockEntityType.Builder.of(AcceleratorVacuumInputPortEntity::new, ODBlocks.ACCELERATOR_VACUUM_INPUT_PORT.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<IridiumTargetEntity>> IRIDIUM_TARGET =
+            BLOCK_ENTITY_TYPES.register(
+                    "iridium_target",
+                    () -> BlockEntityType.Builder.of(IridiumTargetEntity::new, ODBlocks.IRIDIUM_TARGET.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<AcceleratorOutputEntity>> ACCELERATOR_OUTPUT =
+            BLOCK_ENTITY_TYPES.register(
+                    "accelerator_output",
+                    () -> BlockEntityType.Builder.of(AcceleratorOutputEntity::new, ODBlocks.ACCELERATOR_OUTPUT.get()).build(null)
             );
 
     public static void register(IEventBus modEventBus) {

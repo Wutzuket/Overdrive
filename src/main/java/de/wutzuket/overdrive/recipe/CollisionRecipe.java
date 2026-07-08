@@ -6,20 +6,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 public class CollisionRecipe implements Recipe<RecipeInput> {
     private final Ingredient inputTarget;
     private final int energyCost;
     private final int processTime;
-    private final int durabilityCost;
     private final FluidStack outputFluid;
 
-    public CollisionRecipe(Ingredient inputTarget, int energyCost, int processTime, int durabilityCost, FluidStack outputFluid) {
+    public CollisionRecipe(Ingredient inputTarget, int energyCost, int processTime, FluidStack outputFluid) {
         this.inputTarget = inputTarget;
         this.energyCost = energyCost;
         this.processTime = processTime;
-        this.durabilityCost = durabilityCost;
         this.outputFluid = outputFluid;
     }
 
@@ -63,10 +60,6 @@ public class CollisionRecipe implements Recipe<RecipeInput> {
 
     public int processTime() {
         return processTime;
-    }
-
-    public int durabilityCost() {
-        return durabilityCost;
     }
 
     public FluidStack outputFluid() {

@@ -412,6 +412,9 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         tag.putInt("vacuumProgress", vacuumProgress);
         tag.putInt("evacTicks", evacTicks);
         tag.putInt("pipeCount", pipeCount);
+        if (outputPortPos != null) {
+            tag.putLong("outputPortPos", outputPortPos.asLong());
+        }
     }
 
     @Override
@@ -425,6 +428,9 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         vacuumProgress = tag.getInt("vacuumProgress");
         evacTicks = tag.getInt("evacTicks");
         pipeCount = tag.getInt("pipeCount");
+        if (tag.contains("outputPortPos")) {
+            outputPortPos = BlockPos.of(tag.getLong("outputPortPos"));
+        }
     }
 
     @Override

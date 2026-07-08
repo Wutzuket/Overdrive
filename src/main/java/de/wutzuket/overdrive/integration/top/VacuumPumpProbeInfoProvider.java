@@ -1,5 +1,6 @@
 package de.wutzuket.overdrive.integration.top;
 
+import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
 import de.wutzuket.overdrive.block.vacuum.*;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -27,7 +28,8 @@ public class VacuumPumpProbeInfoProvider implements IProbeInfoProvider {
         boolean isRelated = block instanceof PumpCasingBlock
                 || block instanceof EnergyInputPortBlock
                 || block instanceof VacuumOutputPortBlock
-                || block instanceof VacuumPipeBlock;
+                || block instanceof VacuumPipeBlock
+                || block instanceof AcceleratorVacuumInputPortBlock;
         if (!isPumpBlock && !isRelated) return;
 
         BlockEntity be = world.getBlockEntity(data.getPos());

@@ -15,8 +15,8 @@ public interface IVacuumNode {
         if (level == null || level.isClientSide) return;
         BlockPos pos = self.getBlockPos();
 
-        float sum = 0;
-        int count = 0;
+        float sum = node.getVacuumLevel();
+        int count = 1;
         for (Direction dir : Direction.values()) {
             BlockEntity be = level.getBlockEntity(pos.relative(dir));
             if (be instanceof IVacuumNode neighbor && be != self) {
@@ -24,9 +24,7 @@ public interface IVacuumNode {
                 count++;
             }
         }
-        if (count > 0) {
-            node.setVacuumLevel(sum / count);
-        }
+        node.setVacuumLevel(sum / count);
     }
 
     static float getVacuumLevel(BlockEntity be) {

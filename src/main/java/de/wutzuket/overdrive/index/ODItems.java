@@ -68,6 +68,24 @@ public class ODItems {
     public static final Supplier<Item> VACUUM_PIPE = ITEMS.register("vacuum_pipe",
             () -> new BlockItem(ODBlocks.VACUUM_PIPE.get(), new Item.Properties()));
 
+    public static final Supplier<Item> ACCELERATOR_CASING = ITEMS.register("accelerator_casing",
+            () -> new BlockItem(ODBlocks.ACCELERATOR_CASING.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ACCELERATOR_ENERGY_INPUT_PORT = ITEMS.register("accelerator_energy_input_port",
+            () -> new BlockItem(ODBlocks.ACCELERATOR_ENERGY_INPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ACCELERATOR_VACUUM_INPUT_PORT = ITEMS.register("accelerator_vacuum_input_port",
+            () -> new BlockItem(ODBlocks.ACCELERATOR_VACUUM_INPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> PARTICLE_ACCELERATOR_CONTROLLER = ITEMS.register("particle_accelerator_controller",
+            () -> new BlockItem(ODBlocks.PARTICLE_ACCELERATOR_CONTROLLER.get(), new Item.Properties()));
+
+    public static final Supplier<Item> IRIDIUM_TARGET = ITEMS.register("iridium_target",
+            () -> new BlockItem(ODBlocks.IRIDIUM_TARGET.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ACCELERATOR_OUTPUT = ITEMS.register("accelerator_output",
+            () -> new BlockItem(ODBlocks.ACCELERATOR_OUTPUT.get(), new Item.Properties()));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

@@ -50,19 +50,26 @@ public class scanner_jei_plugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(scanner_recipe_category.TYPE, scanner_recipe_manager.INSTANCE.getRecipes().stream().toList());
 
-        RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
-        List<CollisionRecipe> collisionRecipes = new ArrayList<>();
-        for (RecipeHolder<?> holder : recipeManager.getRecipes()) {
-            if (holder.value().getType() == ODRecipeTypes.COLLISION.get() && holder.value() instanceof CollisionRecipe recipe) {
-                collisionRecipes.add(recipe);
+        if (Minecraft.getInstance().level != null) {
+            RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
+            List<CollisionRecipe> collisionRecipes = new ArrayList<>();
+            for (RecipeHolder<?> holder : recipeManager.getRecipes()) {
+                if (holder.value().getType() == ODRecipeTypes.COLLISION.get() && holder.value() instanceof CollisionRecipe recipe) {
+                    collisionRecipes.add(recipe);
+                }
             }
+            registration.addRecipes(AcceleratorRecipeCategory.TYPE, collisionRecipes);
         }
-        registration.addRecipes(AcceleratorRecipeCategory.TYPE, collisionRecipes);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ODItems.SCANNER_ITEM.get()), scanner_recipe_category.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ODItems.VACUUM_PUMP.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.PARTICLE_ACCELERATOR_CONTROLLER.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.ACCELERATOR_CASING.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.ACCELERATOR_ENERGY_INPUT_PORT.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.ACCELERATOR_VACUUM_INPUT_PORT.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.IRIDIUM_TARGET.get()), AcceleratorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ODItems.ACCELERATOR_OUTPUT.get()), AcceleratorRecipeCategory.TYPE);
     }
 }

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "overdrive:block/particle_accelerator_controller" },
+    "facing=south": { "model": "overdrive:block/particle_accelerator_controller", "y": 180 },
+    "facing=east": { "model": "overdrive:block/particle_accelerator_controller", "y": 90 },
+    "facing=west": { "model": "overdrive:block/particle_accelerator_controller", "y": 270 }
+  }
+}

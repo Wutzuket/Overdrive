@@ -24,6 +24,13 @@
   "block.overdrive.vacuum_output_port": "Vacuum Output Port",
   "block.overdrive.vacuum_pipe": "Vacuum Pipe",
 
+  "block.overdrive.accelerator_casing": "Accelerator Casing",
+  "block.overdrive.accelerator_energy_input_port": "Accelerator Energy Input Port",
+  "block.overdrive.accelerator_vacuum_input_port": "Accelerator Vacuum Input Port",
+  "block.overdrive.particle_accelerator_controller": "Particle Accelerator Controller",
+  "block.overdrive.iridium_target": "Iridium Target",
+  "block.overdrive.accelerator_output": "Accelerator Output",
+
   "fluid.overdrive.antiprotons": "Antiprotons",
   "item.overdrive.antiprotons_bucket": "Antiproton Bucket",
 
@@ -36,6 +43,21 @@
   "container.overdrive.vacuum_pump.leak": "\u26A0\uFE0F Leak detected!",
   "container.overdrive.vacuum_pump.volume": "Volume: %s",
   "container.overdrive.vacuum_pump.usage": "Usage: %s FE/t",
+
+  "container.overdrive.accelerator_controller": "Particle Accelerator Controller",
+  "container.overdrive.accelerator_controller.energy": "Energy",
+  "container.overdrive.accelerator_controller.vacuum": "Vacuum",
+  "container.overdrive.accelerator_controller.usage": "Usage: %s FE/t",
+  "container.overdrive.accelerator_controller.running": "\uD83D\uDFE2 Running",
+  "container.overdrive.accelerator_controller.idle": "\uD83D\uDFE1 Idle",
+  "container.overdrive.accelerator_controller.invalid_structure": "\u26A0\uFE0F Invalid Structure",
+
+  "container.overdrive.accelerator_output": "Accelerator Output",
+  "container.overdrive.accelerator_output.fluid": "Fluid",
+  "container.overdrive.accelerator_output.empty": "Empty",
+
+  "container.overdrive.iridium_target": "Iridium Target",
+  "container.overdrive.iridium_target.slot": "Target Slot",
 
   "jei.overdrive.scanner.title": "Scanner",
   "jei.overdrive.scanner.energy": "Energy: %s FE",
@@ -52,8 +74,22 @@
   "jei.overdrive.collision.title": "Particle Collision",
   "jei.overdrive.collision.energy": "Energy: %s FE",
   "jei.overdrive.collision.time": "Time: %s ticks",
-  "jei.overdrive.collision.durability": "Durability cost: %s",
   "jei.overdrive.collision.fluid": "Output: %s x %s mB",
   "jei.overdrive.collision.target": "Target",
-  "jei.overdrive.collision.result": "Result"
+  "jei.overdrive.collision.result": "Result",
+
+  "jei.overdrive.accelerator_collision.title": "Particle Accelerator Collision",
+  "jei.overdrive.accelerator_collision.energy": "Energy: %s FE",
+  "jei.overdrive.accelerator_collision.time": "Time: %s ticks",
+  "jei.overdrive.accelerator_collision.fluid": "Output: %s x %s mB",
+  "jei.overdrive.accelerator_collision.input": "Iridium Target",
+  "jei.overdrive.accelerator_collision.result": "Result",
+  "jei.overdrive.accelerator.all_layers": "All layers",
+  "jei.overdrive.accelerator.layer": "Layer %s / %s",
+  "jei.overdrive.accelerator.prev_layer": "Previous layer",
+  "jei.overdrive.accelerator.next_layer": "Next layer",
+  "jei.overdrive.accelerator.legend": "Legend:",
+  "jei.overdrive.accelerator.casing": "Casing",
+  "jei.overdrive.accelerator.controller": "Controller",
+  "jei.overdrive.accelerator.target": "Iridium Target"
 }

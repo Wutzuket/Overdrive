@@ -27,6 +27,7 @@ public class VacuumPipeBlockEntity extends BlockEntity implements IVacuumNode {
     @Override
     public void setVacuumLevel(float level) {
         this.vacuum = level;
+        setChanged();
     }
 
     @Override

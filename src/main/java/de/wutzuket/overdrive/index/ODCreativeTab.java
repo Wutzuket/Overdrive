@@ -36,6 +36,12 @@ public class ODCreativeTab {
                 output.accept(ODItems.ENERGY_INPUT_PORT.get());
                 output.accept(ODItems.VACUUM_OUTPUT_PORT.get());
                 output.accept(ODItems.VACUUM_PIPE.get());
+                output.accept(ODItems.ACCELERATOR_CASING.get());
+                output.accept(ODItems.ACCELERATOR_ENERGY_INPUT_PORT.get());
+                output.accept(ODItems.ACCELERATOR_VACUUM_INPUT_PORT.get());
+                output.accept(ODItems.PARTICLE_ACCELERATOR_CONTROLLER.get());
+                output.accept(ODItems.IRIDIUM_TARGET.get());
+                output.accept(ODItems.ACCELERATOR_OUTPUT.get());
                 output.accept(ODItemsFluid.ANTIPROTONS_BUCKET.get());
             })
             .build());

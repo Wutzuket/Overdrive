@@ -12,6 +12,53 @@
 
   "block.overdrive.creative_energy_cube": "Kreativ-Energie-Würfel",
 
+  "block.overdrive.iridium_ore": "Iridiumerz",
+  "block.overdrive.deepslate_iridium_ore": "Tiefenschiefer-Iridiumerz",
+  "block.overdrive.iridium_block": "Iridiumblock",
+  "item.overdrive.raw_iridium": "Rohiridium",
+  "item.overdrive.iridium_ingot": "Iridiumbarren",
+
+  "block.overdrive.vacuum_pump": "Vakuumpumpe",
+  "block.overdrive.pump_casing": "Pumpengehäuse",
+  "block.overdrive.energy_input_port": "Energieeingangsport",
+  "block.overdrive.vacuum_output_port": "Vakuumausgangsport",
+  "block.overdrive.vacuum_pipe": "Vakuumrohr",
+
+  "block.overdrive.accelerator_casing": "Beschleunigergehäuse",
+  "block.overdrive.accelerator_energy_input_port": "Beschleuniger-Energieeingang",
+  "block.overdrive.accelerator_vacuum_input_port": "Beschleuniger-Vakuumeingang",
+  "block.overdrive.particle_accelerator_controller": "Teilchenbeschleuniger-Steuerung",
+  "block.overdrive.iridium_target": "Iridium-Target",
+  "block.overdrive.accelerator_output": "Beschleuniger-Ausgang",
+
+  "fluid.overdrive.antiprotons": "Antiprotonen",
+  "item.overdrive.antiprotons_bucket": "Antiprotonen-Eimer",
+
+  "container.overdrive.vacuum_pump": "Vakuumpumpe",
+  "container.overdrive.vacuum_pump.energy": "Energie",
+  "container.overdrive.vacuum_pump.vacuum": "Vakuum",
+  "container.overdrive.vacuum_pump.offline": "\u26AA Aus",
+  "container.overdrive.vacuum_pump.evacuating": "\uD83D\uDFE1 Evakuiere...",
+  "container.overdrive.vacuum_pump.stable": "\uD83D\uDFE2 Stabil",
+  "container.overdrive.vacuum_pump.leak": "\u26A0\uFE0F Leck erkannt!",
+  "container.overdrive.vacuum_pump.volume": "Volumen: %s",
+  "container.overdrive.vacuum_pump.usage": "Verbrauch: %s FE/t",
+
+  "container.overdrive.accelerator_controller": "Teilchenbeschleuniger-Steuerung",
+  "container.overdrive.accelerator_controller.energy": "Energie",
+  "container.overdrive.accelerator_controller.vacuum": "Vakuum",
+  "container.overdrive.accelerator_controller.usage": "Verbrauch: %s FE/t",
+  "container.overdrive.accelerator_controller.running": "\uD83D\uDFE2 Aktiv",
+  "container.overdrive.accelerator_controller.idle": "\uD83D\uDFE1 Bereit",
+  "container.overdrive.accelerator_controller.invalid_structure": "\u26A0\uFE0F Ung\u00FCltige Struktur",
+
+  "container.overdrive.accelerator_output": "Beschleuniger-Ausgang",
+  "container.overdrive.accelerator_output.fluid": "Flüssigkeit",
+  "container.overdrive.accelerator_output.empty": "Leer",
+
+  "container.overdrive.iridium_target": "Iridium-Target",
+  "container.overdrive.iridium_target.slot": "Target-Slot",
+
   "jei.overdrive.scanner.title": "Scanner",
   "jei.overdrive.scanner.energy": "Energie: %s FE",
   "jei.overdrive.scanner.structure": "Struktur",
@@ -24,13 +71,25 @@
   "jei.overdrive.scanner.result": "Ergebnis",
   "jei.overdrive.scanner.mirrored": "Gespiegelte Anordnung erlaubt",
 
-  "container.overdrive.vacuum_pump": "Vakuumpumpe",
-  "container.overdrive.vacuum_pump.energy": "Energie",
-  "container.overdrive.vacuum_pump.vacuum": "Vakuum",
-  "container.overdrive.vacuum_pump.offline": "\u26AA Aus",
-  "container.overdrive.vacuum_pump.evacuating": "\uD83D\uDFE1 Evakuiere...",
-  "container.overdrive.vacuum_pump.stable": "\uD83D\uDFE2 Stabil",
-  "container.overdrive.vacuum_pump.leak": "\u26A0\uFE0F Leck erkannt!",
-  "container.overdrive.vacuum_pump.volume": "Volumen: %s",
-  "container.overdrive.vacuum_pump.usage": "Verbrauch: %s FE/t"
+  "jei.overdrive.collision.title": "Teilchenkollision",
+  "jei.overdrive.collision.energy": "Energie: %s FE",
+  "jei.overdrive.collision.time": "Zeit: %s Ticks",
+  "jei.overdrive.collision.fluid": "Ausgabe: %s x %s mB",
+  "jei.overdrive.collision.target": "Target",
+  "jei.overdrive.collision.result": "Ergebnis",
+
+  "jei.overdrive.accelerator_collision.title": "Beschleuniger-Kollision",
+  "jei.overdrive.accelerator_collision.energy": "Energie: %s FE",
+  "jei.overdrive.accelerator_collision.time": "Zeit: %s Ticks",
+  "jei.overdrive.accelerator_collision.fluid": "Ausgabe: %s x %s mB",
+  "jei.overdrive.accelerator_collision.input": "Iridium-Target",
+  "jei.overdrive.accelerator_collision.result": "Ergebnis",
+  "jei.overdrive.accelerator.all_layers": "Alle Schichten",
+  "jei.overdrive.accelerator.layer": "Schicht %s / %s",
+  "jei.overdrive.accelerator.prev_layer": "Vorherige Schicht",
+  "jei.overdrive.accelerator.next_layer": "Nächste Schicht",
+  "jei.overdrive.accelerator.legend": "Legende:",
+  "jei.overdrive.accelerator.casing": "Gehäuse",
+  "jei.overdrive.accelerator.controller": "Steuerung",
+  "jei.overdrive.accelerator.target": "Iridium-Target"
 }

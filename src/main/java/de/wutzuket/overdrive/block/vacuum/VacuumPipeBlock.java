@@ -1,5 +1,6 @@
 package de.wutzuket.overdrive.block.vacuum;
 
+import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -93,7 +94,8 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
 
     private boolean isConnectable(BlockState state) {
         return state.getBlock() instanceof VacuumPipeBlock
-                || state.getBlock() instanceof VacuumOutputPortBlock;
+                || state.getBlock() instanceof VacuumOutputPortBlock
+                || state.getBlock() instanceof AcceleratorVacuumInputPortBlock;
     }
 
     @Override

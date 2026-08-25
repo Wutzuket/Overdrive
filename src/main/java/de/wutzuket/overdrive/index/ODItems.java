@@ -53,14 +53,33 @@ public class ODItems {
     public static final Supplier<Item> IRIDIUM_INGOT = ITEMS.register("iridium_ingot",
             () -> new Item(new Item.Properties()));
 
+    // Wolfram
+    public static final Supplier<Item> WOLFRAM_ORE = ITEMS.register("wolfram_ore",
+            () -> new BlockItem(ODBlocks.WOLFRAM_ORE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> DEEPSLATE_WOLFRAM_ORE = ITEMS.register("deepslate_wolfram_ore",
+            () -> new BlockItem(ODBlocks.DEEPSLATE_WOLFRAM_ORE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> WOLFRAM_BLOCK = ITEMS.register("wolfram_block",
+            () -> new BlockItem(ODBlocks.WOLFRAM_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> RAW_WOLFRAM = ITEMS.register("raw_wolfram",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> WOLFRAM_INGOT = ITEMS.register("wolfram_ingot",
+            () -> new Item(new Item.Properties()));
+
+    public static final Supplier<Item> WOLFRAM_NUGGET = ITEMS.register("wolfram_nugget",
+            () -> new Item(new Item.Properties()));
+
     public static final Supplier<Item> VACUUM_PUMP = ITEMS.register("vacuum_pump",
             () -> new BlockItem(ODBlocks.VACUUM_PUMP.get(), new Item.Properties()));
 
     public static final Supplier<Item> PUMP_CASING = ITEMS.register("pump_casing",
             () -> new BlockItem(ODBlocks.PUMP_CASING.get(), new Item.Properties()));
 
-    public static final Supplier<Item> ENERGY_INPUT_PORT = ITEMS.register("energy_input_port",
-            () -> new BlockItem(ODBlocks.ENERGY_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> VACUUM_ENERGY_PORT = ITEMS.register("vacuum_energy_port",
+            () -> new BlockItem(ODBlocks.VACUUM_ENERGY_PORT.get(), new Item.Properties()));
 
     public static final Supplier<Item> VACUUM_OUTPUT_PORT = ITEMS.register("vacuum_output_port",
             () -> new BlockItem(ODBlocks.VACUUM_OUTPUT_PORT.get(), new Item.Properties()));
@@ -85,6 +104,60 @@ public class ODItems {
 
     public static final Supplier<Item> ACCELERATOR_OUTPUT = ITEMS.register("accelerator_output",
             () -> new BlockItem(ODBlocks.ACCELERATOR_OUTPUT.get(), new Item.Properties()));
+
+    // AD Ring
+    public static final Supplier<Item> AD_CASING = ITEMS.register("ad_casing",
+            () -> new BlockItem(ODBlocks.AD_CASING.get(), new Item.Properties()));
+    public static final Supplier<Item> AD_CONTROLLER = ITEMS.register("ad_controller",
+            () -> new BlockItem(ODBlocks.AD_CONTROLLER.get(), new Item.Properties()));
+    public static final Supplier<Item> AD_ENERGY_INPUT_PORT = ITEMS.register("ad_energy_input_port",
+            () -> new BlockItem(ODBlocks.AD_ENERGY_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> AD_VACUUM_PORT = ITEMS.register("ad_vacuum_port",
+            () -> new BlockItem(ODBlocks.AD_VACUUM_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> AD_INPUT_PORT = ITEMS.register("ad_input_port",
+            () -> new BlockItem(ODBlocks.AD_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> AD_OUTPUT_PORT = ITEMS.register("ad_output_port",
+            () -> new BlockItem(ODBlocks.AD_OUTPUT_PORT.get(), new Item.Properties()));
+
+    // ELENA Ring
+    public static final Supplier<Item> ELENA_CASING = ITEMS.register("elena_casing",
+            () -> new BlockItem(ODBlocks.ELENA_CASING.get(), new Item.Properties()));
+    public static final Supplier<Item> ELENA_CONTROLLER = ITEMS.register("elena_controller",
+            () -> new BlockItem(ODBlocks.ELENA_CONTROLLER.get(), new Item.Properties()));
+    public static final Supplier<Item> ELENA_ENERGY_INPUT_PORT = ITEMS.register("elena_energy_input_port",
+            () -> new BlockItem(ODBlocks.ELENA_ENERGY_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> ELENA_VACUUM_PORT = ITEMS.register("elena_vacuum_port",
+            () -> new BlockItem(ODBlocks.ELENA_VACUUM_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> ELENA_INPUT_PORT = ITEMS.register("elena_input_port",
+            () -> new BlockItem(ODBlocks.ELENA_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> ELENA_OUTPUT_PORT = ITEMS.register("elena_output_port",
+            () -> new BlockItem(ODBlocks.ELENA_OUTPUT_PORT.get(), new Item.Properties()));
+
+    // Wolfram Target
+    public static final Supplier<Item> WOLFRAM_CASING = ITEMS.register("wolfram_casing",
+            () -> new BlockItem(ODBlocks.WOLFRAM_CASING.get(), new Item.Properties()));
+    public static final Supplier<Item> ELECTRON_GUN = ITEMS.register("electron_gun",
+            () -> new BlockItem(ODBlocks.ELECTRON_GUN.get(), new Item.Properties()));
+    public static final Supplier<Item> WOLFRAM_TARGET = ITEMS.register("wolfram_target",
+            () -> new BlockItem(ODBlocks.WOLFRAM_TARGET.get(), new Item.Properties()));
+    public static final Supplier<Item> POSITRON_VACUUM_OUTPUT_PORT = ITEMS.register("positron_vacuum_output_port",
+            () -> new BlockItem(ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get(), new Item.Properties()));
+
+    // Items
+    public static final Supplier<Item> WOLFRAM_MESH = ITEMS.register("wolfram_mesh",
+            () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
+
+    public static final Supplier<Item> EMPTY_ANTIPROTON_CELL = ITEMS.register("empty_antiproton_cell",
+            () -> new Item(new Item.Properties().stacksTo(16)));
+
+    public static final Supplier<Item> FILLED_ANTIPROTON_CELL = ITEMS.register("filled_antiproton_cell",
+            () -> new Item(new Item.Properties().stacksTo(16).component(ODDataComponents.ANTIPROTON_AMOUNT.get(), 0)));
+
+    public static final Supplier<Item> EMPTY_POSITRON_CELL = ITEMS.register("empty_positron_cell",
+            () -> new Item(new Item.Properties().stacksTo(16)));
+
+    public static final Supplier<Item> FILLED_POSITRON_CELL = ITEMS.register("filled_positron_cell",
+            () -> new Item(new Item.Properties().stacksTo(16).component(ODDataComponents.POSITRON_AMOUNT.get(), 0)));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

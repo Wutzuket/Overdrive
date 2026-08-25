@@ -1,6 +1,9 @@
 package de.wutzuket.overdrive.block.vacuum;
 
 import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
+import de.wutzuket.overdrive.block.ad.ADVacuumPortBlock;
+import de.wutzuket.overdrive.block.elena.ELENAVacuumPortBlock;
+import de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortBlock;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,16 +47,20 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
             Direction.DOWN, DOWN
     );
 
-    private static final VoxelShape CENTER_SHAPE = Shapes.box(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
+    private static final double MIN = 5.0 / 16.0;
+    private static final double MAX = 11.0 / 16.0;
+    private static final double MID = 8.0 / 16.0;
+
+    private static final VoxelShape CENTER_SHAPE = Shapes.box(MIN, MIN, MIN, MAX, MAX, MAX);
     private static final Map<Direction, VoxelShape> CONNECTION_SHAPES = new EnumMap<>(Direction.class);
 
     static {
-        CONNECTION_SHAPES.put(Direction.NORTH, Shapes.box(0.25, 0.25, 0.0, 0.75, 0.75, 0.25));
-        CONNECTION_SHAPES.put(Direction.SOUTH, Shapes.box(0.25, 0.25, 0.75, 0.75, 0.75, 1.0));
-        CONNECTION_SHAPES.put(Direction.WEST, Shapes.box(0.0, 0.25, 0.25, 0.25, 0.75, 0.75));
-        CONNECTION_SHAPES.put(Direction.EAST, Shapes.box(0.75, 0.25, 0.25, 1.0, 0.75, 0.75));
-        CONNECTION_SHAPES.put(Direction.DOWN, Shapes.box(0.25, 0.0, 0.25, 0.75, 0.25, 0.75));
-        CONNECTION_SHAPES.put(Direction.UP, Shapes.box(0.25, 0.75, 0.25, 0.75, 1.0, 0.75));
+        CONNECTION_SHAPES.put(Direction.NORTH, Shapes.box(MIN, MIN, 0.0, MAX, MAX, MID));
+        CONNECTION_SHAPES.put(Direction.SOUTH, Shapes.box(MIN, MIN, MID, MAX, MAX, 1.0));
+        CONNECTION_SHAPES.put(Direction.WEST, Shapes.box(0.0, MIN, MIN, MID, MAX, MAX));
+        CONNECTION_SHAPES.put(Direction.EAST, Shapes.box(MID, MIN, MIN, 1.0, MAX, MAX));
+        CONNECTION_SHAPES.put(Direction.DOWN, Shapes.box(MIN, 0.0, MIN, MAX, MID, MAX));
+        CONNECTION_SHAPES.put(Direction.UP, Shapes.box(MIN, MID, MIN, MAX, 1.0, MAX));
     }
 
     public VacuumPipeBlock(Properties properties) {
@@ -95,7 +102,11 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
     private boolean isConnectable(BlockState state) {
         return state.getBlock() instanceof VacuumPipeBlock
                 || state.getBlock() instanceof VacuumOutputPortBlock
-                || state.getBlock() instanceof AcceleratorVacuumInputPortBlock;
+                || state.getBlock() instanceof AcceleratorVacuumInputPortBlock
+            || state.getBlock() instanceof ADVacuumPortBlock
+            || state.getBlock() instanceof ELENAVacuumPortBlock
+                || state.getBlock() instanceof PositronVacuumOutputPortBlock
+                || state.getBlock() instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunBlock;
     }
 
     @Override

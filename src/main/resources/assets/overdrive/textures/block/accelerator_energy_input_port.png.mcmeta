@@ -1,0 +1,19 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/accelerator_energy_input_port"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:accelerator_casing" },
+                { "block": "overdrive:accelerator_energy_input_port" },
+                { "block": "overdrive:accelerator_vacuum_input_port" },
+                { "block": "overdrive:accelerator_output" },
+                { "block": "overdrive:iridium_target" }
+            ]
+        }
+    }
+}

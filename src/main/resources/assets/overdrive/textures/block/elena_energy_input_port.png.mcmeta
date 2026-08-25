@@ -1,0 +1,19 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/elena_energy_input_port"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:elena_casing" },
+                { "block": "overdrive:elena_energy_input_port" },
+                { "block": "overdrive:elena_vacuum_port" },
+                { "block": "overdrive:elena_input_port" },
+                { "block": "overdrive:elena_output_port" }
+            ]
+        }
+    }
+}

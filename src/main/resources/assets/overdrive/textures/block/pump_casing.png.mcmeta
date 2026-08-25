@@ -1,0 +1,17 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/pump_casing"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:pump_casing" },
+                { "block": "overdrive:vacuum_energy_port" },
+                { "block": "overdrive:vacuum_output_port" }
+            ]
+        }
+    }
+}

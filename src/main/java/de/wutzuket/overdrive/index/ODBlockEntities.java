@@ -41,8 +41,8 @@ public class ODBlockEntities {
 
     public static final java.util.function.Supplier<BlockEntityType<EnergyInputPortBlockEntity>> ENERGY_INPUT_PORT_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register(
-                    "energy_input_port",
-                    () -> BlockEntityType.Builder.of(EnergyInputPortBlockEntity::new, ODBlocks.ENERGY_INPUT_PORT.get()).build(null)
+                    "vacuum_energy_port",
+                    () -> BlockEntityType.Builder.of(EnergyInputPortBlockEntity::new, ODBlocks.VACUUM_ENERGY_PORT.get()).build(null)
             );
 
     public static final java.util.function.Supplier<BlockEntityType<VacuumOutputPortBlockEntity>> VACUUM_OUTPUT_PORT_BLOCK_ENTITY =
@@ -86,6 +86,61 @@ public class ODBlockEntities {
                     "accelerator_output",
                     () -> BlockEntityType.Builder.of(AcceleratorOutputEntity::new, ODBlocks.ACCELERATOR_OUTPUT.get()).build(null)
             );
+
+    // AD Ring
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.ad.ADControllerEntity>> AD_CONTROLLER =
+            BLOCK_ENTITY_TYPES.register("ad_controller",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.ad.ADControllerEntity::new, ODBlocks.AD_CONTROLLER.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.ad.ADEnergyInputPortEntity>> AD_ENERGY_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("ad_energy_input_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.ad.ADEnergyInputPortEntity::new, ODBlocks.AD_ENERGY_INPUT_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.ad.ADVacuumPortEntity>> AD_VACUUM_PORT =
+            BLOCK_ENTITY_TYPES.register("ad_vacuum_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.ad.ADVacuumPortEntity::new, ODBlocks.AD_VACUUM_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.ad.ADInputPortEntity>> AD_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("ad_input_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.ad.ADInputPortEntity::new, ODBlocks.AD_INPUT_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.ad.ADOutputPortEntity>> AD_OUTPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("ad_output_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.ad.ADOutputPortEntity::new, ODBlocks.AD_OUTPUT_PORT.get()).build(null));
+
+    // ELENA Ring
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.elena.ELENAControllerEntity>> ELENA_CONTROLLER =
+            BLOCK_ENTITY_TYPES.register("elena_controller",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAControllerEntity::new, ODBlocks.ELENA_CONTROLLER.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.elena.ELENAEnergyInputPortEntity>> ELENA_ENERGY_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("elena_energy_input_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAEnergyInputPortEntity::new, ODBlocks.ELENA_ENERGY_INPUT_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.elena.ELENAVacuumPortEntity>> ELENA_VACUUM_PORT =
+            BLOCK_ENTITY_TYPES.register("elena_vacuum_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAVacuumPortEntity::new, ODBlocks.ELENA_VACUUM_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.elena.ELENAInputPortEntity>> ELENA_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("elena_input_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAInputPortEntity::new, ODBlocks.ELENA_INPUT_PORT.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity>> ELENA_OUTPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("elena_output_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity::new, ODBlocks.ELENA_OUTPUT_PORT.get()).build(null));
+
+    // Wolfram Target
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.ElectronGunEntity>> ELECTRON_GUN =
+            BLOCK_ENTITY_TYPES.register("electron_gun",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.ElectronGunEntity::new, ODBlocks.ELECTRON_GUN.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.WolframTargetEntity>> WOLFRAM_TARGET =
+            BLOCK_ENTITY_TYPES.register("wolfram_target",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.WolframTargetEntity::new, ODBlocks.WOLFRAM_TARGET.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity>> POSITRON_VACUUM_OUTPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("positron_vacuum_output_port",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity::new, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get()).build(null));
 
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITY_TYPES.register(modEventBus);

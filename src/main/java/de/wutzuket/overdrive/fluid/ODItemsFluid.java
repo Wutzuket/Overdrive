@@ -16,6 +16,18 @@ public class ODItemsFluid {
             () -> new BucketItem(ODFluids.ANTIPROTONS_SOURCE.get(),
                     new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    public static final Supplier<Item> DECELERATED_ANTIPROTONS_BUCKET = ITEMS.register("decelerated_antiprotons_bucket",
+            () -> new BucketItem(ODFluids.DECELERATED_ANTIPROTONS_SOURCE.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final Supplier<Item> COOLED_ANTIPROTONS_BUCKET = ITEMS.register("cooled_antiprotons_bucket",
+            () -> new BucketItem(ODFluids.COOLED_ANTIPROTONS_SOURCE.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final Supplier<Item> POSITRONS_BUCKET = ITEMS.register("positrons_bucket",
+            () -> new BucketItem(ODFluids.POSITRONS_SOURCE.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

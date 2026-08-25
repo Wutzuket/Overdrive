@@ -16,6 +16,12 @@ public class ServerPayloadHandler {
                 BlockEntity be = level.getBlockEntity(pos);
                 if (be instanceof ParticleAcceleratorControllerEntity ctrl) {
                     ctrl.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.ad.ADControllerEntity ad) {
+                    ad.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.elena.ELENAControllerEntity elena) {
+                    elena.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity gun) {
+                    gun.toggleHologram();
                 }
             }
         });

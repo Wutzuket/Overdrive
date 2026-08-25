@@ -31,9 +31,15 @@ public class ODCreativeTab {
                 output.accept(ODItems.RAW_IRIDIUM.get());
                 output.accept(ODItems.IRIDIUM_INGOT.get());
                 output.accept(ODItems.IRIDIUM_BLOCK.get());
+                output.accept(ODItems.WOLFRAM_ORE.get());
+                output.accept(ODItems.DEEPSLATE_WOLFRAM_ORE.get());
+                output.accept(ODItems.RAW_WOLFRAM.get());
+                output.accept(ODItems.WOLFRAM_INGOT.get());
+                output.accept(ODItems.WOLFRAM_NUGGET.get());
+                output.accept(ODItems.WOLFRAM_BLOCK.get());
                 output.accept(ODItems.VACUUM_PUMP.get());
                 output.accept(ODItems.PUMP_CASING.get());
-                output.accept(ODItems.ENERGY_INPUT_PORT.get());
+                output.accept(ODItems.VACUUM_ENERGY_PORT.get());
                 output.accept(ODItems.VACUUM_OUTPUT_PORT.get());
                 output.accept(ODItems.VACUUM_PIPE.get());
                 output.accept(ODItems.ACCELERATOR_CASING.get());
@@ -43,6 +49,30 @@ public class ODCreativeTab {
                 output.accept(ODItems.IRIDIUM_TARGET.get());
                 output.accept(ODItems.ACCELERATOR_OUTPUT.get());
                 output.accept(ODItemsFluid.ANTIPROTONS_BUCKET.get());
+                output.accept(ODItemsFluid.DECELERATED_ANTIPROTONS_BUCKET.get());
+                output.accept(ODItemsFluid.COOLED_ANTIPROTONS_BUCKET.get());
+                output.accept(ODItemsFluid.POSITRONS_BUCKET.get());
+                output.accept(ODItems.AD_CASING.get());
+                output.accept(ODItems.AD_CONTROLLER.get());
+                output.accept(ODItems.AD_ENERGY_INPUT_PORT.get());
+                output.accept(ODItems.AD_VACUUM_PORT.get());
+                output.accept(ODItems.AD_INPUT_PORT.get());
+                output.accept(ODItems.AD_OUTPUT_PORT.get());
+                output.accept(ODItems.ELENA_CASING.get());
+                output.accept(ODItems.ELENA_CONTROLLER.get());
+                output.accept(ODItems.ELENA_ENERGY_INPUT_PORT.get());
+                output.accept(ODItems.ELENA_VACUUM_PORT.get());
+                output.accept(ODItems.ELENA_INPUT_PORT.get());
+                output.accept(ODItems.ELENA_OUTPUT_PORT.get());
+                output.accept(ODItems.WOLFRAM_CASING.get());
+                output.accept(ODItems.ELECTRON_GUN.get());
+                output.accept(ODItems.WOLFRAM_TARGET.get());
+                output.accept(ODItems.POSITRON_VACUUM_OUTPUT_PORT.get());
+                output.accept(ODItems.WOLFRAM_MESH.get());
+                output.accept(ODItems.EMPTY_ANTIPROTON_CELL.get());
+                output.accept(ODItems.FILLED_ANTIPROTON_CELL.get());
+                output.accept(ODItems.EMPTY_POSITRON_CELL.get());
+                output.accept(ODItems.FILLED_POSITRON_CELL.get());
             })
             .build());
 

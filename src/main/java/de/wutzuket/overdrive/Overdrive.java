@@ -24,6 +24,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEntity;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorRenderer;
@@ -43,8 +45,13 @@ import de.wutzuket.overdrive.index.ODItems;
 import de.wutzuket.overdrive.index.ODMenuTypes;
 import de.wutzuket.overdrive.menu.AcceleratorControllerScreen;
 import de.wutzuket.overdrive.menu.AcceleratorOutputScreen;
+import de.wutzuket.overdrive.menu.ADInputPortScreen;
+import de.wutzuket.overdrive.menu.ADOutputPortScreen;
+import de.wutzuket.overdrive.menu.ADControllerScreen;
+import de.wutzuket.overdrive.menu.ELENAControllerScreen;
 import de.wutzuket.overdrive.menu.IridiumTargetScreen;
 import de.wutzuket.overdrive.menu.VacuumPumpScreen;
+import de.wutzuket.overdrive.menu.WolframTargetScreen;
 import de.wutzuket.overdrive.recipe.ODRecipeSerializers;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import de.wutzuket.overdrive.worldgen.ODBiomeModifiers;
@@ -78,6 +85,15 @@ public class Overdrive {
         ODWorldGen.register(modEventBus);
         ODBiomeModifiers.register(modEventBus);
         ODDataComponents.register(modEventBus);
+
+        modEventBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
+            PayloadRegistrar registrar = event.registrar(MODID);
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.ToggleHologramPayload.TYPE,
+                    de.wutzuket.overdrive.network.ToggleHologramPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleToggleHologram
+            );
+        });
 
         modEventBus.addListener(RegisterCapabilitiesEvent.class, event -> {
             event.registerBlockEntity(
@@ -130,6 +146,30 @@ public class Overdrive {
                     ODBlockEntities.ACCELERATOR_OUTPUT.get(),
                     (blockEntity, side) -> ((de.wutzuket.overdrive.block.accelerator.AcceleratorOutputEntity) blockEntity).getItemHandler()
             );
+
+            // AD Ring capabilities
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.AD_CONTROLLER.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.AD_ENERGY_INPUT_PORT.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.AD_CONTROLLER.get(), (be, side) -> ((de.wutzuket.overdrive.block.ad.ADControllerEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.AD_INPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.ad.ADInputPortEntity) be).getTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.AD_INPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.ad.ADInputPortEntity) be).getItemHandler());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.AD_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.ad.ADOutputPortEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.AD_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.ad.ADOutputPortEntity) be).getItemHandler());
+
+            // ELENA Ring capabilities
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.ELENA_CONTROLLER.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.ELENA_ENERGY_INPUT_PORT.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELENA_CONTROLLER.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAControllerEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELENA_INPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAInputPortEntity) be).getTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.ELENA_INPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAInputPortEntity) be).getItemHandler());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELENA_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.ELENA_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity) be).getItemHandler());
+
+            // Wolfram Target capabilities
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.ELECTRON_GUN.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELECTRON_GUN.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.ElectronGunEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.POSITRON_VACUUM_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity) be).getTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.WOLFRAM_TARGET.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.WolframTargetEntity) be).getItemHandler());
         });
     }
 
@@ -186,9 +226,25 @@ public class Overdrive {
                     if (mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult blockHit) {
                         targetPos = blockHit.getBlockPos();
                         net.minecraft.world.level.block.entity.BlockEntity be = mc.level.getBlockEntity(targetPos);
-                        if (be instanceof ParticleAcceleratorControllerEntity) {
-                            boolean current = CLIENT_HOLOGRAMS.getOrDefault(targetPos, false);
-                            CLIENT_HOLOGRAMS.put(targetPos, !current);
+                        net.minecraft.core.BlockPos togglePos = null;
+                        if (be instanceof ParticleAcceleratorControllerEntity ||
+                            be instanceof de.wutzuket.overdrive.block.ad.ADControllerEntity ||
+                            be instanceof de.wutzuket.overdrive.block.elena.ELENAControllerEntity ||
+                            be instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity) {
+                            togglePos = targetPos;
+                        } else if (be instanceof de.wutzuket.overdrive.block.wolfram.WolframTargetEntity) {
+                            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                                if (!dir.getAxis().isHorizontal()) continue;
+                                net.minecraft.world.level.block.entity.BlockEntity nearby = mc.level.getBlockEntity(targetPos.relative(dir, 1));
+                                if (nearby instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity) {
+                                    togglePos = targetPos.relative(dir, 1);
+                                    break;
+                                }
+                            }
+                        }
+                        if (togglePos != null) {
+                            boolean current = CLIENT_HOLOGRAMS.getOrDefault(togglePos, false);
+                            CLIENT_HOLOGRAMS.put(togglePos, !current);
                         }
                     }
                 }
@@ -200,6 +256,9 @@ public class Overdrive {
             event.registerBlockEntityRenderer(ODBlockEntities.SCANNER_BLOCK_ENTITY.get(), scanner_renderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.VACUUM_PUMP_BLOCK_ENTITY.get(), VacuumPumpRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.PARTICLE_ACCELERATOR_CONTROLLER.get(), ParticleAcceleratorRenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.AD_CONTROLLER.get(), de.wutzuket.overdrive.block.ad.ADRenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.ELENA_CONTROLLER.get(), de.wutzuket.overdrive.block.elena.ELENARenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.ELECTRON_GUN.get(), de.wutzuket.overdrive.block.wolfram.WolframTargetRenderer::new);
         }
 
         @SubscribeEvent
@@ -208,26 +267,54 @@ public class Overdrive {
             event.register(ODMenuTypes.IRIDIUM_TARGET_MENU.get(), IridiumTargetScreen::new);
             event.register(ODMenuTypes.ACCELERATOR_CONTROLLER_MENU.get(), AcceleratorControllerScreen::new);
             event.register(ODMenuTypes.ACCELERATOR_OUTPUT_MENU.get(), AcceleratorOutputScreen::new);
+            event.register(ODMenuTypes.AD_INPUT_PORT_MENU.get(), ADInputPortScreen::new);
+            event.register(ODMenuTypes.AD_OUTPUT_PORT_MENU.get(), ADOutputPortScreen::new);
+            event.register(ODMenuTypes.AD_CONTROLLER_MENU.get(), ADControllerScreen::new);
+            event.register(ODMenuTypes.ELENA_CONTROLLER_MENU.get(), ELENAControllerScreen::new);
+            event.register(ODMenuTypes.ELENA_INPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.ELENAInputPortScreen::new);
+            event.register(ODMenuTypes.ELENA_OUTPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.ELENAOutputPortScreen::new);
+            event.register(ODMenuTypes.WOLFRAM_TARGET_MENU.get(), WolframTargetScreen::new);
+            event.register(ODMenuTypes.ELECTRON_GUN_MENU.get(), de.wutzuket.overdrive.menu.ElectronGunScreen::new);
+            event.register(ODMenuTypes.POSITRON_VACUUM_OUTPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.PositronVacuumOutputPortScreen::new);
         }
 
         @SubscribeEvent
         public static void registerFluidTypeExtensions(RegisterClientExtensionsEvent event) {
             event.registerFluidType(new IClientFluidTypeExtensions() {
                 @Override
-                public ResourceLocation getStillTexture() {
-                    return ResourceLocation.withDefaultNamespace("block/water_still");
-                }
-
+                public ResourceLocation getStillTexture() { return ResourceLocation.withDefaultNamespace("block/water_still"); }
                 @Override
-                public ResourceLocation getFlowingTexture() {
-                    return ResourceLocation.withDefaultNamespace("block/water_flow");
-                }
-
+                public ResourceLocation getFlowingTexture() { return ResourceLocation.withDefaultNamespace("block/water_flow"); }
                 @Override
-                public int getTintColor() {
-                    return 0xFFAA00FF;
-                }
+                public int getTintColor() { return 0xFFAA00FF; }
             }, ODFluidTypes.ANTIPROTONS_TYPE.get());
+
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public ResourceLocation getStillTexture() { return ResourceLocation.withDefaultNamespace("block/water_still"); }
+                @Override
+                public ResourceLocation getFlowingTexture() { return ResourceLocation.withDefaultNamespace("block/water_flow"); }
+                @Override
+                public int getTintColor() { return 0xFFFF5500; }
+            }, ODFluidTypes.DECELERATED_ANTIPROTONS_TYPE.get());
+
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public ResourceLocation getStillTexture() { return ResourceLocation.withDefaultNamespace("block/water_still"); }
+                @Override
+                public ResourceLocation getFlowingTexture() { return ResourceLocation.withDefaultNamespace("block/water_flow"); }
+                @Override
+                public int getTintColor() { return 0xFF00AAFF; }
+            }, ODFluidTypes.COOLED_ANTIPROTONS_TYPE.get());
+
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public ResourceLocation getStillTexture() { return ResourceLocation.withDefaultNamespace("block/water_still"); }
+                @Override
+                public ResourceLocation getFlowingTexture() { return ResourceLocation.withDefaultNamespace("block/water_flow"); }
+                @Override
+                public int getTintColor() { return 0xFFFF00FF; }
+            }, ODFluidTypes.POSITRONS_TYPE.get());
         }
     }
 }

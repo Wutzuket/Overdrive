@@ -8,9 +8,13 @@
     "overdrive:iridium_ore",
     "overdrive:deepslate_iridium_ore",
     "overdrive:iridium_block",
+    "overdrive:wolfram_ore",
+    "overdrive:deepslate_wolfram_ore",
+    "overdrive:wolfram_block",
+    "overdrive:wolfram_casing",
     "overdrive:vacuum_pump",
     "overdrive:pump_casing",
-    "overdrive:energy_input_port",
+    "overdrive:vacuum_energy_port",
     "overdrive:vacuum_output_port",
     "overdrive:vacuum_pipe"
   ]

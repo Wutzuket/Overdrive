@@ -17,6 +17,18 @@ public class ODFluidBlocks {
             () -> new LiquidBlock(ODFluids.ANTIPROTONS_SOURCE.get(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
+    public static final Supplier<Block> DECELERATED_ANTIPROTONS = BLOCKS.register("decelerated_antiprotons",
+            () -> new LiquidBlock(ODFluids.DECELERATED_ANTIPROTONS_SOURCE.get(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
+    public static final Supplier<Block> COOLED_ANTIPROTONS = BLOCKS.register("cooled_antiprotons",
+            () -> new LiquidBlock(ODFluids.COOLED_ANTIPROTONS_SOURCE.get(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
+    public static final Supplier<Block> POSITRONS = BLOCKS.register("positrons",
+            () -> new LiquidBlock(ODFluids.POSITRONS_SOURCE.get(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
     }

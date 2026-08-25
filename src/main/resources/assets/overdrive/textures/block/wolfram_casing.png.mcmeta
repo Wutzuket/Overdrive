@@ -1,0 +1,15 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/wolfram_casing"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:wolfram_casing" }
+            ]
+        }
+    }
+}

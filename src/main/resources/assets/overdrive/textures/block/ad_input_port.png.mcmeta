@@ -1,0 +1,19 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/ad_input_port"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:ad_casing" },
+                { "block": "overdrive:ad_energy_input_port" },
+                { "block": "overdrive:ad_vacuum_port" },
+                { "block": "overdrive:ad_input_port" },
+                { "block": "overdrive:ad_output_port" }
+            ]
+        }
+    }
+}

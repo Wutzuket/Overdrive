@@ -22,6 +22,36 @@ public class ODFluidTypes {
                             .density(1000)
             ));
 
+    public static final Supplier<FluidType> DECELERATED_ANTIPROTONS_TYPE = FLUID_TYPES.register("decelerated_antiprotons",
+            () -> new FluidType(
+                    FluidType.Properties.create()
+                            .descriptionId("fluid.overdrive.decelerated_antiprotons")
+                            .canSwim(false)
+                            .canDrown(false)
+                            .viscosity(120)
+                            .density(1100)
+            ));
+
+    public static final Supplier<FluidType> COOLED_ANTIPROTONS_TYPE = FLUID_TYPES.register("cooled_antiprotons",
+            () -> new FluidType(
+                    FluidType.Properties.create()
+                            .descriptionId("fluid.overdrive.cooled_antiprotons")
+                            .canSwim(false)
+                            .canDrown(false)
+                            .viscosity(150)
+                            .density(1200)
+            ));
+
+    public static final Supplier<FluidType> POSITRONS_TYPE = FLUID_TYPES.register("positrons",
+            () -> new FluidType(
+                    FluidType.Properties.create()
+                            .descriptionId("fluid.overdrive.positrons")
+                            .canSwim(false)
+                            .canDrown(false)
+                            .viscosity(100)
+                            .density(1000)
+            ));
+
     public static void register(IEventBus modEventBus) {
         FLUID_TYPES.register(modEventBus);
     }

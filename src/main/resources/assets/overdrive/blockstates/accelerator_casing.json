@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/accelerator_casing" }
+    "": {
+      "model": "overdrive:block/accelerator_casing"
+    }
   }
 }

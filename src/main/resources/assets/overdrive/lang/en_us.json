@@ -1,5 +1,5 @@
 {
-  "itemGroup.overdrive": "Overdrive",
+  "itemGroup.overdrive": "Overdrive: Antimatter",
 
   "block.overdrive.scanner": "Scanner",
   "block.overdrive.aluminum_ore": "Aluminum Ore",
@@ -18,9 +18,16 @@
   "item.overdrive.raw_iridium": "Raw Iridium",
   "item.overdrive.iridium_ingot": "Iridium Ingot",
 
+  "block.overdrive.wolfram_ore": "Wolfram Ore",
+  "block.overdrive.deepslate_wolfram_ore": "Deepslate Wolfram Ore",
+  "block.overdrive.wolfram_block": "Block of Wolfram",
+  "item.overdrive.raw_wolfram": "Raw Wolfram",
+  "item.overdrive.wolfram_ingot": "Wolfram Ingot",
+  "item.overdrive.wolfram_nugget": "Wolfram Nugget",
+
   "block.overdrive.vacuum_pump": "Vacuum Pump",
   "block.overdrive.pump_casing": "Pump Casing",
-  "block.overdrive.energy_input_port": "Energy Input Port",
+  "block.overdrive.vacuum_energy_port": "Vacuum Energy Port",
   "block.overdrive.vacuum_output_port": "Vacuum Output Port",
   "block.overdrive.vacuum_pipe": "Vacuum Pipe",
 
@@ -32,7 +39,42 @@
   "block.overdrive.accelerator_output": "Accelerator Output",
 
   "fluid.overdrive.antiprotons": "Antiprotons",
-  "item.overdrive.antiprotons_bucket": "Antiproton Bucket",
+  "fluid.overdrive.decelerated_antiprotons": "Decelerated Antiprotons",
+  "fluid.overdrive.cooled_antiprotons": "Cooled Antiprotons",
+  "fluid.overdrive.positrons": "Positrons",
+  "block.overdrive.antiprotons": "Antiprotons",
+  "block.overdrive.decelerated_antiprotons": "Decelerated Antiprotons",
+  "block.overdrive.cooled_antiprotons": "Cooled Antiprotons",
+  "block.overdrive.positrons": "Positrons",
+  "item.overdrive.antiprotons_bucket": "Antiprotons Bucket",
+  "item.overdrive.decelerated_antiprotons_bucket": "Decelerated Antiprotons Bucket",
+  "item.overdrive.cooled_antiprotons_bucket": "Cooled Antiprotons Bucket",
+  "item.overdrive.positrons_bucket": "Positrons Bucket",
+
+  "block.overdrive.ad_casing": "AD Casing",
+  "block.overdrive.ad_controller": "Antiproton Decelerator Controller",
+  "block.overdrive.ad_energy_input_port": "AD Energy Input Port",
+  "block.overdrive.ad_vacuum_port": "AD Vacuum Port",
+  "block.overdrive.ad_input_port": "AD Input Port",
+  "block.overdrive.ad_output_port": "AD Output Port",
+
+  "block.overdrive.elena_casing": "ELENA Casing",
+  "block.overdrive.elena_controller": "ELENA Ring Controller",
+  "block.overdrive.elena_energy_input_port": "ELENA Energy Input Port",
+  "block.overdrive.elena_vacuum_port": "ELENA Vacuum Port",
+  "block.overdrive.elena_input_port": "ELENA Input Port",
+  "block.overdrive.elena_output_port": "ELENA Output Port",
+
+  "block.overdrive.wolfram_casing": "Wolfram Casing",
+  "block.overdrive.electron_gun": "Electron Gun",
+  "block.overdrive.wolfram_target": "Wolfram Target",
+  "block.overdrive.positron_vacuum_output_port": "Positron Vacuum Output Port",
+
+  "item.overdrive.wolfram_mesh": "Wolfram Mesh",
+  "item.overdrive.empty_antiproton_cell": "Empty Antiproton Cell",
+  "item.overdrive.filled_antiproton_cell": "Filled Antiproton Cell",
+  "item.overdrive.empty_positron_cell": "Empty Positron Cell",
+  "item.overdrive.filled_positron_cell": "Filled Positron Cell",
 
   "container.overdrive.vacuum_pump": "Vacuum Pump",
   "container.overdrive.vacuum_pump.energy": "Energy",
@@ -48,9 +90,9 @@
   "container.overdrive.accelerator_controller.energy": "Energy",
   "container.overdrive.accelerator_controller.vacuum": "Vacuum",
   "container.overdrive.accelerator_controller.usage": "Usage: %s FE/t",
-  "container.overdrive.accelerator_controller.running": "\uD83D\uDFE2 Running",
-  "container.overdrive.accelerator_controller.idle": "\uD83D\uDFE1 Idle",
-  "container.overdrive.accelerator_controller.invalid_structure": "\u26A0\uFE0F Invalid Structure",
+  "container.overdrive.accelerator_controller.running": "\u00a7aRunning",
+  "container.overdrive.accelerator_controller.idle": "\u00a7eIdle",
+  "container.overdrive.accelerator_controller.invalid_structure": "\u00a7cInvalid Structure",
 
   "container.overdrive.accelerator_output": "Accelerator Output",
   "container.overdrive.accelerator_output.fluid": "Fluid",
@@ -58,6 +100,26 @@
 
   "container.overdrive.iridium_target": "Iridium Target",
   "container.overdrive.iridium_target.slot": "Target Slot",
+
+  "container.overdrive.ad_controller": "Antiproton Decelerator",
+  "container.overdrive.ad_input_port": "AD Input Port",
+  "container.overdrive.ad_output_port": "AD Output Port",
+
+  "container.overdrive.elena_controller": "ELENA Ring",
+  "container.overdrive.elena_input_port": "ELENA Input Port",
+  "container.overdrive.elena_output_port": "ELENA Output Port",
+
+  "container.overdrive.wolfram_target": "Wolfram Target",
+  "container.overdrive.wolfram_target.slot": "Mesh Slot",
+  "container.overdrive.electron_gun": "Electron Gun",
+  "container.overdrive.electron_gun.energy": "Energy",
+  "container.overdrive.electron_gun.vacuum": "Vacuum",
+  "container.overdrive.electron_gun.running": "\u00a7aRunning",
+  "container.overdrive.electron_gun.idle": "\u00a7eIdle",
+  "container.overdrive.electron_gun.usage": "Usage: %s FE/t",
+
+  "container.overdrive.positron_vacuum_output_port": "Positron Vacuum Output Port",
+  "container.overdrive.positron_vacuum_output_port.empty": "Empty",
 
   "jei.overdrive.scanner.title": "Scanner",
   "jei.overdrive.scanner.energy": "Energy: %s FE",
@@ -91,5 +153,17 @@
   "jei.overdrive.accelerator.legend": "Legend:",
   "jei.overdrive.accelerator.casing": "Casing",
   "jei.overdrive.accelerator.controller": "Controller",
-  "jei.overdrive.accelerator.target": "Iridium Target"
+  "jei.overdrive.accelerator.target": "Iridium Target",
+
+  "jei.overdrive.ad.title": "Antiproton Decelerator (AD)",
+  "jei.overdrive.ad.input": "Input",
+  "jei.overdrive.ad.output": "Output",
+  "jei.overdrive.elena.title": "ELENA",
+  "jei.overdrive.elena.input": "Input",
+  "jei.overdrive.elena.output": "Output",
+  "jei.overdrive.positron_extraction.title": "Positron Production & Bottling",
+  "jei.overdrive.positron_extraction.input": "Input",
+  "jei.overdrive.positron_extraction.output": "Output",
+
+  "key.overdrive.toggle_accelerator_hologram": "Toggle Hologram Overlay"
 }

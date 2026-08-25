@@ -1,0 +1,8 @@
+{
+    "ctm": {
+        "type": "ctm:optifine_full",
+        "textures": [
+            "overdrive:ctm/elena_casing"
+        ]
+    }
+}

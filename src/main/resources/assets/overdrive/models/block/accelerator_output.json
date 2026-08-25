@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "overdrive:block/accelerator_casing",
   "textures": {
-    "all": "minecraft:block/chiseled_polished_blackstone"
+    "all": "overdrive:block/accelerator_output"
   }
 }

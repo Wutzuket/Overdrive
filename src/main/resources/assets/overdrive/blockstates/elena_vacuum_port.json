@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "overdrive:block/elena_vacuum_port", "y": 0 },
+    "facing=east": { "model": "overdrive:block/elena_vacuum_port", "y": 90 },
+    "facing=south": { "model": "overdrive:block/elena_vacuum_port", "y": 180 },
+    "facing=west": { "model": "overdrive:block/elena_vacuum_port", "y": 270 }
+  }
+}

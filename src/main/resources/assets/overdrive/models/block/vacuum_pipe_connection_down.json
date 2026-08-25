@@ -1,20 +1,20 @@
 {
-  "parent": "block/block",
+  "parent": "minecraft:block/block",
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "texture": "minecraft:block/iron_block"
+    "particle": "overdrive:block/vacuum_pipe",
+    "texture": "overdrive:block/vacuum_pipe"
   },
   "elements": [
     {
-      "from": [4, 0, 4],
-      "to": [12, 4, 12],
+      "from": [5, 0, 5],
+      "to": [11, 5, 11],
       "faces": {
-        "north": {"uv": [4, 0, 12, 4], "texture": "#texture"},
-        "south": {"uv": [4, 12, 12, 16], "texture": "#texture"},
-        "west":  {"uv": [0, 0, 4, 4], "texture": "#texture"},
-        "east":  {"uv": [12, 0, 16, 4], "texture": "#texture"},
-        "up":    {"uv": [4, 4, 12, 12], "texture": "#texture"},
-        "down":  {"uv": [4, 4, 12, 12], "texture": "#texture"}
+        "north": {"uv": [5, 11, 11, 16], "texture": "#texture"},
+        "south": {"uv": [5, 11, 11, 16], "texture": "#texture"},
+        "west":  {"uv": [5, 11, 11, 16], "texture": "#texture"},
+        "east":  {"uv": [5, 11, 11, 16], "texture": "#texture"},
+        "up":    {"uv": [5, 5, 11, 11], "texture": "#texture"},
+        "down":  {"uv": [5, 5, 11, 11], "texture": "#texture"}
       }
     }
   ]

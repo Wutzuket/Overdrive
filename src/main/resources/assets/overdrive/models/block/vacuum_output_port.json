@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "overdrive:block/pump_casing",
   "textures": {
-    "all": "minecraft:block/obsidian"
+    "all": "overdrive:block/vacuum_output_port"
   }
 }

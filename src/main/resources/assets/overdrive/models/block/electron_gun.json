@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/wolfram_casing",
+  "textures": {
+    "north": "overdrive:block/electron_gun_front"
+  }
+}

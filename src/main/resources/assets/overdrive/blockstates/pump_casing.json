@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/pump_casing" }
+    "": {
+      "model": "overdrive:block/pump_casing"
+    }
   }
 }

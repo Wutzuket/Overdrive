@@ -1,12 +1,6 @@
 {
-  "parent": "block/cube",
+  "parent": "overdrive:block/pump_casing",
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "down": "minecraft:block/stone_bricks",
-    "up": "minecraft:block/stone_bricks",
-    "north": "minecraft:block/furnace_top",
-    "south": "minecraft:block/stone_bricks",
-    "east": "minecraft:block/stone_bricks",
-    "west": "minecraft:block/stone_bricks"
+    "north": "overdrive:block/vacuum_pump_front"
   }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "overdrive:block/accelerator_casing",
   "textures": {
-    "all": "minecraft:block/lapis_block"
+    "all": "overdrive:block/accelerator_vacuum_input_port"
   }
 }

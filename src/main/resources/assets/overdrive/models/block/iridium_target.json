@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "overdrive:block/accelerator_casing",
   "textures": {
-    "all": "minecraft:block/target_top"
+    "all": "overdrive:block/iridium_target_front"
   }
 }

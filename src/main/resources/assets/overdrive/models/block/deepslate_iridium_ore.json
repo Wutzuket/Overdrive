@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "minecraft:block/deepslate"
+    "all": "overdrive:block/deepslate_iridium_ore"
   }
 }

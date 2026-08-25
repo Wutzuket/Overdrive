@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/stone_bricks"
+    "all": "overdrive:block/pump_casing"
   }
 }

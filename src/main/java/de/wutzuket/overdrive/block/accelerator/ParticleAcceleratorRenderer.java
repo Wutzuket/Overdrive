@@ -56,8 +56,8 @@ public class ParticleAcceleratorRenderer implements BlockEntityRenderer<Particle
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                double dx = x - cx + 0.5;
-                double dz = z - cz + 0.5;
+                double dx = x - cx;
+                double dz = z - cz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
 
                 boolean inRing = dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5;
@@ -120,8 +120,8 @@ public class ParticleAcceleratorRenderer implements BlockEntityRenderer<Particle
             boolean layerComplete = true;
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    double dx = x - cx + 0.5;
-                    double dz = z - cz + 0.5;
+                    double dx = x - cx;
+                    double dz = z - cz;
                     double dist = Math.sqrt(dx * dx + dz * dz);
 
                     boolean inRing = dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5;

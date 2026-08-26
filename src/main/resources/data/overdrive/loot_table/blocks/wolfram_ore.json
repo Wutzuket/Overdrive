@@ -5,16 +5,38 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "overdrive:raw_wolfram",
-          "functions": [
+          "type": "minecraft:alternatives",
+          "children": [
             {
-              "function": "minecraft:apply_bonus",
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:ore_drops"
+              "type": "minecraft:item",
+              "name": "overdrive:wolfram_ore",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": { "min": 1 }
+                      }
+                    ]
+                  }
+                }
+              ]
             },
             {
-              "function": "minecraft:explosion_decay"
+              "type": "minecraft:item",
+              "name": "overdrive:raw_wolfram",
+              "functions": [
+                {
+                  "function": "minecraft:apply_bonus",
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:ore_drops"
+                },
+                {
+                  "function": "minecraft:explosion_decay"
+                }
+              ]
             }
           ]
         }

@@ -64,12 +64,12 @@ public class PositronExtractionRecipeCategory implements IRecipeCategory<Positro
             builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 15)
                     .addFluidStack(output.getFluid(), output.getAmount())
                     .setFluidRenderer(capacity, false, 16, 48);
-        }
-
         if (!recipe.outputCell().isEmpty()) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 145, 30)
                     .addItemStack(recipe.outputCell());
         }
+    }
+
     }
 
     @Override

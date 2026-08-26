@@ -4,7 +4,6 @@
   "energy_cost": 100,
   "process_time": 20,
   "results": [
-    { "id": "overdrive:decelerated_antiprotons", "amount": 10 },
-    { "id": "overdrive:filled_antiproton_cell", "count": 1 }
+    { "id": "overdrive:decelerated_antiprotons", "amount": 10 }
   ]
 }

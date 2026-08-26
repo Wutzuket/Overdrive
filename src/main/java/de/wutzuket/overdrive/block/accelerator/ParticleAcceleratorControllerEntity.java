@@ -214,7 +214,7 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                double dist = Math.sqrt((x - cx + 0.5) * (x - cx + 0.5) + (z - cz + 0.5) * (z - cz + 0.5));
+                double dist = Math.sqrt((x - cx) * (x - cx) + (z - cz) * (z - cz));
                 if (dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5) {
                     BlockPos checkPos = new BlockPos(x, pos.getY(), z);
                     BlockState checkState = level.getBlockState(checkPos);
@@ -249,7 +249,7 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                double dist = Math.sqrt((x - cx + 0.5) * (x - cx + 0.5) + (z - cz + 0.5) * (z - cz + 0.5));
+                double dist = Math.sqrt((x - cx) * (x - cx) + (z - cz) * (z - cz));
                 if (dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5) {
                     BlockPos checkPos = new BlockPos(x, pos.getY(), z);
                     BlockState checkState = level.getBlockState(checkPos);
@@ -311,8 +311,8 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                double dx = x - cx + 0.5;
-                double dz = z - cz + 0.5;
+                double dx = x - cx;
+                double dz = z - cz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
 
                 boolean inRing = dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5;
@@ -378,8 +378,8 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                double dx = x - cx + 0.5;
-                double dz = z - cz + 0.5;
+                double dx = x - cx;
+                double dz = z - cz;
                 double dist = Math.sqrt(dx * dx + dz * dz);
 
                 boolean inRing = dist >= OUTER_RADIUS - 3.5 && dist <= OUTER_RADIUS + 0.5;

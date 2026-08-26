@@ -1,6 +1,6 @@
 {
   "variants": {
-    "facing=north": { "model": "overdrive:block/electron_gun", "y": 0 },
+    "facing=north": { "model": "overdrive:block/electron_gun" },
     "facing=east": { "model": "overdrive:block/electron_gun", "y": 90 },
     "facing=south": { "model": "overdrive:block/electron_gun", "y": 180 },
     "facing=west": { "model": "overdrive:block/electron_gun", "y": 270 }

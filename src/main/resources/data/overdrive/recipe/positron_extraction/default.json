@@ -4,7 +4,6 @@
   "energy_cost": 50000,
   "process_time": 300,
   "results": [
-    { "id": "overdrive:positrons", "amount": 50 },
-    { "id": "overdrive:filled_positron_cell", "count": 1 }
+    { "id": "overdrive:positrons", "amount": 50 }
   ]
 }

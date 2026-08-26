@@ -19,6 +19,7 @@ public class ODCreativeTab {
             .icon(() -> new ItemStack(ODItems.SCANNER_ITEM.get()))
             .displayItems((parameters, output) -> {
                 output.accept(ODItems.SCANNER_ITEM.get());
+                output.accept(ODItems.WRENCH.get());
                 output.accept(ODItems.ALUMINUM_ORE.get());
                 output.accept(ODItems.DEEPSLATE_ALUMINUM_ORE.get());
                 output.accept(ODItems.RAW_ALUMINUM.get());

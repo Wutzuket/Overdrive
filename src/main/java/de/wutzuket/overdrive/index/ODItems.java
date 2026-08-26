@@ -1,6 +1,7 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.item.WrenchItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -14,6 +15,9 @@ public class ODItems {
 
     public static final Supplier<Item> SCANNER_ITEM = ITEMS.register("scanner",
             () -> new BlockItem(ODBlocks.SCANNER_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> WRENCH = ITEMS.register("wrench",
+            () -> new WrenchItem(new Item.Properties().stacksTo(1)));
 
     public static final Supplier<Item> ALUMINUM_ORE = ITEMS.register("aluminum_ore",
             () -> new BlockItem(ODBlocks.ALUMINUM_ORE.get(), new Item.Properties()));

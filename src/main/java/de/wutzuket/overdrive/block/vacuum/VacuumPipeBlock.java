@@ -89,12 +89,29 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
         return getConnectionState(level, pos, state);
     }
 
-    private BlockState getConnectionState(BlockGetter level, BlockPos pos, BlockState state) {
+    public boolean toggleConnection(Level level, BlockPos pos, Direction direction) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (!(be instanceof VacuumPipeBlockEntity pipe)) {
+            return false;
+        }
+
+        pipe.toggleSide(direction);
+        level.setBlockAndUpdate(pos, getConnectionState(level, pos, level.getBlockState(pos)));
+        return true;
+    }
+
+    public BlockState getConnectionState(BlockGetter level, BlockPos pos, BlockState state) {
+        VacuumPipeBlockEntity pipe = null;
+        if (level.getBlockEntity(pos) instanceof VacuumPipeBlockEntity existing) {
+            pipe = existing;
+        }
+
         for (Map.Entry<Direction, BooleanProperty> entry : PROPERTY_MAP.entrySet()) {
             Direction dir = entry.getKey();
             BlockPos neighborPos = pos.relative(dir);
             BlockState neighborState = level.getBlockState(neighborPos);
-            state = state.setValue(entry.getValue(), isConnectable(neighborState));
+            boolean enabled = pipe == null || pipe.isSideEnabled(dir);
+            state = state.setValue(entry.getValue(), enabled && isConnectable(neighborState));
         }
         return state;
     }

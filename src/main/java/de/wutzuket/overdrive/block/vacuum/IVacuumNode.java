@@ -8,6 +8,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public interface IVacuumNode {
     float getVacuumLevel();
     void setVacuumLevel(float level);
+    default boolean canConnect(Direction side) {
+        return true;
+    }
 
     static void propagate(BlockEntity self) {
         if (!(self instanceof IVacuumNode node)) return;
@@ -19,7 +22,9 @@ public interface IVacuumNode {
         int count = 1;
         for (Direction dir : Direction.values()) {
             BlockEntity be = level.getBlockEntity(pos.relative(dir));
-            if (be instanceof IVacuumNode neighbor && be != self) {
+            if (be instanceof IVacuumNode neighbor && be != self
+                    && node.canConnect(dir)
+                    && neighbor.canConnect(dir.getOpposite())) {
                 sum += neighbor.getVacuumLevel();
                 count++;
             }

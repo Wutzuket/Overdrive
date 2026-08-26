@@ -69,9 +69,6 @@ public class ODItems {
     public static final Supplier<Item> WOLFRAM_INGOT = ITEMS.register("wolfram_ingot",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> WOLFRAM_NUGGET = ITEMS.register("wolfram_nugget",
-            () -> new Item(new Item.Properties()));
-
     public static final Supplier<Item> VACUUM_PUMP = ITEMS.register("vacuum_pump",
             () -> new BlockItem(ODBlocks.VACUUM_PUMP.get(), new Item.Properties()));
 
@@ -146,18 +143,6 @@ public class ODItems {
     // Items
     public static final Supplier<Item> WOLFRAM_MESH = ITEMS.register("wolfram_mesh",
             () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
-
-    public static final Supplier<Item> EMPTY_ANTIPROTON_CELL = ITEMS.register("empty_antiproton_cell",
-            () -> new Item(new Item.Properties().stacksTo(16)));
-
-    public static final Supplier<Item> FILLED_ANTIPROTON_CELL = ITEMS.register("filled_antiproton_cell",
-            () -> new Item(new Item.Properties().stacksTo(16).component(ODDataComponents.ANTIPROTON_AMOUNT.get(), 0)));
-
-    public static final Supplier<Item> EMPTY_POSITRON_CELL = ITEMS.register("empty_positron_cell",
-            () -> new Item(new Item.Properties().stacksTo(16)));
-
-    public static final Supplier<Item> FILLED_POSITRON_CELL = ITEMS.register("filled_positron_cell",
-            () -> new Item(new Item.Properties().stacksTo(16).component(ODDataComponents.POSITRON_AMOUNT.get(), 0)));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

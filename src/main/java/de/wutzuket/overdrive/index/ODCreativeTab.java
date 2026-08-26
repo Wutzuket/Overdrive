@@ -35,7 +35,6 @@ public class ODCreativeTab {
                 output.accept(ODItems.DEEPSLATE_WOLFRAM_ORE.get());
                 output.accept(ODItems.RAW_WOLFRAM.get());
                 output.accept(ODItems.WOLFRAM_INGOT.get());
-                output.accept(ODItems.WOLFRAM_NUGGET.get());
                 output.accept(ODItems.WOLFRAM_BLOCK.get());
                 output.accept(ODItems.VACUUM_PUMP.get());
                 output.accept(ODItems.PUMP_CASING.get());
@@ -69,10 +68,6 @@ public class ODCreativeTab {
                 output.accept(ODItems.WOLFRAM_TARGET.get());
                 output.accept(ODItems.POSITRON_VACUUM_OUTPUT_PORT.get());
                 output.accept(ODItems.WOLFRAM_MESH.get());
-                output.accept(ODItems.EMPTY_ANTIPROTON_CELL.get());
-                output.accept(ODItems.FILLED_ANTIPROTON_CELL.get());
-                output.accept(ODItems.EMPTY_POSITRON_CELL.get());
-                output.accept(ODItems.FILLED_POSITRON_CELL.get());
             })
             .build());
 

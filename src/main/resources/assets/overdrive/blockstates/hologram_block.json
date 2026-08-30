@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "overdrive:block/hologram_block"
+    }
+  }
+}

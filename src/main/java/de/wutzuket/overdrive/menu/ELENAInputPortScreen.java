@@ -134,7 +134,7 @@ public class ELENAInputPortScreen extends AbstractContainerScreen<ELENAInputPort
             if (menu.getFluidAmount() > 0) {
                 lines.add(getFluidStack().getHoverName());
             } else {
-                lines.add(Component.literal("Empty"));
+                lines.add(Component.translatable("container.overdrive.elena_input_port.empty"));
             }
             lines.add(Component.literal(menu.getFluidAmount() + " / " + menu.getFluidCapacity() + " mB"));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);

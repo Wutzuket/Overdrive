@@ -29,6 +29,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEntity;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorRenderer;
+import de.wutzuket.overdrive.block.hologram.HologramBlockRenderer;
 import de.wutzuket.overdrive.block.scanner.scanner_renderer;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
 import de.wutzuket.overdrive.block.vacuum.VacuumPumpRenderer;
@@ -49,6 +50,7 @@ import de.wutzuket.overdrive.menu.ADInputPortScreen;
 import de.wutzuket.overdrive.menu.ADOutputPortScreen;
 import de.wutzuket.overdrive.menu.ADControllerScreen;
 import de.wutzuket.overdrive.menu.ELENAControllerScreen;
+import de.wutzuket.overdrive.menu.HologramScreen;
 import de.wutzuket.overdrive.menu.IridiumTargetScreen;
 import de.wutzuket.overdrive.menu.VacuumPumpScreen;
 import de.wutzuket.overdrive.menu.WolframTargetScreen;
@@ -92,6 +94,21 @@ public class Overdrive {
                     de.wutzuket.overdrive.network.ToggleHologramPayload.TYPE,
                     de.wutzuket.overdrive.network.ToggleHologramPayload.STREAM_CODEC,
                     de.wutzuket.overdrive.network.ServerPayloadHandler::handleToggleHologram
+            );
+registrar.playToServer(
+                    de.wutzuket.overdrive.network.HologramMenuUpdatePayload.TYPE,
+                    de.wutzuket.overdrive.network.HologramMenuUpdatePayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleHologramMenuUpdate
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.HologramCreateFilePayload.TYPE,
+                    de.wutzuket.overdrive.network.HologramCreateFilePayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleHologramCreateFile
+            );
+            registrar.playToClient(
+                    de.wutzuket.overdrive.network.HologramMenuStatePayload.TYPE,
+                    de.wutzuket.overdrive.network.HologramMenuStatePayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ClientPayloadHandler::handleHologramMenuState
             );
         });
 
@@ -259,6 +276,7 @@ public class Overdrive {
             event.registerBlockEntityRenderer(ODBlockEntities.AD_CONTROLLER.get(), de.wutzuket.overdrive.block.ad.ADRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ELENA_CONTROLLER.get(), de.wutzuket.overdrive.block.elena.ELENARenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ELECTRON_GUN.get(), de.wutzuket.overdrive.block.wolfram.WolframTargetRenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.HOLOGRAM_BLOCK_ENTITY.get(), HologramBlockRenderer::new);
         }
 
         @SubscribeEvent
@@ -276,6 +294,7 @@ public class Overdrive {
             event.register(ODMenuTypes.WOLFRAM_TARGET_MENU.get(), WolframTargetScreen::new);
             event.register(ODMenuTypes.ELECTRON_GUN_MENU.get(), de.wutzuket.overdrive.menu.ElectronGunScreen::new);
             event.register(ODMenuTypes.POSITRON_VACUUM_OUTPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.PositronVacuumOutputPortScreen::new);
+            event.register(ODMenuTypes.HOLOGRAM_MENU.get(), HologramScreen::new);
         }
 
         @SubscribeEvent

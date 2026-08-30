@@ -7,6 +7,7 @@ import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
 import de.wutzuket.overdrive.block.accelerator.AcceleratorOutputBlock;
 import de.wutzuket.overdrive.block.accelerator.IridiumTargetBlock;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerBlock;
+import de.wutzuket.overdrive.block.hologram.HologramBlock;
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlock;
 import de.wutzuket.overdrive.block.scanner.scanner_block;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlock;
@@ -28,6 +29,12 @@ public class ODBlocks {
 
     public static final Supplier<Block> SCANNER_BLOCK = BLOCKS.register("scanner",
             () -> new scanner_block(BlockBehaviour.Properties.of().strength(2.0F)));
+
+    public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_block",
+            () -> new HologramBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()));
 
     public static final Supplier<Block> ALUMINUM_ORE = BLOCKS.register("aluminum_ore",
             () -> new Block(BlockBehaviour.Properties.of()

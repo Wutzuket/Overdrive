@@ -48,6 +48,7 @@ public class ODCreativeTab {
                 output.accept(ODItems.PARTICLE_ACCELERATOR_CONTROLLER.get());
                 output.accept(ODItems.IRIDIUM_TARGET.get());
                 output.accept(ODItems.ACCELERATOR_OUTPUT.get());
+                output.accept(ODItems.HOLOGRAM_BLOCK.get());
                 output.accept(ODItemsFluid.ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.DECELERATED_ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.COOLED_ANTIPROTONS_BUCKET.get());

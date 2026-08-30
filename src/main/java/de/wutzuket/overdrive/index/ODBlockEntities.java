@@ -7,6 +7,7 @@ import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortEntity;
 import de.wutzuket.overdrive.block.accelerator.IridiumTargetEntity;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEntity;
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlockEntity;
+import de.wutzuket.overdrive.block.hologram.HologramBlockEntity;
 import de.wutzuket.overdrive.block.scanner.scanner_blockentity;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlockEntity;
 import de.wutzuket.overdrive.block.vacuum.VacuumOutputPortBlockEntity;
@@ -25,6 +26,12 @@ public class ODBlockEntities {
             BLOCK_ENTITY_TYPES.register(
                     "scanner",
                     () -> BlockEntityType.Builder.of(scanner_blockentity::new, ODBlocks.SCANNER_BLOCK.get()).build(null)
+            );
+
+    public static final java.util.function.Supplier<BlockEntityType<HologramBlockEntity>> HOLOGRAM_BLOCK_ENTITY =
+            BLOCK_ENTITY_TYPES.register(
+                    "hologram_block",
+                    () -> BlockEntityType.Builder.of(HologramBlockEntity::new, ODBlocks.HOLOGRAM_BLOCK.get()).build(null)
             );
 
     public static final java.util.function.Supplier<BlockEntityType<CreativeEnergyCubeBlockEntity>> CREATIVE_ENERGY_CUBE_BLOCK_ENTITY =

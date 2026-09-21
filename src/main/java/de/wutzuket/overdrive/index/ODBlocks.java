@@ -30,8 +30,14 @@ public class ODBlocks {
     public static final Supplier<Block> SCANNER_BLOCK = BLOCKS.register("scanner",
             () -> new scanner_block(BlockBehaviour.Properties.of().strength(2.0F)));
 
-    public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_block",
+public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_block",
             () -> new HologramBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()));
+
+    public static final Supplier<Block> ADVANCED_HOLOGRAM_BLOCK = BLOCKS.register("advanced_hologram_block",
+            () -> new de.wutzuket.overdrive.block.advanced_hologram.AdvancedHologramBlock(BlockBehaviour.Properties.of()
                     .strength(2.0F)
                     .sound(SoundType.GLASS)
                     .noOcclusion()));

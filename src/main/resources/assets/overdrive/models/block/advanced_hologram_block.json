@@ -1,0 +1,59 @@
+{
+  "textures": {
+    "particle": "minecraft:block/obsidian",
+    "base": "minecraft:block/obsidian",
+    "shaft": "minecraft:block/iron_block",
+    "emitter": "minecraft:block/sea_lantern",
+    "lens": "minecraft:block/magenta_stained_glass"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 3, 14],
+      "faces": {
+        "north": { "uv": [2, 3, 14, 6], "texture": "#base" },
+        "south": { "uv": [2, 3, 14, 6], "texture": "#base" },
+        "west": { "uv": [2, 3, 14, 6], "texture": "#base" },
+        "east": { "uv": [2, 3, 14, 6], "texture": "#base" },
+        "up": { "uv": [2, 2, 14, 14], "texture": "#base" },
+        "down": { "uv": [2, 2, 14, 14], "texture": "#base" }
+      }
+    },
+    {
+      "from": [6, 3, 6],
+      "to": [10, 12, 10],
+      "faces": {
+        "north": { "uv": [6, 3, 10, 12], "texture": "#shaft" },
+        "south": { "uv": [6, 3, 10, 12], "texture": "#shaft" },
+        "west": { "uv": [6, 3, 10, 12], "texture": "#shaft" },
+        "east": { "uv": [6, 3, 10, 12], "texture": "#shaft" },
+        "up": { "uv": [6, 6, 10, 10], "texture": "#shaft" },
+        "down": { "uv": [6, 6, 10, 10], "texture": "#shaft" }
+      }
+    },
+    {
+      "from": [4, 12, 4],
+      "to": [12, 15, 12],
+      "faces": {
+        "north": { "uv": [4, 12, 12, 15], "texture": "#emitter" },
+        "south": { "uv": [4, 12, 12, 15], "texture": "#emitter" },
+        "west": { "uv": [4, 12, 12, 15], "texture": "#emitter" },
+        "east": { "uv": [4, 12, 12, 15], "texture": "#emitter" },
+        "up": { "uv": [4, 4, 12, 12], "texture": "#emitter" },
+        "down": { "uv": [4, 4, 12, 12], "texture": "#emitter" }
+      }
+    },
+    {
+      "from": [6, 15, 6],
+      "to": [10, 16, 10],
+      "faces": {
+        "north": { "uv": [6, 15, 10, 16], "texture": "#lens" },
+        "south": { "uv": [6, 15, 10, 16], "texture": "#lens" },
+        "west": { "uv": [6, 15, 10, 16], "texture": "#lens" },
+        "east": { "uv": [6, 15, 10, 16], "texture": "#lens" },
+        "up": { "uv": [6, 6, 10, 10], "texture": "#lens" },
+        "down": { "uv": [6, 6, 10, 10], "texture": "#lens" }
+      }
+    }
+  ]
+}

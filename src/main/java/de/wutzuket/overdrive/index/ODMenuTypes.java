@@ -6,6 +6,7 @@ import de.wutzuket.overdrive.menu.AcceleratorOutputMenu;
 import de.wutzuket.overdrive.menu.ADControllerMenu;
 import de.wutzuket.overdrive.menu.ADInputPortMenu;
 import de.wutzuket.overdrive.menu.ADOutputPortMenu;
+import de.wutzuket.overdrive.menu.AdvancedHologramMenu;
 import de.wutzuket.overdrive.menu.HologramMenu;
 import de.wutzuket.overdrive.menu.ELENAControllerMenu;
 import de.wutzuket.overdrive.menu.IridiumTargetMenu;
@@ -34,8 +35,11 @@ public class ODMenuTypes {
     public static final Supplier<MenuType<AcceleratorOutputMenu>> ACCELERATOR_OUTPUT_MENU =
             MENUS.register("accelerator_output", () -> IMenuTypeExtension.create(AcceleratorOutputMenu::new));
 
-    public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
+public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
             MENUS.register("hologram_block", () -> IMenuTypeExtension.create(HologramMenu::new));
+
+    public static final Supplier<MenuType<AdvancedHologramMenu>> ADVANCED_HOLOGRAM_MENU =
+            MENUS.register("advanced_hologram", () -> IMenuTypeExtension.create(AdvancedHologramMenu::new));
 
 
 

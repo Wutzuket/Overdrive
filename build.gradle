@@ -107,6 +107,16 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
+    // Lua scripting for the Advanced Hologram Block
+    implementation 'org.luaj:luaj-jse:3.0.1'
+    jarJar('org.luaj:luaj-jse:3.0.1') {
+        version {
+            strictly '[3.0.1]'
+            prefer '3.0.1'
+        }
+    }
+    additionalRuntimeClasspath 'org.luaj:luaj-jse:3.0.1'
+
     // JEI API is used at compile time, the full mod is loaded at runtime.
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

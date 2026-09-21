@@ -29,6 +29,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEntity;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorRenderer;
+import de.wutzuket.overdrive.block.advanced_hologram.AdvancedHologramBlockRenderer;
 import de.wutzuket.overdrive.block.hologram.HologramBlockRenderer;
 import de.wutzuket.overdrive.block.scanner.scanner_renderer;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
@@ -49,6 +50,7 @@ import de.wutzuket.overdrive.menu.AcceleratorOutputScreen;
 import de.wutzuket.overdrive.menu.ADInputPortScreen;
 import de.wutzuket.overdrive.menu.ADOutputPortScreen;
 import de.wutzuket.overdrive.menu.ADControllerScreen;
+import de.wutzuket.overdrive.menu.AdvancedHologramScreen;
 import de.wutzuket.overdrive.menu.ELENAControllerScreen;
 import de.wutzuket.overdrive.menu.HologramScreen;
 import de.wutzuket.overdrive.menu.IridiumTargetScreen;
@@ -105,10 +107,50 @@ registrar.playToServer(
                     de.wutzuket.overdrive.network.HologramCreateFilePayload.STREAM_CODEC,
                     de.wutzuket.overdrive.network.ServerPayloadHandler::handleHologramCreateFile
             );
-            registrar.playToClient(
+registrar.playToClient(
                     de.wutzuket.overdrive.network.HologramMenuStatePayload.TYPE,
                     de.wutzuket.overdrive.network.HologramMenuStatePayload.STREAM_CODEC,
                     de.wutzuket.overdrive.network.ClientPayloadHandler::handleHologramMenuState
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramScriptPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramScriptPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramScript
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramRunPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramRunPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramRun
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramConsoleInputPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramConsoleInputPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramConsoleInput
+            );
+            registrar.playToClient(
+                    de.wutzuket.overdrive.network.AdvancedHologramMenuStatePayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramMenuStatePayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ClientPayloadHandler::handleAdvancedHologramMenuState
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramSelectScriptPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramSelectScriptPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramSelectScript
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramSaveScriptPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramSaveScriptPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramSaveScript
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramCreateScriptPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramCreateScriptPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramCreateScript
+            );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.AdvancedHologramDeleteScriptPayload.TYPE,
+                    de.wutzuket.overdrive.network.AdvancedHologramDeleteScriptPayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleAdvancedHologramDeleteScript
             );
         });
 
@@ -277,6 +319,7 @@ registrar.playToServer(
             event.registerBlockEntityRenderer(ODBlockEntities.ELENA_CONTROLLER.get(), de.wutzuket.overdrive.block.elena.ELENARenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ELECTRON_GUN.get(), de.wutzuket.overdrive.block.wolfram.WolframTargetRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.HOLOGRAM_BLOCK_ENTITY.get(), HologramBlockRenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.ADVANCED_HOLOGRAM_BLOCK_ENTITY.get(), AdvancedHologramBlockRenderer::new);
         }
 
         @SubscribeEvent
@@ -295,6 +338,7 @@ registrar.playToServer(
             event.register(ODMenuTypes.ELECTRON_GUN_MENU.get(), de.wutzuket.overdrive.menu.ElectronGunScreen::new);
             event.register(ODMenuTypes.POSITRON_VACUUM_OUTPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.PositronVacuumOutputPortScreen::new);
             event.register(ODMenuTypes.HOLOGRAM_MENU.get(), HologramScreen::new);
+            event.register(ODMenuTypes.ADVANCED_HOLOGRAM_MENU.get(), AdvancedHologramScreen::new);
         }
 
         @SubscribeEvent

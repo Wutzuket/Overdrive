@@ -92,6 +92,7 @@ public class HologramBlockEntity extends BlockEntity implements MenuProvider {
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .filter(name -> name.toLowerCase().endsWith(".json"))
+                    .filter(name -> !name.equals("owners.json"))
                     .sorted(String.CASE_INSENSITIVE_ORDER)
                     .forEach(availableJsonFiles::add);
         } catch (IOException exception) {

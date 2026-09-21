@@ -1,6 +1,7 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.item.AdvancedHologramBlockItem;
 import de.wutzuket.overdrive.item.HologramBlockItem;
 import de.wutzuket.overdrive.item.WrenchItem;
 import net.minecraft.world.item.BlockItem;
@@ -17,8 +18,11 @@ public class ODItems {
     public static final Supplier<Item> SCANNER_ITEM = ITEMS.register("scanner",
             () -> new BlockItem(ODBlocks.SCANNER_BLOCK.get(), new Item.Properties()));
 
-    public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_block",
+public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_block",
             () -> new HologramBlockItem(ODBlocks.HOLOGRAM_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ADVANCED_HOLOGRAM_BLOCK = ITEMS.register("advanced_hologram_block",
+            () -> new AdvancedHologramBlockItem(ODBlocks.ADVANCED_HOLOGRAM_BLOCK.get(), new Item.Properties()));
 
     public static final Supplier<Item> WRENCH = ITEMS.register("wrench",
             () -> new WrenchItem(new Item.Properties().stacksTo(1)));

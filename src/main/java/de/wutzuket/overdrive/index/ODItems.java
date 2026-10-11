@@ -13,10 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class ODItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Overdrive.MODID);
-
-    public static final Supplier<Item> SCANNER_ITEM = ITEMS.register("scanner",
-            () -> new BlockItem(ODBlocks.SCANNER_BLOCK.get(), new Item.Properties()));
+public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Overdrive.MODID);
 
 public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_block",
             () -> new HologramBlockItem(ODBlocks.HOLOGRAM_BLOCK.get(), new Item.Properties()));
@@ -155,6 +152,28 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
     // Items
     public static final Supplier<Item> WOLFRAM_MESH = ITEMS.register("wolfram_mesh",
             () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
+
+    // Step 4 - Magnetic Cells
+    public static final Supplier<Item> MAGNETIC_ANTIPROTON_CELL = ITEMS.register("magnetic_antiproton_cell",
+            () -> new de.wutzuket.overdrive.item.MagneticCellItem(new Item.Properties().stacksTo(1), true));
+    public static final Supplier<Item> MAGNETIC_POSITRON_CELL = ITEMS.register("magnetic_positron_cell",
+            () -> new de.wutzuket.overdrive.item.MagneticCellItem(new Item.Properties().stacksTo(1), false));
+
+    // Step 4 - Annihilation
+    public static final Supplier<Item> ANNIHILATION_HEAVY_CASING = ITEMS.register("annihilation_heavy_casing", () -> new BlockItem(ODBlocks.ANNIHILATION_HEAVY_CASING.get(), new Item.Properties()));
+    public static final Supplier<Item> REACTOR_CORE_BLOCK = ITEMS.register("reactor_core_block", () -> new BlockItem(ODBlocks.REACTOR_CORE_BLOCK.get(), new Item.Properties()));
+    public static final Supplier<Item> CORE_CONTAINMENT_GLASS = ITEMS.register("core_containment_glass", () -> new BlockItem(ODBlocks.CORE_CONTAINMENT_GLASS.get(), new Item.Properties()));
+    public static final Supplier<Item> CORIUM_BLOCK = ITEMS.register("corium_block", () -> new BlockItem(ODBlocks.CORIUM_BLOCK.get(), new Item.Properties()));
+    public static final Supplier<Item> ANNIHILATION_CONTROLLER = ITEMS.register("annihilation_controller", () -> new BlockItem(ODBlocks.ANNIHILATION_CONTROLLER.get(), new Item.Properties()));
+    public static final Supplier<Item> ANNIHILATION_VACUUM_PORT = ITEMS.register("annihilation_vacuum_port", () -> new BlockItem(ODBlocks.ANNIHILATION_VACUUM_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> CELL_DOCKING_PORT = ITEMS.register("cell_docking_port", () -> new BlockItem(ODBlocks.CELL_DOCKING_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> COOLANT_INPUT_PORT = ITEMS.register("coolant_input_port", () -> new BlockItem(ODBlocks.COOLANT_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> STEAM_OUTPUT_PORT = ITEMS.register("steam_output_port", () -> new BlockItem(ODBlocks.STEAM_OUTPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> ANNIHILATION_ENERGY_OUTPUT = ITEMS.register("annihilation_energy_output", () -> new BlockItem(ODBlocks.ANNIHILATION_ENERGY_OUTPUT.get(), new Item.Properties()));
+    public static final Supplier<Item> COOLING_TOWER_CASING = ITEMS.register("cooling_tower_casing", () -> new BlockItem(ODBlocks.COOLING_TOWER_CASING.get(), new Item.Properties()));
+    public static final Supplier<Item> COOLING_TOWER_CONTROLLER = ITEMS.register("cooling_tower_controller", () -> new BlockItem(ODBlocks.COOLING_TOWER_CONTROLLER.get(), new Item.Properties()));
+    public static final Supplier<Item> COOLING_TOWER_INPUT_PORT = ITEMS.register("cooling_tower_input_port", () -> new BlockItem(ODBlocks.COOLING_TOWER_INPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> COOLING_TOWER_OUTPUT_PORT = ITEMS.register("cooling_tower_output_port", () -> new BlockItem(ODBlocks.COOLING_TOWER_OUTPUT_PORT.get(), new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

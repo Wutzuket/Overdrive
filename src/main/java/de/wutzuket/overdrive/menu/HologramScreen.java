@@ -1,10 +1,11 @@
 package de.wutzuket.overdrive.menu;
 
+import de.wutzuket.overdrive.client.gui.ButtonHelper;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
 import de.wutzuket.overdrive.network.HologramMenuStatePayload;
 import de.wutzuket.overdrive.network.HologramMenuUpdatePayload;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -92,34 +93,33 @@ public class HologramScreen extends AbstractContainerScreen<HologramMenu> {
             fileScrollIndex = Math.max(0, Math.min(fileScrollIndex, maxScroll));
         }
 
-        addRenderableWidget(Button.builder(Component.literal("^"), button -> {
+        addRenderableWidget(new ButtonHelper(left + 112, top + 24, 16, 14, Component.literal("^"), button -> {
             if (fileScrollIndex > 0) {
                 fileScrollIndex--;
                 rebuildControls();
             }
-        }).bounds(left + 112, top + 24, 16, 14).build());
+        }, GuiStyle.COL_CYAN));
 
-        addRenderableWidget(Button.builder(Component.literal("v"), button -> {
+        addRenderableWidget(new ButtonHelper(left + 112, top + 188, 16, 14, Component.literal("v"), button -> {
             if (fileScrollIndex < maxScroll) {
                 fileScrollIndex++;
                 rebuildControls();
             }
-        }).bounds(left + 112, top + 188, 16, 14).build());
+        }, GuiStyle.COL_CYAN));
 
-        addRenderableWidget(Button.builder(Component.literal("+"), button -> openCreateScreen())
-                .bounds(left + 8, top + 204, 20, 18)
-                .build());
+        addRenderableWidget(new ButtonHelper(left + 8, top + 204, 20, 18, Component.literal("+"),
+                button -> openCreateScreen(), GuiStyle.COL_CYAN));
 
-        addRenderableWidget(Button.builder(Component.translatable("container.overdrive.hologram_block.none_select"), button -> selectNoFile())
-                .bounds(left + 30, top + 204, 40, 18)
-                .build());
+        addRenderableWidget(new ButtonHelper(left + 30, top + 204, 40, 18,
+                Component.translatable("container.overdrive.hologram_block.none_select"),
+                button -> selectNoFile(), GuiStyle.COL_CYAN));
 
         boolean spin = menu.getBlockEntity().getSpin();
-        addRenderableWidget(Button.builder(Component.translatable(spin
+        addRenderableWidget(new ButtonHelper(left + 72, top + 204, 44, 18,
+                Component.translatable(spin
                         ? "container.overdrive.hologram_block.spin_on"
-                        : "container.overdrive.hologram_block.spin_off"), button -> toggleSpin())
-                .bounds(left + 72, top + 204, 44, 18)
-                .build());
+                        : "container.overdrive.hologram_block.spin_off"),
+                button -> toggleSpin(), GuiStyle.COL_CYAN));
 
         int listStart = fileScrollIndex;
         int listEnd = Math.min(files.size(), listStart + FILE_VISIBLE_COUNT);
@@ -131,9 +131,8 @@ public class HologramScreen extends AbstractContainerScreen<HologramMenu> {
             String fileName = files.get(i);
             boolean selected = fileName.equals(menu.getSelectedFile());
             String prefix = selected ? "> " : "  ";
-            addRenderableWidget(Button.builder(Component.literal(prefix + fileName), button -> selectFile(fileName))
-                    .bounds(buttonX, buttonY + (i - listStart) * 20, buttonWidth, buttonHeight)
-                    .build());
+            addRenderableWidget(new ButtonHelper(buttonX, buttonY + (i - listStart) * 20, buttonWidth, buttonHeight,
+                    Component.literal(prefix + fileName), button -> selectFile(fileName), GuiStyle.COL_CYAN));
         }
 
         int sliderX = left + 146;
@@ -255,29 +254,22 @@ public class HologramScreen extends AbstractContainerScreen<HologramMenu> {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        guiGraphics.fill(x, y, x + WIDTH, y + HEIGHT, 0xFFD8D8D8);
-        guiGraphics.fill(x, y, x + WIDTH, y + 1, 0xFFFFFFFF);
-        guiGraphics.fill(x, y, x + 1, y + HEIGHT, 0xFFFFFFFF);
-        guiGraphics.fill(x + WIDTH - 1, y, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
-        guiGraphics.fill(x, y + HEIGHT - 1, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
+        GuiStyle.inset(guiGraphics, x + 140, y + 18, 206, 188);
 
-        guiGraphics.fill(x + 140, y + 18, x + 346, y + 206, 0xFFBDBDBD);
-        guiGraphics.fill(x + 140, y + 18, x + 346, y + 19, 0xFFFFFFFF);
-        guiGraphics.fill(x + 140, y + 18, x + 141, y + 206, 0xFFFFFFFF);
-        guiGraphics.fill(x + 345, y + 18, x + 346, y + 206, 0xFF666666);
-        guiGraphics.fill(x + 140, y + 205, x + 346, y + 206, 0xFF666666);
-
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.files"), x + 8, y + 14, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.transform"), x + 146, y + 14, 0x404040, false);
+        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.files"),
+                x + 8, y + 14, GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.transform"),
+                x + 146, y + 14, GuiStyle.COL_TEXT_DIM, false);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, 8, 6, 0x404040, false);
+        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
         if (menu.getSelectedFile() != null) {
-            guiGraphics.drawString(this.font, Component.literal(menu.getSelectedFile()), 8, 194, 0x404040, false);
+            guiGraphics.drawString(this.font, Component.literal(menu.getSelectedFile()), 8, 194, GuiStyle.COL_CYAN, false);
         } else {
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.none"), 8, 194, 0x404040, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.none"), 8, 194, GuiStyle.COL_TEXT_DIM, false);
         }
     }
 

@@ -1,0 +1,16 @@
+{
+  "type": "overdrive:reactor_cooling",
+  "input": {
+    "id": "overdrive:sodium",
+    "amount": 5
+  },
+  "output": {
+    "id": "overdrive:superheated_sodium",
+    "amount": 5
+  },
+  "mb_per_100k": 5,
+  "cooling_per_mb": 4,
+  "boiling_temp": 100,
+  "steam_per_mb": 1,
+  "max_mb_per_tick": 200
+}

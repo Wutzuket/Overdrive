@@ -1,13 +1,14 @@
 {
   "type": "overdrive:collision",
-  "input_target": {
-    "item": "overdrive:iridium_ingot"
+  "input_fluid": {
+    "id": "overdrive:liquid_iridium",
+    "amount": 1000
   },
-  "energy_cost": 50000,
-  "process_time": 200,
+  "energy_cost": 250000000,
+  "process_time": 1,
   "results": [
     {
-      "amount": 150,
+      "amount": 20000,
       "id": "overdrive:antiprotons"
     }
   ]

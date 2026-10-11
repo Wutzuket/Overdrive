@@ -24,6 +24,13 @@ public class ODRecipeSerializers {
     public static final Supplier<RecipeSerializer<PositronExtractionRecipe>> POSITRON_EXTRACTION_SERIALIZER =
             RECIPE_SERIALIZERS.register("positron_extraction", PositronExtractionRecipeSerializer::new);
 
+    public static final Supplier<RecipeSerializer<AnnihilationRecipe>> ANNIHILATION_SERIALIZER =
+            RECIPE_SERIALIZERS.register("annihilation_generator", AnnihilationRecipeSerializer::new);
+    public static final Supplier<RecipeSerializer<CoolingTowerRecipe>> COOLING_TOWER_SERIALIZER =
+            RECIPE_SERIALIZERS.register("cooling_tower", CoolingTowerRecipeSerializer::new);
+    public static final Supplier<RecipeSerializer<ReactorCoolingRecipe>> REACTOR_COOLING_SERIALIZER =
+            RECIPE_SERIALIZERS.register("reactor_cooling", ReactorCoolingRecipeSerializer::new);
+
     public static void register(IEventBus modEventBus) {
         RECIPE_SERIALIZERS.register(modEventBus);
     }

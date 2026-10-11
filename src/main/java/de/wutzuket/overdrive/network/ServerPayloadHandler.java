@@ -33,6 +33,65 @@ public class ServerPayloadHandler {
                     elena.toggleHologram();
                 } else if (be instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity gun) {
                     gun.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann) {
+                    ann.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerEntity cooling) {
+                    cooling.toggleHologram();
+                }
+            }
+        });
+    }
+    public static void handleAnnihilationToggle(final AnnihilationTogglePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann){
+                    ann.setEnabled(payload.enabled());
+                }
+            }
+        });
+    }
+    public static void handleAcceleratorEnergyRate(final AcceleratorEnergyRatePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof ParticleAcceleratorControllerEntity acc){
+                    acc.setEnergyRate(payload.energyRate());
+                }
+            }
+        });
+    }
+    public static void handleADEnergyRate(final ADEnergyRatePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof de.wutzuket.overdrive.block.ad.ADControllerEntity ad){
+                    ad.setEnergyRate(payload.energyRate());
+                }
+            }
+        });
+    }
+    public static void handleELENAEnergyRate(final ELENAEnergyRatePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof de.wutzuket.overdrive.block.elena.ELENAControllerEntity elena){
+                    elena.setEnergyRate(payload.energyRate());
+                }
+            }
+        });
+    }
+    public static void handleAnnihilationBurnRate(final AnnihilationBurnRatePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann){
+                    ann.setBurnRate(payload.burnRate());
                 }
             }
         });

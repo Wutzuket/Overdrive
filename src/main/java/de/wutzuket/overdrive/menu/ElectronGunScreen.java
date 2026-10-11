@@ -1,11 +1,14 @@
 package de.wutzuket.overdrive.menu;
 
+import de.wutzuket.overdrive.client.gui.ButtonHelper;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
 import de.wutzuket.overdrive.network.ToggleHologramPayload;
+import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
     private static final int BAR_W = 16;
     private static final int BAR_H = 54;
 
-    private Button hologramButton;
+    private ButtonHelper hologramButton;
 
     public ElectronGunScreen(ElectronGunMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -31,13 +34,18 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
         int x = (this.width - WIDTH) / 2;
         int y = (this.height - HEIGHT) / 2;
 
-        this.hologramButton = Button.builder(
-                Component.literal("H"),
-                button -> {
-                    PacketDistributor.sendToServer(new ToggleHologramPayload(menu.getBlockEntity().getBlockPos()));
-                }
-        ).bounds(x + 150, y + 20, 18, 18).build();
+        this.hologramButton = new ButtonHelper(x + WIDTH - 22, y + 6, 16, 16, Component.literal("H"),
+                button -> PacketDistributor.sendToServer(new ToggleHologramPayload(menu.getBlockEntity().getBlockPos())),
+                GuiStyle.COL_CYAN);
         addRenderableWidget(hologramButton);
+    }
+
+    private FluidStack getFluidStack() {
+        var be = menu.getBlockEntity();
+        if (be == null) return FluidStack.EMPTY;
+        FluidStack fluid = be.getFluidTank().getFluid();
+        if (fluid.isEmpty()) return FluidStack.EMPTY;
+        return fluid.copyWithAmount(menu.getFluidAmount());
     }
 
     @Override
@@ -45,63 +53,40 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        guiGraphics.fill(x, y, x + WIDTH, y + HEIGHT, 0xFFC6C6C6);
-        guiGraphics.fill(x, y, x + WIDTH, y + 1, 0xFFFFFFFF);
-        guiGraphics.fill(x, y, x + 1, y + HEIGHT, 0xFFFFFFFF);
-        guiGraphics.fill(x + WIDTH - 1, y, x + WIDTH, y + HEIGHT, 0xFF555555);
-        guiGraphics.fill(x, y + HEIGHT - 1, x + WIDTH, y + HEIGHT, 0xFF555555);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
 
-        renderMekanismBar(guiGraphics, x + 8, y + 16, BAR_W, BAR_H, menu.getEnergyScaled(BAR_H - 2), 0xFFFF3333);
-        renderMekanismBar(guiGraphics, x + 28, y + 16, BAR_W, BAR_H, menu.getVacuumScaled(BAR_H - 2), 0xFF3399FF);
+        float energy = menu.getMaxEnergy() > 0 ? (float) menu.getEnergy() / menu.getMaxEnergy() : 0.0f;
+        GuiStyle.metricGauge(guiGraphics, font, x + 8, y + 16, BAR_W, BAR_H, energy,
+                GuiStyle.COL_GREEN, null);
+        GuiStyle.metricGauge(guiGraphics, font, x + 28, y + 16, BAR_W, BAR_H,
+                menu.getVacuumScaled(BAR_H - 2) / (float) (BAR_H - 2), GuiStyle.COL_CYAN, null);
+        GuiStyle.fluidGauge(guiGraphics, font, getFluidStack(), menu.getFluidCapacity(),
+                x + 48, y + 16, BAR_W, BAR_H, null);
 
-        int px = x + 48, py = y + 36, pw = 80, ph = 10;
+        GuiStyle.hBar(guiGraphics, x + 70, y + 34, 96, 10,
+                menu.getProgressScaled(94) / 94.0, GuiStyle.COL_CYAN);
 
-        guiGraphics.fill(px, py, px + pw, py + ph, 0xFF2D2D2D);
-        guiGraphics.fill(px + 1, py + 1, px + pw, py + ph, 0xFF707070);
-        guiGraphics.fill(px + 1, py + 1, px + pw - 1, py + ph - 1, 0xFF141414);
-
-        int progressW = menu.getProgressScaled(pw - 2);
-        if (progressW > 0) {
-            progressW = Math.min(progressW, pw - 2);
-            guiGraphics.fill(px + 1, py + 1, px + 1 + progressW, py + ph - 1, 0xFF00E5FF);
-            guiGraphics.fill(px + 1, py + 1, px + 1 + progressW, py + 2, 0x66FFFFFF);
-        }
-    }
-
-    private void renderMekanismBar(GuiGraphics guiGraphics, int bx, int by, int w, int h, int fillHeight, int color) {
-        guiGraphics.fill(bx, by, bx + w, by + h, 0xFF2D2D2D);
-        guiGraphics.fill(bx + 1, by + 1, bx + w, by + h, 0xFF707070);
-        guiGraphics.fill(bx + 1, by + 1, bx + w - 1, by + h - 1, 0xFF141414);
-
-        if (fillHeight > 0) {
-            int innerX = bx + 1;
-            int innerY = by + 1;
-            int innerW = w - 2;
-            int maxInnerH = h - 2;
-
-            int top = innerY + maxInnerH - fillHeight;
-            guiGraphics.fill(innerX, top, innerX + innerW, innerY + maxInnerH, color);
-            guiGraphics.fill(innerX, top, innerX + innerW, top + 1, 0x66FFFFFF);
+        if (menu.isActive()) {
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.running"),
+                    70, 50, GuiStyle.COL_GREEN, false);
+        } else {
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.idle"),
+                    70, 50, GuiStyle.COL_YELLOW, false);
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, 8, 6, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.energy"), 8, 74, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.vacuum"), 8, 84, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.usage", 3000), 8, 94, 0x404040, false);
-
-        Component statusText;
-        int statusColor;
-        if (menu.isActive()) {
-            statusText = Component.translatable("container.overdrive.electron_gun.running");
-            statusColor = 0x22C55E;
-        } else {
-            statusText = Component.translatable("container.overdrive.electron_gun.idle");
-            statusColor = 0xEAB308;
-        }
-        guiGraphics.drawString(this.font, statusText, 48, 24, statusColor, false);
+        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
+        GuiStyle.kv(guiGraphics, font,
+                Component.translatable("container.overdrive.electron_gun.energy"),
+                ODFormat.formatEnergyPair(menu.getEnergy(), menu.getMaxEnergy()), 8, 74, GuiStyle.COL_GREEN);
+        GuiStyle.kv(guiGraphics, font,
+                Component.translatable("container.overdrive.electron_gun.vacuum"),
+                (menu.getVacuumLevel() / 10) + "." + (menu.getVacuumLevel() % 10) + " %", 8, 84, GuiStyle.COL_CYAN);
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.electron_gun.usage", 3000),
+                8, 94, GuiStyle.COL_TEXT, false);
     }
 
     @Override
@@ -117,11 +102,17 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
 
         if (mouseX >= x + 8 && mouseX <= x + 24 && mouseY >= y + 16 && mouseY <= y + 70) {
             List<Component> lines = new ArrayList<>();
-            lines.add(Component.literal(menu.getEnergy() + " / " + menu.getMaxEnergy() + " FE"));
+            lines.add(Component.literal(ODFormat.formatEnergyPair(menu.getEnergy(), menu.getMaxEnergy())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else if (mouseX >= x + 28 && mouseX <= x + 44 && mouseY >= y + 16 && mouseY <= y + 70) {
             List<Component> lines = new ArrayList<>();
             lines.add(Component.literal((menu.getVacuumLevel() / 10) + "." + (menu.getVacuumLevel() % 10) + " %"));
+            guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
+        } else if (mouseX >= x + 48 && mouseX <= x + 64 && mouseY >= y + 16 && mouseY <= y + 70) {
+            List<Component> lines = new ArrayList<>();
+            FluidStack fluid = getFluidStack();
+            lines.add(fluid.isEmpty() ? Component.literal("Empty") : fluid.getHoverName());
+            lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else {
             super.renderTooltip(guiGraphics, mouseX, mouseY);

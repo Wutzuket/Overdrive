@@ -1,15 +1,11 @@
 package de.wutzuket.overdrive.menu;
 
-import de.wutzuket.overdrive.integration.jei.scanner_jei_plugin;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.runtime.IIngredientManager;
-import mezz.jei.api.runtime.IJeiRuntime;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
+import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -17,26 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AcceleratorOutputScreen extends AbstractContainerScreen<AcceleratorOutputMenu> {
-    // Standard-Textur für das korrekte Spielerinventar unten
-    private static final ResourceLocation CONTAINER_BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/dispenser.png");
-
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
-
-    private static final int FLUID_BAR_X = 18; // Leicht nach rechts verschoben für ein besseres Alignment
+    private static final int FLUID_BAR_X = 18;
     private static final int FLUID_BAR_Y = 17;
     private static final int FLUID_BAR_W = 18;
     private static final int FLUID_BAR_H = 54;
 
-    private static final int SLOT_X = 134;
-    private static final int SLOT_Y = 35;
+    private double lastMouseX;
+    private double lastMouseY;
 
     public AcceleratorOutputScreen(AcceleratorOutputMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
-        this.inventoryLabelY = this.imageHeight - 94; // Richtige Position für "Inventar"-Schriftzug
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     private FluidStack getFluidStack() {
@@ -50,60 +41,28 @@ public class AcceleratorOutputScreen extends AbstractContainerScreen<Accelerator
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        // 1. Standard-Hintergrund zeichnen (Inventar unten + graue Grundfläche oben)
-        guiGraphics.blit(CONTAINER_BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
-
-        // 2. Den oberen Bereich komplett glätten/grau übermalen
-        guiGraphics.fill(x + 6, y + 16, x + 170, y + 72, 0xFFC6C6C6);
-
-        // 3. FLUID-TANK (Mekanism-Style mit dunkleren, moderneren Farben)
-        int bx = x + FLUID_BAR_X;
-        int by = y + FLUID_BAR_Y;
-
-        // Äußerer Rahmen (Dunkles Anthrazit)
-        guiGraphics.fill(bx, by, bx + FLUID_BAR_W, by + FLUID_BAR_H, 0xFF2D2D2D);
-        // Innerer Schatten/Rahmen (Mittelgrau für 3D-Effekt)
-        guiGraphics.fill(bx + 1, by + 1, bx + FLUID_BAR_W, by + FLUID_BAR_H, 0xFF707070);
-        // Das eigentliche Tank-Innere (Sehr dunkles, fast schwarzes Grau – perfekt für Kontrast)
-        guiGraphics.fill(bx + 1, by + 1, bx + FLUID_BAR_W - 1, by + FLUID_BAR_H - 1, 0xFF141414);
-
-        // Flüssigkeit im Tank rendern
-        FluidStack fluidStack = getFluidStack();
-        int fluidAmount = fluidStack.getAmount();
-        int fluidCapacity = menu.getFluidCapacity();
-
-        int maxInnerH = FLUID_BAR_H - 2;
-        int fillHeight = fluidCapacity > 0 ? (int) ((long) fluidAmount * maxInnerH / fluidCapacity) : 0;
-
-        if (fillHeight > 0) {
-            int innerX = bx + 1;
-            int innerY = by + 1;
-            int innerW = FLUID_BAR_W - 2;
-
-            int fluidTop = innerY + maxInnerH - fillHeight;
-            int color = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
-
-            // Flüssigkeit zeichnen
-            guiGraphics.fill(innerX, fluidTop, innerX + innerW, innerY + maxInnerH, color);
-            // Klares, helles Highlight an der Oberfläche
-            guiGraphics.fill(innerX, fluidTop, innerX + innerW, fluidTop + 1, 0x66FFFFFF);
-        }
-
-        // 4. Einzelnen Standard-Slot für das Item rechts zeichnen
-        guiGraphics.blit(CONTAINER_BACKGROUND, x + SLOT_X - 1, y + SLOT_Y - 1, 61, 17, 18, 18);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
+        GuiStyle.inset(guiGraphics, x + 6, y + 80, 164, 82);
+        GuiStyle.fluidGauge(guiGraphics, font, getFluidStack(), menu.getFluidCapacity(),
+                x + FLUID_BAR_X, y + FLUID_BAR_Y, FLUID_BAR_W, FLUID_BAR_H, null);
+        GuiStyle.slotFrames(guiGraphics, menu, x, y);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        // Titel oben links
-        guiGraphics.drawString(this.font, this.title, 8, 6, 0x404040, false);
-
-        // Standard "Inventar" Text unten
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0x404040, false);
+        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
+        FluidStack stack = getFluidStack();
+        if (stack.isEmpty()) {
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.accelerator_output.empty"),
+                    40, 20, GuiStyle.COL_TEXT_DIM, false);
+        } else {
+            guiGraphics.drawString(this.font, stack.getHoverName(), 40, 20, GuiStyle.COL_TEXT, false);
+        }
+        guiGraphics.drawString(this.font, ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity()),
+                40, 30, GuiStyle.COL_CYAN, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY,
+                GuiStyle.COL_TEXT_DIM, false);
     }
-
-    private double lastMouseX;
-    private double lastMouseY;
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -115,31 +74,7 @@ public class AcceleratorOutputScreen extends AbstractContainerScreen<Accelerator
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_R && menu.getFluidAmount() > 0) {
-            int x = (this.width - WIDTH) / 2;
-            int y = (this.height - HEIGHT) / 2;
-
-            if (lastMouseX >= x + FLUID_BAR_X && lastMouseX <= x + FLUID_BAR_X + FLUID_BAR_W &&
-                    lastMouseY >= y + FLUID_BAR_Y && lastMouseY <= y + FLUID_BAR_Y + FLUID_BAR_H) {
-                openJeiForFluid();
-                return true;
-            }
-        }
         return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    private void openJeiForFluid() {
-        FluidStack tankFluid = menu.getBlockEntity().getFluidTank().getFluid();
-        IJeiRuntime jeiRuntime = scanner_jei_plugin.getRuntime();
-        if (jeiRuntime != null && !tankFluid.isEmpty()) {
-            IIngredientManager manager = jeiRuntime.getIngredientManager();
-            manager.getIngredientTypeChecked(FluidStack.class).ifPresent(fluidType -> {
-                jeiRuntime.getRecipesGui().show(
-                        jeiRuntime.getJeiHelpers().getFocusFactory()
-                                .createFocus(RecipeIngredientRole.OUTPUT, fluidType, tankFluid.copyWithAmount(1))
-                );
-            });
-        }
     }
 
     @Override
@@ -147,16 +82,15 @@ public class AcceleratorOutputScreen extends AbstractContainerScreen<Accelerator
         int x = (this.width - WIDTH) / 2;
         int y = (this.height - HEIGHT) / 2;
 
-        // Tooltip für die Flüssigkeitsanzeige
-        if (mouseX >= x + FLUID_BAR_X && mouseX <= x + FLUID_BAR_X + FLUID_BAR_W &&
-                mouseY >= y + FLUID_BAR_Y && mouseY <= y + FLUID_BAR_Y + FLUID_BAR_H) {
+        if (mouseX >= x + FLUID_BAR_X && mouseX <= x + FLUID_BAR_X + FLUID_BAR_W
+                && mouseY >= y + FLUID_BAR_Y && mouseY <= y + FLUID_BAR_Y + FLUID_BAR_H) {
             List<Component> lines = new ArrayList<>();
             if (menu.getFluidAmount() > 0) {
                 lines.add(getFluidStack().getHoverName());
             } else {
                 lines.add(Component.translatable("container.overdrive.accelerator_output.empty"));
             }
-            lines.add(Component.literal(menu.getFluidAmount() + " / " + menu.getFluidCapacity() + " mB"));
+            lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else {
             super.renderTooltip(guiGraphics, mouseX, mouseY);

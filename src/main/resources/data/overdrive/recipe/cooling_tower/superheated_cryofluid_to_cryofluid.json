@@ -1,0 +1,12 @@
+{
+  "type": "overdrive:cooling_tower",
+  "input_fluid": {
+    "id": "overdrive:superheated_cryofluid",
+    "amount": 1000
+  },
+  "output_fluid": {
+    "id": "overdrive:cryofluid",
+    "amount": 1000
+  },
+  "process_time": 1
+}

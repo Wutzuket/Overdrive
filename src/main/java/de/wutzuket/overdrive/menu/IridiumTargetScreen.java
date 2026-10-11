@@ -1,60 +1,75 @@
 package de.wutzuket.overdrive.menu;
 
+import de.wutzuket.overdrive.client.gui.GuiStyle;
+import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.List;
 
 public class IridiumTargetScreen extends AbstractContainerScreen<IridiumTargetMenu> {
-    // Wir nutzen die Dispenser-Textur, da sie die perfekte Höhe (166px) für das Inventar besitzt
-    private static final ResourceLocation CONTAINER_BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/dispenser.png");
-
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
+    private static final int FLUID_BAR_X = 18;
+    private static final int FLUID_BAR_Y = 17;
+    private static final int FLUID_BAR_W = 18;
+    private static final int FLUID_BAR_H = 54;
 
     public IridiumTargetScreen(IridiumTargetMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
-
-        // Positioniert den automatischen "Inventar"-Text korrekt über den Slots unten
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
-
-        // 1. Das standardmäßige Minecraft-Inventar unten und den Rahmen zeichnen
-        guiGraphics.blit(CONTAINER_BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
-
-        // 2. Den oberen Bereich großzügiger übermalen (x+6 bis x+170 und y+16 bis y+72)
-        // Das deckt die Ränder der Dispenser-Slots vollständig ab
-        guiGraphics.fill(x + 6, y + 16, x + 170, y + 72, 0xFF3A3A3A);
-
-        // 3. Einen einzelnen Standard-Slot aus der Textur ausschneiden und über das Ziel-Feld legen
-        guiGraphics.blit(CONTAINER_BACKGROUND, x + 79, y + 34, 61, 17, 18, 18);
+    private void drawFluidGauge(GuiGraphics g, FluidStack stack, int capacity, int x, int y, String label) {
+        GuiStyle.fluidGauge(g, font, stack, capacity, x, y, FLUID_BAR_W, FLUID_BAR_H, label);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        // Titel des Blocks oben links (Dunkelgrau, da der Hintergrund dort jetzt hell ist)
-        guiGraphics.drawString(this.font, this.title, 8, 6, 0x404040, false);
+    protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
 
-        // "Target Slot"-Text (In Weiß, damit er auf dem dunkelgrauen Kasten lesbar bleibt)
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.iridium_target.slot"), 8, 22, 0xFFFFFF, false);
+        GuiStyle.panel(g, x, y, WIDTH, HEIGHT);
+        GuiStyle.inset(g, x + 6, y + 80, 164, 82);
+        drawFluidGauge(g, menu.getFluidStack(), menu.getFluidCapacity(), x + FLUID_BAR_X, y + FLUID_BAR_Y, null);
+        GuiStyle.slotFrames(g, menu, x, y);
+    }
 
-        // Der standardmäßige "Inventar"-Schriftzug für die Spielerslots unten
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0x404040, false);
+    @Override
+    protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
+        g.drawString(font, title, 8, 6, GuiStyle.COL_TEXT, false);
+        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, GuiStyle.COL_TEXT_DIM, false);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        // Aktiviert Tooltips, wenn man mit der Maus über Items fährt
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics g, int mouseX, int mouseY) {
+        int x = (this.width - WIDTH) / 2;
+        int y = (this.height - HEIGHT) / 2;
+
+        if (in(mouseX, mouseY, x + FLUID_BAR_X, y + FLUID_BAR_Y, FLUID_BAR_W, FLUID_BAR_H)) {
+            renderFluidTooltip(g, menu.getFluidStack(), menu.getFluidAmount(), menu.getFluidCapacity(), "Empty", mouseX, mouseY);
+            return;
+        }
+        super.renderTooltip(g, mouseX, mouseY);
+    }
+
+    private void renderFluidTooltip(GuiGraphics g, FluidStack stack, int amount, int capacity, String fallback, int mouseX, int mouseY) {
+        Component name = stack.isEmpty() ? Component.literal(fallback) : stack.getHoverName();
+        g.renderTooltip(font, List.of(name, Component.literal(ODFormat.formatFluidPair(amount, capacity))), java.util.Optional.empty(), mouseX, mouseY);
+    }
+
+    private static boolean in(int mouseX, int mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 }

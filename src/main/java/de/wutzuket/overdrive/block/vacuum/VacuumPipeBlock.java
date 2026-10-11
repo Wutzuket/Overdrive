@@ -123,7 +123,8 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
             || state.getBlock() instanceof ADVacuumPortBlock
             || state.getBlock() instanceof ELENAVacuumPortBlock
                 || state.getBlock() instanceof PositronVacuumOutputPortBlock
-                || state.getBlock() instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunBlock;
+                || state.getBlock() instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunBlock
+                || state.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock;
     }
 
     @Override

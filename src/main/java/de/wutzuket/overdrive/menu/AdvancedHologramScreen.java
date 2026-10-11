@@ -1,6 +1,8 @@
 package de.wutzuket.overdrive.menu;
 
 import de.wutzuket.overdrive.block.advanced_hologram.AdvancedHologramBlockEntity;
+import de.wutzuket.overdrive.client.gui.ButtonHelper;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
 import de.wutzuket.overdrive.network.AdvancedHologramConsoleInputPayload;
 import de.wutzuket.overdrive.network.AdvancedHologramCreateScriptPayload;
 import de.wutzuket.overdrive.network.AdvancedHologramDeleteScriptPayload;
@@ -11,7 +13,6 @@ import de.wutzuket.overdrive.network.AdvancedHologramSelectScriptPayload;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -112,28 +113,26 @@ public class AdvancedHologramScreen extends AbstractContainerScreen<AdvancedHolo
                 nameField.setFocused(true);
                 addRenderableWidget(nameField);
 
-                addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.create_confirm"), button -> createScript())
-                        .bounds(left + 170, top + 224, 150, 18)
-                        .build());
-                addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.create_cancel"), button -> {
+                addRenderableWidget(new ButtonHelper(left + 170, top + 224, 150, 18,
+                        Component.translatable("container.overdrive.advanced_hologram_block.create_confirm"),
+                        button -> createScript(), GuiStyle.COL_CYAN));
+                addRenderableWidget(new ButtonHelper(left + 326, top + 224, 136, 18,
+                        Component.translatable("container.overdrive.advanced_hologram_block.create_cancel"), button -> {
                             createMode = false;
                             rebuildRequested = true;
-                        })
-                        .bounds(left + 326, top + 224, 136, 18)
-                        .build());
+                        }, GuiStyle.COL_CYAN));
             } else {
                 editor.setFocused(true);
-                addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.edit_save"), button -> saveScript())
-                        .bounds(left + 170, top + 224, 150, 18)
-                        .build());
-                addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.edit_cancel"), button -> {
+                addRenderableWidget(new ButtonHelper(left + 170, top + 224, 150, 18,
+                        Component.translatable("container.overdrive.advanced_hologram_block.edit_save"),
+                        button -> saveScript(), GuiStyle.COL_CYAN));
+                addRenderableWidget(new ButtonHelper(left + 326, top + 224, 136, 18,
+                        Component.translatable("container.overdrive.advanced_hologram_block.edit_cancel"), button -> {
                             editMode = false;
                             editFileName = null;
                             deleteArmed = false;
                             rebuildRequested = true;
-                        })
-                        .bounds(left + 326, top + 224, 136, 18)
-                        .build());
+                        }, GuiStyle.COL_CYAN));
             }
         } else {
             console = new ConsoleWidget(left + 170, top + 20, 292, 176);
@@ -152,69 +151,61 @@ public class AdvancedHologramScreen extends AbstractContainerScreen<AdvancedHolo
                 String name = files.get(index);
                 String label = (name.equals(selected) ? "\u00a7a> " : "  ") + truncateLabel(name, 10);
                 int fileIndex = index;
-                addRenderableWidget(Button.builder(Component.literal(label), button -> selectScriptFile(files.get(fileIndex)))
-                        .bounds(left + 8, top + 22 + i * 20, 150, 18)
-                        .build());
+                addRenderableWidget(new ButtonHelper(left + 8, top + 22 + i * 20, 150, 18,
+                        Component.literal(label), button -> selectScriptFile(files.get(fileIndex)),
+                        GuiStyle.COL_CYAN));
             }
 
-            addRenderableWidget(Button.builder(Component.literal("^"), button -> {
+            addRenderableWidget(new ButtonHelper(left + 8, top + 106, 73, 18, Component.literal("^"), button -> {
                         if (fileScrollIndex > 0) {
                             fileScrollIndex--;
                             rebuildRequested = true;
                         }
-                    })
-                    .bounds(left + 8, top + 106, 73, 18)
-                    .build());
-            addRenderableWidget(Button.builder(Component.literal("v"), button -> {
+                    }, GuiStyle.COL_CYAN));
+            addRenderableWidget(new ButtonHelper(left + 87, top + 106, 73, 18, Component.literal("v"), button -> {
                         if (fileScrollIndex + FILES_VISIBLE < menu.getAvailableScriptFiles().size()) {
                             fileScrollIndex++;
                             rebuildRequested = true;
                         }
-                    })
-                    .bounds(left + 87, top + 106, 73, 18)
-                    .build());
-            addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.create"), button -> {
+                    }, GuiStyle.COL_CYAN));
+            addRenderableWidget(new ButtonHelper(left + 8, top + 128, 150, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.create"), button -> {
                         createMode = true;
                         clearEditorOnCreate = true;
                         rebuildRequested = true;
-                    })
-                    .bounds(left + 8, top + 128, 150, 18)
-                    .build());
-            addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.none"), button -> selectScriptFile(null))
-                    .bounds(left + 8, top + 150, 150, 18)
-                    .build());
+                    }, GuiStyle.COL_CYAN));
+            addRenderableWidget(new ButtonHelper(left + 8, top + 150, 150, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.none"),
+                    button -> selectScriptFile(null), GuiStyle.COL_CYAN));
 
             String selectedFile = menu.getSelectedScriptFile();
             boolean hasSelectedFile = selectedFile != null;
-            Button editButton = Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.edit"), button -> enterEditMode())
-                    .bounds(left + 8, top + 172, 73, 18)
-                    .build();
+            ButtonHelper editButton = new ButtonHelper(left + 8, top + 172, 73, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.edit"),
+                    button -> enterEditMode(), GuiStyle.COL_CYAN);
             editButton.active = hasSelectedFile;
             addRenderableWidget(editButton);
-            Button deleteButton = Button.builder(
-                            Component.translatable(deleteArmed && hasSelectedFile
-                                    ? "container.overdrive.advanced_hologram_block.delete_confirm"
-                                    : "container.overdrive.advanced_hologram_block.delete"),
-                            button -> onDeleteClick())
-                    .bounds(left + 87, top + 172, 73, 18)
-                    .build();
+            ButtonHelper deleteButton = new ButtonHelper(left + 87, top + 172, 73, 18,
+                    Component.translatable(deleteArmed && hasSelectedFile
+                            ? "container.overdrive.advanced_hologram_block.delete_confirm"
+                            : "container.overdrive.advanced_hologram_block.delete"),
+                    button -> onDeleteClick(), GuiStyle.COL_RED);
             deleteButton.active = hasSelectedFile;
             addRenderableWidget(deleteButton);
 
-            addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.start"), button -> startScript())
-                    .bounds(left + 170, top + 224, 73, 18)
-                    .build());
-            addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.stop"), button -> stopScript())
-                    .bounds(left + 249, top + 224, 73, 18)
-                    .build());
-            addRenderableWidget(Button.builder(Component.translatable("container.overdrive.advanced_hologram_block.clear"), button -> {
+            addRenderableWidget(new ButtonHelper(left + 170, top + 224, 73, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.start"),
+                    button -> startScript(), GuiStyle.COL_GREEN));
+            addRenderableWidget(new ButtonHelper(left + 249, top + 224, 73, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.stop"),
+                    button -> stopScript(), GuiStyle.COL_YELLOW));
+            addRenderableWidget(new ButtonHelper(left + 390, top + 224, 72, 18,
+                    Component.translatable("container.overdrive.advanced_hologram_block.clear"), button -> {
                         AdvancedHologramBlockEntity blockEntity = menu.getBlockEntity();
                         if (blockEntity != null) {
                             blockEntity.clearConsole();
                         }
-                    })
-                    .bounds(left + 390, top + 224, 72, 18)
-                    .build());
+                    }, GuiStyle.COL_CYAN));
         }
 
         controlsBuilt = true;
@@ -298,24 +289,21 @@ public class AdvancedHologramScreen extends AbstractContainerScreen<AdvancedHolo
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        guiGraphics.fill(x, y, x + WIDTH, y + HEIGHT, 0xFFD8D8D8);
-        guiGraphics.fill(x, y, x + WIDTH, y + 1, 0xFFFFFFFF);
-        guiGraphics.fill(x, y, x + 1, y + HEIGHT, 0xFFFFFFFF);
-        guiGraphics.fill(x + WIDTH - 1, y, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
-        guiGraphics.fill(x, y + HEIGHT - 1, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
+        GuiStyle.inset(guiGraphics, x + 166, y + 16, 300, 184);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (createMode) {
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.create_name"), 8, 6, 0x404040, false);
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.script"), 170, 6, 0x404040, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.create_name"), 8, 6, GuiStyle.COL_TEXT, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.script"), 170, 6, GuiStyle.COL_TEXT_DIM, false);
         } else if (editMode) {
-            guiGraphics.drawString(this.font, Component.literal(editFileName == null ? "" : truncateLabel(editFileName, 12)), 8, 6, 0x404040, false);
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.script"), 170, 6, 0x404040, false);
+            guiGraphics.drawString(this.font, Component.literal(editFileName == null ? "" : truncateLabel(editFileName, 12)), 8, 6, GuiStyle.COL_CYAN, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.script"), 170, 6, GuiStyle.COL_TEXT_DIM, false);
         } else {
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.files"), 8, 6, 0x404040, false);
-            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.console"), 170, 6, 0x404040, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.files"), 8, 6, GuiStyle.COL_TEXT_DIM, false);
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.advanced_hologram_block.console"), 170, 6, GuiStyle.COL_TEXT_DIM, false);
         }
     }
 

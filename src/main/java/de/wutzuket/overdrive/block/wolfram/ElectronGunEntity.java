@@ -35,11 +35,13 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     private static final int ENERGY_PER_TICK = 3000;
 
     private int energy = 0;
-    private final FluidTank fluidTank = new FluidTank(4000);
+    // Positron-Max-Rate: 14.000 mB/Op
+    private final FluidTank fluidTank = new FluidTank(500_000);
     private boolean active = false;
     private boolean hologramEnabled = false;
     private int progressTicks = 0;
     private float vacuumLevel = 0;
+    private long vacuumFedTick = 0;
 
     private @Nullable PositronExtractionRecipe currentRecipe = null;
     private @Nullable BlockPos targetPos = null;
@@ -236,6 +238,16 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     public void setVacuumLevel(float level) {
         this.vacuumLevel = level;
         setChanged();
+    }
+
+    @Override
+    public long getVacuumFedTick() {
+        return vacuumFedTick;
+    }
+
+    @Override
+    public void setVacuumFedTick(long tick) {
+        this.vacuumFedTick = tick;
     }
 
     private void triggerAnnihilation(ServerLevel level, BlockPos pos, BlockState state) {

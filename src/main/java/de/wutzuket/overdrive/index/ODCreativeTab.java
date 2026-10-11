@@ -14,11 +14,10 @@ import java.util.function.Supplier;
 public class ODCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Overdrive.MODID);
 
-    public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.register("overdrive", () -> CreativeModeTab.builder()
+public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.register("overdrive", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.overdrive"))
-            .icon(() -> new ItemStack(ODItems.SCANNER_ITEM.get()))
+            .icon(() -> new ItemStack(ODItems.WRENCH.get()))
             .displayItems((parameters, output) -> {
-                output.accept(ODItems.SCANNER_ITEM.get());
                 output.accept(ODItems.WRENCH.get());
                 output.accept(ODItems.ALUMINUM_ORE.get());
                 output.accept(ODItems.DEEPSLATE_ALUMINUM_ORE.get());
@@ -54,6 +53,12 @@ public class ODCreativeTab {
                 output.accept(ODItemsFluid.DECELERATED_ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.COOLED_ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.POSITRONS_BUCKET.get());
+                output.accept(ODItemsFluid.SODIUM_BUCKET.get());
+                output.accept(ODItemsFluid.CRYOFLUID_BUCKET.get());
+                output.accept(ODItemsFluid.STEAM_BUCKET.get());
+                output.accept(ODItemsFluid.SUPERHEATED_SODIUM_BUCKET.get());
+                output.accept(ODItemsFluid.SUPERHEATED_CRYOFLUID_BUCKET.get());
+                output.accept(ODItemsFluid.LIQUID_IRIDIUM_BUCKET.get());
                 output.accept(ODItems.AD_CASING.get());
                 output.accept(ODItems.AD_CONTROLLER.get());
                 output.accept(ODItems.AD_ENERGY_INPUT_PORT.get());
@@ -71,6 +76,22 @@ public class ODCreativeTab {
                 output.accept(ODItems.WOLFRAM_TARGET.get());
                 output.accept(ODItems.POSITRON_VACUUM_OUTPUT_PORT.get());
                 output.accept(ODItems.WOLFRAM_MESH.get());
+                output.accept(ODItems.MAGNETIC_ANTIPROTON_CELL.get());
+                output.accept(ODItems.MAGNETIC_POSITRON_CELL.get());
+                output.accept(ODItems.ANNIHILATION_HEAVY_CASING.get());
+                output.accept(ODItems.REACTOR_CORE_BLOCK.get());
+                output.accept(ODItems.CORE_CONTAINMENT_GLASS.get());
+                output.accept(ODItems.CORIUM_BLOCK.get());
+                output.accept(ODItems.ANNIHILATION_CONTROLLER.get());
+                output.accept(ODItems.ANNIHILATION_VACUUM_PORT.get());
+                output.accept(ODItems.CELL_DOCKING_PORT.get());
+                output.accept(ODItems.COOLANT_INPUT_PORT.get());
+                output.accept(ODItems.STEAM_OUTPUT_PORT.get());
+                output.accept(ODItems.ANNIHILATION_ENERGY_OUTPUT.get());
+                output.accept(ODItems.COOLING_TOWER_CASING.get());
+                output.accept(ODItems.COOLING_TOWER_CONTROLLER.get());
+                output.accept(ODItems.COOLING_TOWER_INPUT_PORT.get());
+                output.accept(ODItems.COOLING_TOWER_OUTPUT_PORT.get());
             })
             .build());
 

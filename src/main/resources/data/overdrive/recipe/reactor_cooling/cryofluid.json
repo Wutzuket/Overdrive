@@ -1,0 +1,16 @@
+{
+  "type": "overdrive:reactor_cooling",
+  "input": {
+    "id": "overdrive:cryofluid",
+    "amount": 2
+  },
+  "output": {
+    "id": "overdrive:superheated_cryofluid",
+    "amount": 2
+  },
+  "mb_per_100k": 2,
+  "cooling_per_mb": 50,
+  "boiling_temp": 100,
+  "steam_per_mb": 1,
+  "max_mb_per_tick": 90
+}

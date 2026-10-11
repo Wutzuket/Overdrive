@@ -9,7 +9,6 @@ import de.wutzuket.overdrive.block.accelerator.IridiumTargetBlock;
 import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerBlock;
 import de.wutzuket.overdrive.block.hologram.HologramBlock;
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlock;
-import de.wutzuket.overdrive.block.scanner.scanner_block;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlock;
 import de.wutzuket.overdrive.block.vacuum.PumpCasingBlock;
 import de.wutzuket.overdrive.block.vacuum.VacuumOutputPortBlock;
@@ -25,10 +24,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class ODBlocks {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Overdrive.MODID);
-
-    public static final Supplier<Block> SCANNER_BLOCK = BLOCKS.register("scanner",
-            () -> new scanner_block(BlockBehaviour.Properties.of().strength(2.0F)));
+public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Overdrive.MODID);
 
 public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_block",
             () -> new HologramBlock(BlockBehaviour.Properties.of()
@@ -235,6 +231,38 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
     public static final Supplier<Block> POSITRON_VACUUM_OUTPUT_PORT = BLOCKS.register("positron_vacuum_output_port",
             () -> new de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortBlock(BlockBehaviour.Properties.of()
                     .strength(4.0F, 6.0F).sound(SoundType.METAL)));
+
+    // Step 4 - Annihilation Reactor 25x25x25
+    public static final Supplier<Block> ANNIHILATION_HEAVY_CASING = BLOCKS.register("annihilation_heavy_casing",
+            () -> new de.wutzuket.overdrive.block.annihilation.AnnihilationHeavyCasingBlock(BlockBehaviour.Properties.of().strength(5.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final Supplier<Block> REACTOR_CORE_BLOCK = BLOCKS.register("reactor_core_block",
+            () -> new de.wutzuket.overdrive.block.annihilation.ReactorCoreBlock(BlockBehaviour.Properties.of().strength(6.0F, 12.0F).sound(SoundType.METAL).lightLevel(s->10)));
+    public static final Supplier<Block> CORE_CONTAINMENT_GLASS = BLOCKS.register("core_containment_glass",
+            () -> new de.wutzuket.overdrive.block.annihilation.CoreContainmentGlassBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).sound(SoundType.GLASS).noOcclusion()));
+    public static final Supplier<Block> CORIUM_BLOCK = BLOCKS.register("corium_block",
+            () -> new de.wutzuket.overdrive.block.annihilation.CoriumBlock(BlockBehaviour.Properties.of().strength(8.0F, 15.0F).sound(SoundType.STONE).lightLevel(s->8)));
+    public static final Supplier<Block> ANNIHILATION_CONTROLLER = BLOCKS.register("annihilation_controller",
+            () -> new de.wutzuket.overdrive.block.annihilation.AnnihilationControllerBlock(BlockBehaviour.Properties.of().strength(6.0F, 12.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> ANNIHILATION_VACUUM_PORT = BLOCKS.register("annihilation_vacuum_port",
+            () -> new de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> CELL_DOCKING_PORT = BLOCKS.register("cell_docking_port",
+            () -> new de.wutzuket.overdrive.block.annihilation.CellDockingPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> COOLANT_INPUT_PORT = BLOCKS.register("coolant_input_port",
+            () -> new de.wutzuket.overdrive.block.annihilation.CoolantInputPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> STEAM_OUTPUT_PORT = BLOCKS.register("steam_output_port",
+            () -> new de.wutzuket.overdrive.block.annihilation.SteamOutputPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> ANNIHILATION_ENERGY_OUTPUT = BLOCKS.register("annihilation_energy_output",
+            () -> new de.wutzuket.overdrive.block.annihilation.EnergyOutputPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+
+    // Cooling Tower 5x5x9
+    public static final Supplier<Block> COOLING_TOWER_CASING = BLOCKS.register("cooling_tower_casing",
+            () -> new de.wutzuket.overdrive.block.coolingtower.CoolingTowerCasingBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final Supplier<Block> COOLING_TOWER_CONTROLLER = BLOCKS.register("cooling_tower_controller",
+            () -> new de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> COOLING_TOWER_INPUT_PORT = BLOCKS.register("cooling_tower_input_port",
+            () -> new de.wutzuket.overdrive.block.coolingtower.CoolingTowerInputPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
+    public static final Supplier<Block> COOLING_TOWER_OUTPUT_PORT = BLOCKS.register("cooling_tower_output_port",
+            () -> new de.wutzuket.overdrive.block.coolingtower.CoolingTowerOutputPortBlock(BlockBehaviour.Properties.of().strength(4.0F, 8.0F).sound(SoundType.METAL)));
 
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);

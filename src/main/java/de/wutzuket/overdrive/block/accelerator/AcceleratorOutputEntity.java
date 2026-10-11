@@ -24,7 +24,8 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class AcceleratorOutputEntity extends BlockEntity implements MenuProvider {
-    private static final int TANK_CAPACITY = 16_000;
+    // Muss 14.000 mB/Op (Max-Rate-Rezept) plus Puffer aufnehmen
+    private static final int TANK_CAPACITY = 500_000;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(1) {
         @Override

@@ -22,7 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class PositronVacuumOutputPortEntity extends BlockEntity implements IVacuumNode, MenuProvider {
     private float vacuum = 0;
-    private final FluidTank tank = new FluidTank(4000) {
+    private long vacuumFedTick = 0;
+    // Positron-Max-Rate: 14.000 mB/Op
+    private final FluidTank tank = new FluidTank(500_000) {
         @Override
         protected void onContentsChanged() {
             setChanged();
@@ -68,6 +70,8 @@ public class PositronVacuumOutputPortEntity extends BlockEntity implements IVacu
 
     @Override public float getVacuumLevel() { return vacuum; }
     @Override public void setVacuumLevel(float v) { this.vacuum = v; setChanged(); }
+    @Override public long getVacuumFedTick() { return vacuumFedTick; }
+    @Override public void setVacuumFedTick(long tick) { this.vacuumFedTick = tick; }
 
     @Override
     public Component getDisplayName() {

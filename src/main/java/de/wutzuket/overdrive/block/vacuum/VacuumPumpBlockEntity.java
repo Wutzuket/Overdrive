@@ -167,6 +167,7 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         BlockEntity be = level.getBlockEntity(outputPortPos);
         if (be instanceof IVacuumNode node) {
             node.setVacuumLevel(vacuum);
+            node.setVacuumFedTick(level.getGameTime());
         }
     }
 
@@ -335,7 +336,60 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
     }
 
     public int getVolume() {
-        return 27 + pipeCount;
+        int torusVol = getConnectedTorusVolume();
+        return 27 + pipeCount + torusVol;
+    }
+
+    private int getConnectedTorusVolume(){
+        // Wenn Pumpen-Netzwerk mit Annihilation-Reaktor verbunden ist, füge dessen Hohlraum-Volumen hinzu
+        if(outputPortPos==null || level==null) return 0;
+        // BFS durch Pipes um AnnihilationVacuumPort zu finden
+        Set<BlockPos> visited = new HashSet<>();
+        Queue<BlockPos> q = new ArrayDeque<>();
+        q.add(outputPortPos);
+        visited.add(outputPortPos);
+        int steps=0;
+        while(!q.isEmpty() && steps<2000){
+            BlockPos cur=q.poll();
+            steps++;
+            BlockState st=level.getBlockState(cur);
+            // Wenn wir einen AnnihilationVacuumPort finden, wurde Torus erreicht -> füge dessen Hohlvolumen hinzu
+            if(st.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock){
+                // Hole Controller für diesen Port um Torus-Zentrum zu finden
+                // Suche Controller im 25er Radius um den Port
+                for(int dx=-15;dx<=15;dx++) for(int dy=-15;dy<=15;dy++) for(int dz=-15;dz<=15;dz++){
+                    BlockPos p=cur.offset(dx,dy,dz);
+                    BlockState bs=level.getBlockState(p);
+                    if(bs.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerBlock){
+                        BlockEntity be=level.getBlockEntity(p);
+                        if(be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann){
+                            // Zähle Torus-Hohlraum Blöcke (isTorusHollow) für diesen Reaktor
+                            BlockPos center=de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.getCenter(p, bs);
+                            int cnt=0;
+                            int OUTER=de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.OUTER;
+                            for(int x=center.getX()-OUTER;x<=center.getX()+OUTER;x++)
+                                for(int y=center.getY()-OUTER;y<=center.getY()+OUTER;y++)
+                                    for(int z=center.getZ()-OUTER;z<=center.getZ()+OUTER;z++){
+                                        int ddx=Math.abs(x-center.getX()), ddy=Math.abs(y-center.getY()), ddz=Math.abs(z-center.getZ());
+                                        if(de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.isTorusHollow(ddx,ddy,ddz)) cnt++;
+                                    }
+                            return cnt;
+                        }
+                    }
+                }
+                return 1200; // Fallback Torus-Volumen wenn Controller nicht gefunden (~1200)
+            }
+            for(Direction dir: Direction.values()){
+                BlockPos nb=cur.relative(dir);
+                if(visited.contains(nb)) continue;
+                BlockState nbs=level.getBlockState(nb);
+                if(nbs.getBlock() instanceof VacuumPipeBlock || nbs.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock){
+                    visited.add(nb);
+                    q.add(nb);
+                }
+            }
+        }
+        return 0;
     }
 
     public int getEnergyUsage() {

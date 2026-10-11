@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "overdrive:block/steam_output_port"
+    }
+  }
+}

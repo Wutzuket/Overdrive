@@ -12,6 +12,15 @@ public interface IVacuumNode {
         return true;
     }
 
+    /** Letzter Tick, zu dem dieser Node aktiv von einer Pumpe gespeist wurde. */
+    default long getVacuumFedTick() { return 0; }
+    default void setVacuumFedTick(long tick) { }
+
+    /** Gnadenfrist in Ticks, bevor ein ungespeistes Netz zu lecken beginnt. */
+    long FED_GRACE_TICKS = 40;
+    /** Vakuum-Verlust pro Tick nach Ablauf der Gnadenfrist. */
+    float STALE_DRAIN_PER_TICK = 0.01f;
+
     static void propagate(BlockEntity self) {
         if (!(self instanceof IVacuumNode node)) return;
         Level level = self.getLevel();
@@ -20,6 +29,7 @@ public interface IVacuumNode {
 
         float sum = node.getVacuumLevel();
         int count = 1;
+        long fed = node.getVacuumFedTick();
         for (Direction dir : Direction.values()) {
             BlockEntity be = level.getBlockEntity(pos.relative(dir));
             if (be instanceof IVacuumNode neighbor && be != self
@@ -27,9 +37,17 @@ public interface IVacuumNode {
                     && neighbor.canConnect(dir.getOpposite())) {
                 sum += neighbor.getVacuumLevel();
                 count++;
+                fed = Math.max(fed, neighbor.getVacuumFedTick());
             }
         }
-        node.setVacuumLevel(sum / count);
+        float avg = sum / count;
+        if (level.getGameTime() - fed > FED_GRACE_TICKS) {
+            // Kein Pumpensignal mehr (Pipe getrennt, Pumpe aus): Netz leckt leer,
+            // statt den letzten Wert ewig zu halten.
+            avg = Math.max(0, avg - STALE_DRAIN_PER_TICK);
+        }
+        node.setVacuumLevel(avg);
+        node.setVacuumFedTick(fed);
     }
 
     static float getVacuumLevel(BlockEntity be) {

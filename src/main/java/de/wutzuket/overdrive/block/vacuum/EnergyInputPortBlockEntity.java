@@ -13,6 +13,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 public class EnergyInputPortBlockEntity extends BlockEntity implements IEnergyStorage, IVacuumNode {
     private VacuumPumpBlockEntity cachedPump = null;
     private float vacuum = 0;
+    private long vacuumFedTick = 0;
 
     public EnergyInputPortBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ODBlockEntities.ENERGY_INPUT_PORT_BLOCK_ENTITY.get(), blockPos, blockState);
@@ -31,6 +32,16 @@ public class EnergyInputPortBlockEntity extends BlockEntity implements IEnergySt
     public void setVacuumLevel(float level) {
         this.vacuum = level;
         setChanged();
+    }
+
+    @Override
+    public long getVacuumFedTick() {
+        return vacuumFedTick;
+    }
+
+    @Override
+    public void setVacuumFedTick(long tick) {
+        this.vacuumFedTick = tick;
     }
 
     @Override

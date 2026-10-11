@@ -39,7 +39,6 @@ public class WrenchItem extends Item {
                 if (level.isClientSide) {
                     return InteractionResult.SUCCESS;
                 }
-
                 Direction face = context.getClickedFace();
                 if (pipe.toggleConnection(level, pos, face)) {
                     return InteractionResult.CONSUME;

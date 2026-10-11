@@ -1,8 +1,9 @@
 package de.wutzuket.overdrive.menu;
 
+import de.wutzuket.overdrive.client.gui.ButtonHelper;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
 import de.wutzuket.overdrive.network.HologramCreateFilePayload;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -48,13 +49,13 @@ public class CreateHologramScreen extends Screen {
         jsonField.setCharacterLimit(MAX_CONTENT_LENGTH);
         addRenderableWidget(jsonField);
 
-        addRenderableWidget(Button.builder(Component.translatable("container.overdrive.hologram_block.create_save"), button -> createFile())
-                .bounds(x + 8, y + 194, 80, 18)
-                .build());
+        addRenderableWidget(new ButtonHelper(x + 8, y + 194, 80, 18,
+                Component.translatable("container.overdrive.hologram_block.create_save"),
+                button -> createFile(), GuiStyle.COL_GREEN));
 
-        addRenderableWidget(Button.builder(Component.translatable("container.overdrive.hologram_block.create_cancel"), button -> close())
-                .bounds(x + 272, y + 194, 80, 18)
-                .build());
+        addRenderableWidget(new ButtonHelper(x + 272, y + 194, 80, 18,
+                Component.translatable("container.overdrive.hologram_block.create_cancel"),
+                button -> close(), GuiStyle.COL_CYAN));
     }
 
     private void createFile() {
@@ -105,17 +106,13 @@ public class CreateHologramScreen extends Screen {
         int x = (this.width - WIDTH) / 2;
         int y = (this.height - HEIGHT) / 2;
 
-        guiGraphics.fill(x, y, x + WIDTH, y + HEIGHT, 0xFFD8D8D8);
-        guiGraphics.fill(x, y, x + WIDTH, y + 1, 0xFFFFFFFF);
-        guiGraphics.fill(x, y, x + 1, y + HEIGHT, 0xFFFFFFFF);
-        guiGraphics.fill(x + WIDTH - 1, y, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
-        guiGraphics.fill(x, y + HEIGHT - 1, x + WIDTH, y + HEIGHT, 0xFF5A5A5A);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
 
-        guiGraphics.drawString(this.font, this.title, x + 8, y + 6, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.create_name"), x + 8, y + 18, 0x404040, false);
-        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.create_json"), x + 8, y + 46, 0x404040, false);
+        guiGraphics.drawString(this.font, this.title, x + 8, y + 6, GuiStyle.COL_TEXT, false);
+        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.create_name"), x + 8, y + 18, GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font, Component.translatable("container.overdrive.hologram_block.create_json"), x + 8, y + 46, GuiStyle.COL_TEXT_DIM, false);
         if (error != null) {
-            guiGraphics.drawString(this.font, error, x + 96, y + 178, 0xFFFF5555, false);
+            guiGraphics.drawString(this.font, error, x + 96, y + 178, GuiStyle.COL_RED, false);
         }
 
         for (Renderable renderable : this.renderables) {

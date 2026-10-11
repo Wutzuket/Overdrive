@@ -8,13 +8,15 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CollisionRecipe implements Recipe<RecipeInput> {
-    private final Ingredient inputTarget;
+    // z.B. 1000 mB Liquid Iridium + 250 MFE = 20.000 mB Antiprotonen (1 Op, 1 Tick).
+    // Pro 1 mB Antiproton: 0,05 mB Iridium + 20.000 FE. Skaliert linear mit der GUI-FE/t-Rate.
+    private final FluidStack inputFluid;
     private final int energyCost;
     private final int processTime;
     private final FluidStack outputFluid;
 
-    public CollisionRecipe(Ingredient inputTarget, int energyCost, int processTime, FluidStack outputFluid) {
-        this.inputTarget = inputTarget;
+    public CollisionRecipe(FluidStack inputFluid, int energyCost, int processTime, FluidStack outputFluid) {
+        this.inputFluid = inputFluid;
         this.energyCost = energyCost;
         this.processTime = processTime;
         this.outputFluid = outputFluid;
@@ -22,7 +24,7 @@ public class CollisionRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, Level level) {
-        return inputTarget.test(input.getItem(0));
+        return true;
     }
 
     @Override
@@ -50,8 +52,8 @@ public class CollisionRecipe implements Recipe<RecipeInput> {
         return ODRecipeTypes.COLLISION.get();
     }
 
-    public Ingredient inputTarget() {
-        return inputTarget;
+    public FluidStack inputFluid() {
+        return inputFluid;
     }
 
     public int energyCost() {

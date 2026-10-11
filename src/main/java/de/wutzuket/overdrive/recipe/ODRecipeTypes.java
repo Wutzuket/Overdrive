@@ -24,6 +24,13 @@ public class ODRecipeTypes {
     public static final Supplier<RecipeType<PositronExtractionRecipe>> POSITRON_EXTRACTION =
             RECIPE_TYPES.register("positron_extraction", () -> RecipeType.simple(Overdrive.id("positron_extraction")));
 
+    public static final Supplier<RecipeType<AnnihilationRecipe>> ANNIHILATION =
+            RECIPE_TYPES.register("annihilation_generator", () -> RecipeType.simple(Overdrive.id("annihilation_generator")));
+    public static final Supplier<RecipeType<CoolingTowerRecipe>> COOLING_TOWER =
+            RECIPE_TYPES.register("cooling_tower", () -> RecipeType.simple(Overdrive.id("cooling_tower")));
+    public static final Supplier<RecipeType<ReactorCoolingRecipe>> REACTOR_COOLING =
+            RECIPE_TYPES.register("reactor_cooling", () -> RecipeType.simple(Overdrive.id("reactor_cooling")));
+
     public static void register(IEventBus modEventBus) {
         RECIPE_TYPES.register(modEventBus);
     }

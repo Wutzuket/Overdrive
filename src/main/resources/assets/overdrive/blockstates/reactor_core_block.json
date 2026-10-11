@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "overdrive:block/reactor_core_block"
+    }
+  }
+}

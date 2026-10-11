@@ -1,0 +1,13 @@
+{
+  "type": "overdrive:matter_transmutation",
+  "input": {
+    "tag": "c:ingots/iron"
+  },
+  "cell_type": "positron",
+  "energy_cost": 800000,
+  "process_time": 300,
+  "result": {
+    "id": "minecraft:netherite_ingot",
+    "count": 1
+  }
+}

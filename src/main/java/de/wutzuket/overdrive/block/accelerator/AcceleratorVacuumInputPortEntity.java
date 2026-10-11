@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class AcceleratorVacuumInputPortEntity extends BlockEntity implements IVacuumNode {
     private float vacuum = 0;
+    private long vacuumFedTick = 0;
 
     public AcceleratorVacuumInputPortEntity(BlockPos blockPos, BlockState blockState) {
         super(ODBlockEntities.ACCELERATOR_VACUUM_INPUT_PORT.get(), blockPos, blockState);
@@ -33,6 +34,16 @@ public class AcceleratorVacuumInputPortEntity extends BlockEntity implements IVa
     public void setVacuumLevel(float v) {
         this.vacuum = v;
         setChanged();
+    }
+
+    @Override
+    public long getVacuumFedTick() {
+        return vacuumFedTick;
+    }
+
+    @Override
+    public void setVacuumFedTick(long tick) {
+        this.vacuumFedTick = tick;
     }
 
     @Override

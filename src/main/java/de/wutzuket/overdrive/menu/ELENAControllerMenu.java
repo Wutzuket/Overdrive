@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ELENAControllerMenu extends AbstractContainerMenu {
     private final ELENAControllerEntity blockEntity;
-    private final int[] data = new int[8];
+    private final int[] data = new int[12];
 
     public ELENAControllerMenu(int containerId, Inventory inventory, ELENAControllerEntity blockEntity) {
         super(ODMenuTypes.ELENA_CONTROLLER_MENU.get(), containerId);
@@ -20,14 +20,18 @@ public class ELENAControllerMenu extends AbstractContainerMenu {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> blockEntity.getEnergy();
-                    case 1 -> blockEntity.getMaxEnergy();
+                    case 0 -> (int) (blockEntity.getEnergyStoredLong() & 0xFFFFFFFFL);
+                    case 1 -> (int) (blockEntity.getEnergyStoredLong() >>> 32);
                     case 2 -> blockEntity.isValidStructure() ? 1 : 0;
                     case 3 -> blockEntity.isActive() ? 1 : 0;
                     case 4 -> blockEntity.getProgressTicks();
                     case 5 -> blockEntity.isHologramEnabled() ? 1 : 0;
                     case 6 -> (int) (blockEntity.getVacuumLevel() * 1000);
                     case 7 -> blockEntity.getMaxProgressTicks();
+                    case 8 -> blockEntity.getEnergyRate();
+                    case 9 -> blockEntity.getChargeScaled();
+                    case 10 -> blockEntity.getChargeTicksElapsed();
+                    case 11 -> blockEntity.getChargeTicksTotal();
                     default -> 0;
                 };
             }
@@ -62,17 +66,27 @@ public class ELENAControllerMenu extends AbstractContainerMenu {
     }
 
     public ELENAControllerEntity getBlockEntity() { return blockEntity; }
-    public int getEnergy() { return data[0]; }
-    public int getMaxEnergy() { return data[1]; }
+
+    public long getEnergyLong() {
+        return ((long) data[1] << 32) | (data[0] & 0xFFFFFFFFL);
+    }
+
+    public long getMaxEnergyLong() {
+        return ELENAControllerEntity.MAX_ENERGY_STORED;
+    }
+
+    public int getMaxRate() {
+        return ELENAControllerEntity.MAX_ENERGY_RATE;
+    }
     public boolean isValidStructure() { return data[2] == 1; }
     public boolean isActive() { return data[3] == 1; }
     public int getProgressTicks() { return data[4]; }
     public boolean isHologramEnabled() { return data[5] == 1; }
 
     public int getEnergyScaled(int max) {
-        int maxEnergy = getMaxEnergy();
+        long maxEnergy = getMaxEnergyLong();
         if (maxEnergy <= 0) return 0;
-        return (int) ((long) getEnergy() * max / maxEnergy);
+        return (int) (getEnergyLong() * max / maxEnergy);
     }
 
     public int getVacuumLevel() { return data[6]; }
@@ -82,4 +96,12 @@ public class ELENAControllerMenu extends AbstractContainerMenu {
     }
 
     public int getMaxProgressTicks() { return data[7]; }
+
+    public int getEnergyRateSynced() { return data[8]; }
+
+    public int getChargeScaled() { return Math.min(200, Math.max(0, data[9])); }
+
+    public int getChargeTicksElapsed() { return Math.max(0, data[10]); }
+
+    public int getChargeTicksTotal() { return Math.max(1, data[11]); }
 }

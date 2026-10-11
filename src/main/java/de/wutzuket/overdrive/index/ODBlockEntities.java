@@ -9,7 +9,6 @@ import de.wutzuket.overdrive.block.accelerator.ParticleAcceleratorControllerEnti
 import de.wutzuket.overdrive.block.energy.CreativeEnergyCubeBlockEntity;
 import de.wutzuket.overdrive.block.advanced_hologram.AdvancedHologramBlockEntity;
 import de.wutzuket.overdrive.block.hologram.HologramBlockEntity;
-import de.wutzuket.overdrive.block.scanner.scanner_blockentity;
 import de.wutzuket.overdrive.block.vacuum.EnergyInputPortBlockEntity;
 import de.wutzuket.overdrive.block.vacuum.VacuumOutputPortBlockEntity;
 import de.wutzuket.overdrive.block.vacuum.VacuumPipeBlockEntity;
@@ -20,14 +19,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ODBlockEntities {
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
+public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Overdrive.MODID);
-
-    public static final java.util.function.Supplier<BlockEntityType<scanner_blockentity>> SCANNER_BLOCK_ENTITY =
-            BLOCK_ENTITY_TYPES.register(
-                    "scanner",
-                    () -> BlockEntityType.Builder.of(scanner_blockentity::new, ODBlocks.SCANNER_BLOCK.get()).build(null)
-            );
 
 public static final java.util.function.Supplier<BlockEntityType<HologramBlockEntity>> HOLOGRAM_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register(
@@ -156,6 +149,25 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
             BLOCK_ENTITY_TYPES.register("positron_vacuum_output_port",
                     () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity::new, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get()).build(null));
 
+    // Step 4 - Annihilation
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity>> ANNIHILATION_CONTROLLER =
+            BLOCK_ENTITY_TYPES.register("annihilation_controller", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity::new, ODBlocks.ANNIHILATION_CONTROLLER.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortEntity>> ANNIHILATION_VACUUM_PORT =
+            BLOCK_ENTITY_TYPES.register("annihilation_vacuum_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortEntity::new, ODBlocks.ANNIHILATION_VACUUM_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.CellDockingPortEntity>> ANNIHILATION_CELL_PORT =
+            BLOCK_ENTITY_TYPES.register("cell_docking_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.CellDockingPortEntity::new, ODBlocks.CELL_DOCKING_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.CoolantInputPortEntity>> ANNIHILATION_COOLANT_INPUT =
+            BLOCK_ENTITY_TYPES.register("coolant_input_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.CoolantInputPortEntity::new, ODBlocks.COOLANT_INPUT_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.SteamOutputPortEntity>> ANNIHILATION_STEAM_OUTPUT =
+            BLOCK_ENTITY_TYPES.register("steam_output_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.SteamOutputPortEntity::new, ODBlocks.STEAM_OUTPUT_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.EnergyOutputPortEntity>> ANNIHILATION_ENERGY_OUTPUT =
+            BLOCK_ENTITY_TYPES.register("annihilation_energy_output", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.annihilation.EnergyOutputPortEntity::new, ODBlocks.ANNIHILATION_ENERGY_OUTPUT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerEntity>> COOLING_TOWER_CONTROLLER =
+            BLOCK_ENTITY_TYPES.register("cooling_tower_controller", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerEntity::new, ODBlocks.COOLING_TOWER_CONTROLLER.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coolingtower.CoolingTowerInputPortEntity>> COOLING_TOWER_INPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("cooling_tower_input_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coolingtower.CoolingTowerInputPortEntity::new, ODBlocks.COOLING_TOWER_INPUT_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coolingtower.CoolingTowerOutputPortEntity>> COOLING_TOWER_OUTPUT_PORT =
+            BLOCK_ENTITY_TYPES.register("cooling_tower_output_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coolingtower.CoolingTowerOutputPortEntity::new, ODBlocks.COOLING_TOWER_OUTPUT_PORT.get()).build(null));
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITY_TYPES.register(modEventBus);
     }

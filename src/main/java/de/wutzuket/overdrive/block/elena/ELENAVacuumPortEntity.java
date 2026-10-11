@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ELENAVacuumPortEntity extends BlockEntity implements IVacuumNode {
     private float vacuum = 0;
+    private long vacuumFedTick = 0;
 
     public ELENAVacuumPortEntity(BlockPos pos, BlockState state) {
         super(ODBlockEntities.ELENA_VACUUM_PORT.get(), pos, state);
@@ -26,6 +27,8 @@ public class ELENAVacuumPortEntity extends BlockEntity implements IVacuumNode {
 
     @Override public float getVacuumLevel() { return vacuum; }
     @Override public void setVacuumLevel(float v) { this.vacuum = v; setChanged(); }
+    @Override public long getVacuumFedTick() { return vacuumFedTick; }
+    @Override public void setVacuumFedTick(long tick) { this.vacuumFedTick = tick; }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {

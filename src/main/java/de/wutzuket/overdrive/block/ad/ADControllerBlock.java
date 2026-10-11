@@ -1,10 +1,17 @@
 package de.wutzuket.overdrive.block.ad;
 
 import de.wutzuket.overdrive.index.ODBlockEntities;
+import de.wutzuket.overdrive.index.ODBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +23,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +55,137 @@ public class ADControllerBlock extends Block implements EntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (!(be instanceof ADControllerEntity ctrl)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        // Leerer Eimer: 1000 mB aus dem Output-Tank abfuellen.
+        if (stack.is(Items.BUCKET)) {
+            FluidTank out = ctrl.getFluidTank();
+            if (!level.isClientSide) {
+                if (out.getFluidAmount() >= 1000) {
+                    FluidStack drained = out.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                    if (!drained.isEmpty()) {
+                        ItemStack filledBucket = new ItemStack(drained.getFluid().getBucket());
+                        if (!player.isCreative()) {
+                            stack.shrink(1);
+                        }
+                        if (!player.getInventory().add(filledBucket)) {
+                            player.drop(filledBucket, false);
+                        }
+                    }
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        // Voller Eimer/Behaelter: 1000 mB in den Input-Tank fuellen.
+        var bucketHandler = stack.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.ITEM);
+        if (bucketHandler != null && !stack.is(Items.BUCKET)) {
+            FluidTank in = ctrl.getInputTank();
+            FluidStack bucketFluid = bucketHandler.drain(1000, IFluidHandler.FluidAction.SIMULATE);
+            if (!bucketFluid.isEmpty() && in.isFluidValid(bucketFluid) && in.fill(bucketFluid, IFluidHandler.FluidAction.SIMULATE) >= 1000) {
+                if (!level.isClientSide) {
+                    bucketHandler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                    in.fill(bucketFluid, IFluidHandler.FluidAction.EXECUTE);
+                    if (!player.isCreative()) {
+                        player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+                    }
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
+        }
+
+        // Creative Auto-Build
+        if (!player.isCreative()) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (!(stack.getItem() instanceof BlockItem bi)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        Block held = bi.getBlock();
+        Block target = null;
+        int need = 0;
+        boolean isInputPort = false, isOutputPort = false, isEnergyPort = false, isVacuumPort = false, isCasing = false;
+        if (held == ODBlocks.AD_INPUT_PORT.get()) { isInputPort = true; target = held; need = 1; }
+        else if (held == ODBlocks.AD_OUTPUT_PORT.get()) { isOutputPort = true; target = held; need = 1; }
+        else if (held == ODBlocks.AD_ENERGY_INPUT_PORT.get()) { isEnergyPort = true; target = held; need = 1; }
+        else if (held == ODBlocks.AD_VACUUM_PORT.get()) { isVacuumPort = true; target = held; need = 1; }
+        else if (held == ODBlocks.AD_CASING.get()) { isCasing = true; target = held; }
+        else return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        int cx = pos.getX() + facing.getStepX() * ADControllerEntity.OUTER_RADIUS;
+        int cy = pos.getY();
+        int cz = pos.getZ() + facing.getStepZ() * ADControllerEntity.OUTER_RADIUS;
+        int OUTER_RADIUS = ADControllerEntity.OUTER_RADIUS;
+        int placed = 0;
+
+        if (need > 0 || isInputPort || isOutputPort || isEnergyPort || isVacuumPort) {
+            // Zähle bereits vorhandene
+            int existing = 0;
+            int minX = cx - OUTER_RADIUS;
+            int maxX = cx + OUTER_RADIUS;
+            int minZ = cz - OUTER_RADIUS;
+            int maxZ = cz + OUTER_RADIUS;
+            for (int x = minX; x <= maxX; x++) for (int z = minZ; z <= maxZ; z++) {
+                int maxDist = Math.max(Math.abs(x - cx), Math.abs(z - cz));
+                boolean inRing = maxDist >= 3 && maxDist <= OUTER_RADIUS;
+                if (!inRing) continue;
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = new BlockPos(x, cy + dy, z);
+                    Block b = level.getBlockState(p).getBlock();
+                    if (b == target) existing++;
+                }
+            }
+            int missing = need - existing;
+            if (missing <= 0) {
+                player.displayClientMessage(Component.literal("Alle " + target.getName().getString() + " bereits vorhanden"), true);
+                return ItemInteractionResult.SUCCESS;
+            }
+            // Platziere an erster freier Ring-Position
+            outer: for (int x = minX; x <= maxX; x++) for (int z = minZ; z <= maxZ; z++) {
+                int maxDist = Math.max(Math.abs(x - cx), Math.abs(z - cz));
+                boolean inRing = maxDist >= 3 && maxDist <= OUTER_RADIUS;
+                if (!inRing) continue;
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = new BlockPos(x, cy + dy, z);
+                    if (p.equals(pos)) continue;
+                    if (!level.getBlockState(p).isAir()) continue;
+                    level.setBlock(p, target.defaultBlockState(), 3);
+                    placed++;
+                    if (placed >= missing) break outer;
+                }
+            }
+        } else if (isCasing) {
+            // Casing: alle Ring-Positionen füllen (Wände und Top/Bottom)
+            int minX = cx - OUTER_RADIUS;
+            int maxX = cx + OUTER_RADIUS;
+            int minZ = cz - OUTER_RADIUS;
+            int maxZ = cz + OUTER_RADIUS;
+            for (int x = minX; x <= maxX; x++) for (int z = minZ; z <= maxZ; z++) {
+                int maxDist = Math.max(Math.abs(x - cx), Math.abs(z - cz));
+                boolean inRing = maxDist >= 3 && maxDist <= OUTER_RADIUS;
+                if (!inRing) continue;
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = new BlockPos(x, cy + dy, z);
+                    if (p.equals(pos)) continue;
+                    if (!level.getBlockState(p).isAir()) continue;
+                    level.setBlock(p, target.defaultBlockState(), 3);
+                    placed++;
+                }
+            }
+        }
+        if (placed > 0) {
+            player.displayClientMessage(Component.literal("Auto-Build: " + placed + "x " + target.getName().getString() + " platziert (Creative)"), true);
+        } else {
+            player.displayClientMessage(Component.literal("Nichts zu platzieren für " + target.getName().getString()), true);
+        }
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

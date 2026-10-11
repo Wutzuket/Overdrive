@@ -1,0 +1,12 @@
+{
+  "type": "overdrive:cooling_tower",
+  "input_fluid": {
+    "id": "overdrive:steam",
+    "amount": 1
+  },
+  "output_fluid": {
+    "id": "minecraft:water",
+    "amount": 1
+  },
+  "process_time": 4
+}

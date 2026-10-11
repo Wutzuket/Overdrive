@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class VacuumPipeBlockEntity extends BlockEntity implements IVacuumNode {
     private float vacuum = 0;
+    private long vacuumFedTick = 0;
     private int disabledConnections = 0;
 
     public VacuumPipeBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -29,6 +30,16 @@ public class VacuumPipeBlockEntity extends BlockEntity implements IVacuumNode {
     public void setVacuumLevel(float level) {
         this.vacuum = level;
         setChanged();
+    }
+
+    @Override
+    public long getVacuumFedTick() {
+        return vacuumFedTick;
+    }
+
+    @Override
+    public void setVacuumFedTick(long tick) {
+        this.vacuumFedTick = tick;
     }
 
     @Override

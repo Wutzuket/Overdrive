@@ -1,0 +1,14 @@
+{
+  "type": "overdrive:annihilation_generator",
+  "input_antiproton": {
+    "id": "overdrive:cooled_antiprotons",
+    "amount": 10
+  },
+  "input_positron": {
+    "id": "overdrive:positrons",
+    "amount": 10
+  },
+  "energy_per_tick": 285714,
+  "temperature_threshold": 3000,
+  "process_time": 100
+}

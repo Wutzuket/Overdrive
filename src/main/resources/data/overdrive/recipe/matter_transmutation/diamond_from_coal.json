@@ -1,0 +1,13 @@
+{
+  "type": "overdrive:matter_transmutation",
+  "input": {
+    "item": "minecraft:coal"
+  },
+  "cell_type": "antiproton",
+  "energy_cost": 500000,
+  "process_time": 200,
+  "result": {
+    "id": "minecraft:diamond",
+    "count": 1
+  }
+}

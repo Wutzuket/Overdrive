@@ -1,9 +1,9 @@
 {
   "type": "overdrive:ad_recipe",
-  "input_fluid": { "id": "overdrive:antiprotons", "amount": 10 },
-  "energy_cost": 100,
-  "process_time": 20,
+  "input_fluid": { "id": "overdrive:antiprotons", "amount": 20000 },
+  "energy_cost": 100000000,
+  "process_time": 1,
   "results": [
-    { "id": "overdrive:decelerated_antiprotons", "amount": 10 }
+    { "id": "overdrive:decelerated_antiprotons", "amount": 20000 }
   ]
 }

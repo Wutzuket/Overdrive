@@ -4,8 +4,6 @@ import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.menu.AcceleratorControllerMenu;
 import de.wutzuket.overdrive.menu.AcceleratorOutputMenu;
 import de.wutzuket.overdrive.menu.ADControllerMenu;
-import de.wutzuket.overdrive.menu.ADInputPortMenu;
-import de.wutzuket.overdrive.menu.ADOutputPortMenu;
 import de.wutzuket.overdrive.menu.AdvancedHologramMenu;
 import de.wutzuket.overdrive.menu.HologramMenu;
 import de.wutzuket.overdrive.menu.ELENAControllerMenu;
@@ -55,20 +53,13 @@ public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
     public static final Supplier<MenuType<ELENAControllerMenu>> ELENA_CONTROLLER_MENU =
             MENUS.register("elena_controller", () -> IMenuTypeExtension.create(ELENAControllerMenu::new));
 
-    public static final Supplier<MenuType<ADInputPortMenu>> AD_INPUT_PORT_MENU =
-            MENUS.register("ad_input_port", () -> IMenuTypeExtension.create(ADInputPortMenu::new));
-
-    public static final Supplier<MenuType<ADOutputPortMenu>> AD_OUTPUT_PORT_MENU =
-            MENUS.register("ad_output_port", () -> IMenuTypeExtension.create(ADOutputPortMenu::new));
-
-    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.ELENAInputPortMenu>> ELENA_INPUT_PORT_MENU =
-            MENUS.register("elena_input_port", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.ELENAInputPortMenu::new));
-
-    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.ELENAOutputPortMenu>> ELENA_OUTPUT_PORT_MENU =
-            MENUS.register("elena_output_port", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.ELENAOutputPortMenu::new));
-
     public static final Supplier<MenuType<de.wutzuket.overdrive.menu.PositronVacuumOutputPortMenu>> POSITRON_VACUUM_OUTPUT_PORT_MENU =
             MENUS.register("positron_vacuum_output_port", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.PositronVacuumOutputPortMenu::new));
+
+    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.AnnihilationControllerMenu>> ANNIHILATION_CONTROLLER_MENU =
+            MENUS.register("annihilation_controller", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.AnnihilationControllerMenu::new));
+    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.CoolingTowerMenu>> COOLING_TOWER_MENU =
+            MENUS.register("cooling_tower", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.CoolingTowerMenu::new));
 
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);

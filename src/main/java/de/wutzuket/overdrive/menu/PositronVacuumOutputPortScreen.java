@@ -1,17 +1,13 @@
 package de.wutzuket.overdrive.menu;
 
-import de.wutzuket.overdrive.integration.jei.scanner_jei_plugin;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.runtime.IIngredientManager;
-import mezz.jei.api.runtime.IJeiRuntime;
+import de.wutzuket.overdrive.client.gui.GuiStyle;
+import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -19,19 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<PositronVacuumOutputPortMenu> {
-    private static final ResourceLocation CONTAINER_BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/dispenser.png");
-
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final int FLUID_BAR_X = 8;
-    private static final int FLUID_BAR_Y = 20;
-    private static final int FLUID_BAR_W = 130;
-    private static final int FLUID_BAR_H = 16;
-
-    private static final int SLOT_X = 148;
-    private static final int SLOT_Y = 35;
+    private static final int FLUID_BAR_X = 18;
+    private static final int FLUID_BAR_Y = 17;
+    private static final int FLUID_BAR_W = 18;
+    private static final int FLUID_BAR_H = 54;
 
     private double lastMouseX;
     private double lastMouseY;
@@ -55,42 +45,27 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        // 1. Hintergrund-Textur vom Dispenser zeichnen
-        guiGraphics.blit(CONTAINER_BACKGROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
-
-        // 2. Grauer Bereich: Deckt die nicht benutzten 3x3 Dispenser-Slots vollständig ab (von y + 16 bis y + 80)
-        guiGraphics.fill(x + 6, y + 16, x + 142, y + 80, 0xFFC6C6C6);
-
-        // 3. Fluid-Bar Rahmen
-        int fx = x + FLUID_BAR_X, fy = y + FLUID_BAR_Y, fw = FLUID_BAR_W, fh = FLUID_BAR_H;
-        guiGraphics.fill(fx, fy, fx + fw, fy + fh, 0xFF2D2D2D);
-        guiGraphics.fill(fx + 1, fy + 1, fx + fw, fy + fh, 0xFF707070);
-        guiGraphics.fill(fx + 1, fy + 1, fx + fw - 1, fy + fh - 1, 0xFF141414);
-
-        // 4. Fluid-Füllstand
-        FluidStack fluidStack = getFluidStack();
-        if (!fluidStack.isEmpty()) {
-            int amount = fluidStack.getAmount();
-            int capacity = menu.getFluidCapacity();
-            int fillW = capacity > 0 ? amount * (fw - 2) / capacity : 0;
-            if (fillW > 0) {
-                fillW = Math.min(fillW, fw - 2);
-                int color = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
-                guiGraphics.fill(fx + 1, fy + 1, fx + 1 + fillW, fy + fh - 1, color);
-                guiGraphics.fill(fx + 1, fy + 1, fx + 1 + fillW, fy + 2, 0x66FFFFFF);
-            }
-        }
-
-        // 5. Einzelner Slot-Hintergrund oben rechts
-        guiGraphics.blit(CONTAINER_BACKGROUND, x + SLOT_X - 1, y + SLOT_Y - 1, 61, 17, 18, 18);
+        GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
+        GuiStyle.inset(guiGraphics, x + 6, y + 80, 164, 82);
+        GuiStyle.fluidGauge(guiGraphics, font, getFluidStack(), menu.getFluidCapacity(),
+                x + FLUID_BAR_X, y + FLUID_BAR_Y, FLUID_BAR_W, FLUID_BAR_H, null);
+        GuiStyle.slotFrames(guiGraphics, menu, x, y);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, 8, 6, 0x404040, false);
-        int amount = menu.getFluidAmount();
-        guiGraphics.drawString(this.font, amount + " / " + menu.getFluidCapacity() + " mB", 8, 44, 0x404040, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0x404040, false);
+        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
+        FluidStack fluidStack = getFluidStack();
+        if (fluidStack.isEmpty()) {
+            guiGraphics.drawString(this.font, Component.translatable("container.overdrive.positron_vacuum_output_port.empty"),
+                    40, 20, GuiStyle.COL_TEXT_DIM, false);
+        } else {
+            guiGraphics.drawString(this.font, fluidStack.getHoverName(), 40, 20, GuiStyle.COL_TEXT, false);
+        }
+        guiGraphics.drawString(this.font, ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity()),
+                40, 30, GuiStyle.COL_CYAN, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY,
+                GuiStyle.COL_TEXT_DIM, false);
     }
 
     @Override
@@ -103,31 +78,7 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if ((keyCode == GLFW.GLFW_KEY_R || keyCode == GLFW.GLFW_KEY_U) && menu.getFluidAmount() > 0) {
-            int x = (this.width - WIDTH) / 2;
-            int y = (this.height - HEIGHT) / 2;
-
-            if (lastMouseX >= x + FLUID_BAR_X && lastMouseX <= x + FLUID_BAR_X + FLUID_BAR_W &&
-                    lastMouseY >= y + FLUID_BAR_Y && lastMouseY <= y + FLUID_BAR_Y + FLUID_BAR_H) {
-                openJeiForFluid(keyCode == GLFW.GLFW_KEY_U);
-                return true;
-            }
-        }
         return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    private void openJeiForFluid(boolean showUses) {
-        FluidStack fluidStack = getFluidStack();
-        IJeiRuntime jeiRuntime = scanner_jei_plugin.getRuntime();
-        if (jeiRuntime != null && !fluidStack.isEmpty()) {
-            IIngredientManager manager = jeiRuntime.getIngredientManager();
-            manager.getIngredientTypeChecked(FluidStack.class).ifPresent(fluidType -> {
-                jeiRuntime.getRecipesGui().show(
-                        jeiRuntime.getJeiHelpers().getFocusFactory()
-                                .createFocus(showUses ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT, fluidType, fluidStack.copyWithAmount(1))
-                );
-            });
-        }
     }
 
     @Override
@@ -144,7 +95,7 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
             } else {
                 lines.add(Component.translatable("container.overdrive.positron_vacuum_output_port.empty"));
             }
-            lines.add(Component.literal(menu.getFluidAmount() + " / " + menu.getFluidCapacity() + " mB"));
+            lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else {
             super.renderTooltip(guiGraphics, mouseX, mouseY);

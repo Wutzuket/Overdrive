@@ -243,7 +243,6 @@ registrar.playToClient(
             // Step 4 - Annihilation
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ANNIHILATION_VACUUM_PORT.get(), (be, side) -> null); // vacuum via IVacuumNode not fluid
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ANNIHILATION_CELL_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.annihilation.CellDockingPortEntity)be).getTank());
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.ANNIHILATION_CELL_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.annihilation.CellDockingPortEntity)be).getItemHandler());
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ANNIHILATION_COOLANT_INPUT.get(), (be, side) -> ((de.wutzuket.overdrive.block.annihilation.CoolantInputPortEntity)be).getTank());
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ANNIHILATION_STEAM_OUTPUT.get(), (be, side) -> ((de.wutzuket.overdrive.block.annihilation.SteamOutputPortEntity)be).getTank());
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.ANNIHILATION_ENERGY_OUTPUT.get(), (be, side) -> (de.wutzuket.overdrive.block.annihilation.EnergyOutputPortEntity)be);

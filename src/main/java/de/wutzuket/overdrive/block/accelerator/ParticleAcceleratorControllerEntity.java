@@ -2,6 +2,7 @@ package de.wutzuket.overdrive.block.accelerator;
 
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.menu.AcceleratorControllerMenu;
+import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.recipe.CollisionRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import net.minecraft.core.BlockPos;
@@ -584,6 +585,14 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
     }
 
     private void triggerAnnihilation(ServerLevel level, BlockPos pos, BlockState state) {
+        if (!de.wutzuket.overdrive.config.ODConfig.ACCELERATOR_EXPLODE_ON_FAILURE.get()) {
+            active = false;
+            progressTicks = 0;
+            validStructure = false;
+            setChanged();
+            level.sendBlockUpdated(pos, state, state, 3);
+            return;
+        }
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         int cx = pos.getX() + facing.getStepX() * OUTER_RADIUS;
         int cy = pos.getY();
@@ -606,6 +615,10 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         int minZ = cz - OUTER_RADIUS - 2;
         int maxZ = cz + OUTER_RADIUS + 2;
 
+        double bottomChance = de.wutzuket.overdrive.config.ODConfig.ACCELERATOR_BOTTOM_DESTROY_CHANCE.get();
+        double middleChance = de.wutzuket.overdrive.config.ODConfig.ACCELERATOR_MIDDLE_DESTROY_CHANCE.get();
+        double topChance = de.wutzuket.overdrive.config.ODConfig.ACCELERATOR_TOP_DESTROY_CHANCE.get();
+
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
                 double dx = x - cx;
@@ -626,14 +639,14 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
                             || block instanceof AcceleratorVacuumInputPortBlock) {
                         double destroyChance;
                         if (dy == -1) {
-                            destroyChance = 0.15; // bottom layer: 15% destroyed
+                            destroyChance = bottomChance;
                         } else if (dy == 0) {
-                            destroyChance = 0.5; // middle layer: 50% destroyed
+                            destroyChance = middleChance;
                         } else {
-                            destroyChance = 0.85; // top layer: 85% destroyed
+                            destroyChance = topChance;
                         }
                         if (level.random.nextDouble() < destroyChance) {
-                            level.destroyBlock(blockPos, true); // true = drop items
+                            level.destroyBlock(blockPos, true);
                         }
                     }
                 }

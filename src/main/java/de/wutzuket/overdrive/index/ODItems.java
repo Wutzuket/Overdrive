@@ -153,12 +153,6 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
     public static final Supplier<Item> WOLFRAM_MESH = ITEMS.register("wolfram_mesh",
             () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
 
-    // Step 4 - Magnetic Cells
-    public static final Supplier<Item> MAGNETIC_ANTIPROTON_CELL = ITEMS.register("magnetic_antiproton_cell",
-            () -> new de.wutzuket.overdrive.item.MagneticCellItem(new Item.Properties().stacksTo(1), true));
-    public static final Supplier<Item> MAGNETIC_POSITRON_CELL = ITEMS.register("magnetic_positron_cell",
-            () -> new de.wutzuket.overdrive.item.MagneticCellItem(new Item.Properties().stacksTo(1), false));
-
     // Step 4 - Annihilation
     public static final Supplier<Item> ANNIHILATION_HEAVY_CASING = ITEMS.register("annihilation_heavy_casing", () -> new BlockItem(ODBlocks.ANNIHILATION_HEAVY_CASING.get(), new Item.Properties()));
     public static final Supplier<Item> REACTOR_CORE_BLOCK = ITEMS.register("reactor_core_block", () -> new BlockItem(ODBlocks.REACTOR_CORE_BLOCK.get(), new Item.Properties()));

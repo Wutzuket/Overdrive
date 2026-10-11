@@ -76,8 +76,6 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItems.WOLFRAM_TARGET.get());
                 output.accept(ODItems.POSITRON_VACUUM_OUTPUT_PORT.get());
                 output.accept(ODItems.WOLFRAM_MESH.get());
-                output.accept(ODItems.MAGNETIC_ANTIPROTON_CELL.get());
-                output.accept(ODItems.MAGNETIC_POSITRON_CELL.get());
                 output.accept(ODItems.ANNIHILATION_HEAVY_CASING.get());
                 output.accept(ODItems.REACTOR_CORE_BLOCK.get());
                 output.accept(ODItems.CORE_CONTAINMENT_GLASS.get());

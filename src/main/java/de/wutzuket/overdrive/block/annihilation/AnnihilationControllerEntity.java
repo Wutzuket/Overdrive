@@ -2,6 +2,7 @@ package de.wutzuket.overdrive.block.annihilation;
 
 import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.block.vacuum.IVacuumNode;
+import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.index.ODBlocks;
 import de.wutzuket.overdrive.recipe.AnnihilationRecipe;
@@ -211,9 +212,7 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         for(CellDockingPortEntity p: new CellDockingPortEntity[]{a,b}){
             if(p==null) continue;
             if(p.hasAntiprotonFluid()) totalAnti+=p.getTank().getFluidAmount();
-            else if(p.hasAntiproton()) totalAnti+=100; // Item zählt als 100mB
             if(p.hasPositronFluid()) totalPos+=p.getTank().getFluidAmount();
-            else if(p.hasPositron()) totalPos+=100;
         }
         return totalAnti>=needAnti && totalPos>=needPos;
     }
@@ -314,10 +313,6 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         return null;
     }
 
-    private boolean hasCellsForRecipe(CellDockingPortEntity a, CellDockingPortEntity b){
-        // Legacy wrapper für idleCode-Check mit default 100mB
-        return hasFuelForRecipe(a,b,100,100);
-    }
     private boolean consumeFuelForRecipe(CellDockingPortEntity a, CellDockingPortEntity b, int needAnti, int needPos){
         int leftAnti=needAnti, leftPos=needPos;
         for(CellDockingPortEntity p: new CellDockingPortEntity[]{a,b}){
@@ -326,22 +321,14 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
                 int take=Math.min(leftAnti, p.getTank().getFluidAmount());
                 p.getTank().drain(take, net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
                 leftAnti-=take;
-            } else if(leftAnti>0 && p.hasAntiproton()){
-                p.consumeDose(1); leftAnti=0;
             }
             if(leftPos>0 && p.hasPositronFluid()){
                 int take=Math.min(leftPos, p.getTank().getFluidAmount());
                 p.getTank().drain(take, net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
                 leftPos-=take;
-            } else if(leftPos>0 && p.hasPositron()){
-                p.consumeDose(1); leftPos=0;
             }
         }
         return leftAnti<=0 && leftPos<=0;
-    }
-    private void consumeCellDoses(CellDockingPortEntity a, CellDockingPortEntity b){
-        // Legacy - wird nicht mehr pro Tick aufgerufen, bleibt für Kompatibilität
-        consumeFuelForRecipe(a,b,100,100);
     }
 
     private Fluid getSteamFluid(){
@@ -486,14 +473,38 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
     }
 
     private void triggerVacuumExplosion(ServerLevel level, BlockPos pos, BlockState state){
+        var mode = de.wutzuket.overdrive.config.ODConfig.REACTOR_FAILURE_MODE.get();
+        if(mode == de.wutzuket.overdrive.config.ODConfig.ReactorFailureMode.NONE){
+            active=false; validStructure=false; coreTemp=20; setChanged(); level.sendBlockUpdated(pos,state,state,3);
+            return;
+        }
         BlockPos center=getCenter(pos, state);
         int cx=center.getX(), cy=center.getY(), cz=center.getZ();
-        level.explode(null, cx+0.5, cy+0.5, cz+0.5, 50f, Level.ExplosionInteraction.TNT);
-        // vaporize - set blocks to air within radius
-        int r=12;
-        for(int x=cx-r; x<=cx+r; x++) for(int y=cy-r; y<=cy+r; y++) for(int z=cz-r; z<=cz+r; z++){
-            double d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy)+(z-cz)*(z-cz));
-            if(d<r) level.setBlock(new BlockPos(x,y,z), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+
+        if(mode == de.wutzuket.overdrive.config.ODConfig.ReactorFailureMode.EXPLOSION){
+            level.explode(null, cx+0.5, cy+0.5, cz+0.5, 50f, Level.ExplosionInteraction.TNT);
+            int r=12;
+            for(int x=cx-r; x<=cx+r; x++) for(int y=cy-r; y<=cy+r; y++) for(int z=cz-r; z<=cz+r; z++){
+                double d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy)+(z-cz)*(z-cz));
+                if(d<r) level.setBlock(new BlockPos(x,y,z), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+            }
+        } else {
+            // MELTDOWN
+            triggerMeltdown(level, pos, state);
+            if(de.wutzuket.overdrive.config.ODConfig.DESTROY_STRUCTURE_ON_MELTDOWN.get()){
+                // Also destroy torus structure (keep bottom layer)
+                for(int x=cx-OUTER; x<=cx+OUTER; x++) for(int z=cz-OUTER; z<=cz+OUTER; z++){
+                    int dx=Math.abs(x-cx), dz=Math.abs(z-cz);
+                    if(isTorusWall(dx, 0, dz)){
+                        for(int dy=-1; dy<=1; dy++){
+                            double chance = dy == -1 ? 0.15 : (dy == 0 ? 0.5 : 0.85);
+                            if(level.random.nextDouble() < chance){
+                                level.destroyBlock(new BlockPos(x, cy+dy, z), true);
+                            }
+                        }
+                    }
+                }
+            }
         }
         active=false; validStructure=false; coreTemp=20; setChanged(); level.sendBlockUpdated(pos,state,state,3);
     }

@@ -2,6 +2,7 @@ package de.wutzuket.overdrive.block.elena;
 
 import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.block.vacuum.IVacuumNode;
+import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.fluid.InOutFluidHandler;
 import de.wutzuket.overdrive.fluid.ODFluids;
 import de.wutzuket.overdrive.index.ODBlockEntities;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -450,12 +452,71 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
     }
 
     private void triggerAnnihilation(ServerLevel level, BlockPos pos, BlockState state) {
+        if (!de.wutzuket.overdrive.config.ODConfig.ELENA_EXPLODE_ON_FAILURE.get()) {
+            active = false;
+            progressTicks = 0;
+            validStructure = false;
+            setChanged();
+            level.sendBlockUpdated(pos, state, state, 3);
+            return;
+        }
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         int cx = pos.getX() + facing.getStepX() * OUTER_RADIUS;
         int cy = pos.getY();
         int cz = pos.getZ() + facing.getStepZ() * OUTER_RADIUS;
-        float power = 6.0f;
-        level.explode(null, cx + 0.5, cy + 0.5, cz + 0.5, power, Level.ExplosionInteraction.TNT);
+
+        // Multiple small explosions along the ring
+        int explosionCount = 12;
+        for (int i = 0; i < explosionCount; i++) {
+            double angle = 2.0 * Math.PI * i / explosionCount;
+            double rx = OUTER_RADIUS * Math.cos(angle);
+            double rz = OUTER_RADIUS * Math.sin(angle);
+            double ex = cx + rx + 0.5;
+            double ez = cz + rz + 0.5;
+            level.explode(null, ex, cy + 0.5, ez, 3.0f, Level.ExplosionInteraction.TNT);
+        }
+
+        // Destroy ring blocks - tiered destruction
+        int minX = cx - OUTER_RADIUS;
+        int maxX = cx + OUTER_RADIUS;
+        int minZ = cz - OUTER_RADIUS;
+        int maxZ = cz + OUTER_RADIUS;
+
+        double bottomChance = de.wutzuket.overdrive.config.ODConfig.ELENA_BOTTOM_DESTROY_CHANCE.get();
+        double middleChance = de.wutzuket.overdrive.config.ODConfig.ELENA_MIDDLE_DESTROY_CHANCE.get();
+        double topChance = de.wutzuket.overdrive.config.ODConfig.ELENA_TOP_DESTROY_CHANCE.get();
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int maxDist = Math.max(Math.abs(x - cx), Math.abs(z - cz));
+                boolean inRing = maxDist >= 1 && maxDist <= OUTER_RADIUS;
+                if (!inRing) continue;
+
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos blockPos = new BlockPos(x, cy + dy, z);
+                    BlockState blockState = level.getBlockState(blockPos);
+                    Block block = blockState.getBlock();
+                    if (block instanceof ELENACasingBlock
+                            || block instanceof ELENAEnergyInputPortBlock
+                            || block instanceof ELENAVacuumPortBlock
+                            || block instanceof ELENAInputPortBlock
+                            || block instanceof ELENAOutputPortBlock) {
+                        double destroyChance;
+                        if (dy == -1) {
+                            destroyChance = bottomChance;
+                        } else if (dy == 0) {
+                            destroyChance = middleChance;
+                        } else {
+                            destroyChance = topChance;
+                        }
+                        if (level.random.nextDouble() < destroyChance) {
+                            level.destroyBlock(blockPos, true);
+                        }
+                    }
+                }
+            }
+        }
+
         active = false;
         progressTicks = 0;
         validStructure = false;

@@ -70,16 +70,18 @@ public class CoolingTowerControllerBlock extends Block implements EntityBlock {
         else return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockPos center = CoolingTowerControllerEntity.getCenter(pos, state);
+        int cx = center.getX(), cy = center.getY(), cz = center.getZ();
         int placed = 0;
 
         if (isInputPort) {
-            BlockPos inSlot = pos.offset(CoolingTowerControllerEntity.INPUT_DX, CoolingTowerControllerEntity.INPUT_DY, CoolingTowerControllerEntity.INPUT_DZ);
+            BlockPos inSlot = new BlockPos(cx + CoolingTowerControllerEntity.INPUT_DX, cy + CoolingTowerControllerEntity.INPUT_DY, cz + CoolingTowerControllerEntity.INPUT_DZ);
             if (level.getBlockState(inSlot).isAir()) {
                 level.setBlock(inSlot, target.defaultBlockState(), 3);
                 placed = 1;
             }
         } else if (isOutputPort) {
-            BlockPos outSlot = pos.offset(CoolingTowerControllerEntity.OUTPUT_DX, CoolingTowerControllerEntity.OUTPUT_DY, CoolingTowerControllerEntity.OUTPUT_DZ);
+            BlockPos outSlot = new BlockPos(cx + CoolingTowerControllerEntity.OUTPUT_DX, cy + CoolingTowerControllerEntity.OUTPUT_DY, cz + CoolingTowerControllerEntity.OUTPUT_DZ);
             if (level.getBlockState(outSlot).isAir()) {
                 level.setBlock(outSlot, target.defaultBlockState(), 3);
                 placed = 1;
@@ -92,7 +94,8 @@ public class CoolingTowerControllerBlock extends Block implements EntityBlock {
                 for (int x = -r; x <= r; x++) for (int z = -r; z <= r; z++) {
                     boolean isWall = Math.abs(x) == r || Math.abs(z) == r;
                     if (!isWall) continue;
-                    BlockPos pp = pos.offset(x, y, z);
+                    BlockPos pp = new BlockPos(cx + x, cy + y, cz + z);
+                    // Skip controller position in base wall
                     if (pp.equals(pos)) continue;
                     if (y == 1 && x == CoolingTowerControllerEntity.INPUT_DX && z == CoolingTowerControllerEntity.INPUT_DZ) continue;
                     if (y == 7 && x == CoolingTowerControllerEntity.OUTPUT_DX && z == CoolingTowerControllerEntity.OUTPUT_DZ) continue;

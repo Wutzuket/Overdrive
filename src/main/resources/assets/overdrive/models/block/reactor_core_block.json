@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/netherite_block"
+    "all": "overdrive:block/reactor_core_block"
   }
 }

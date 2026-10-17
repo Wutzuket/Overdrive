@@ -1,0 +1,20 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": {
+      "block": "minecraft:stone"
+    }
+  },
+  "pattern": [
+    ["AAA", "AAA", "AAA"],
+    ["AAA", "AAA", "AAA"],
+    ["AAA", "AAA", "AAA"]
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:diamond_block"
+  },
+  "show_notification": false
+}

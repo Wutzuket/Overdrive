@@ -11,6 +11,19 @@
     "overdrive:wolfram_ore",
     "overdrive:deepslate_wolfram_ore",
     "overdrive:wolfram_block",
+    "overdrive:annihilation_heavy_casing",
+    "overdrive:reactor_core_block",
+    "overdrive:core_containment_glass",
+    "overdrive:annihilation_controller",
+    "overdrive:annihilation_vacuum_port",
+    "overdrive:cell_docking_port",
+    "overdrive:coolant_input_port",
+    "overdrive:steam_output_port",
+    "overdrive:annihilation_energy_output",
+    "overdrive:cooling_tower_casing",
+    "overdrive:cooling_tower_controller",
+    "overdrive:cooling_tower_input_port",
+    "overdrive:cooling_tower_output_port",
     "overdrive:wolfram_casing",
     "overdrive:electron_gun",
     "overdrive:wolfram_target",
@@ -37,6 +50,8 @@
     "overdrive:elena_energy_input_port",
     "overdrive:elena_vacuum_port",
     "overdrive:elena_input_port",
-    "overdrive:elena_output_port"
+    "overdrive:elena_output_port",
+    "overdrive:corium_block",
+    "overdrive:cryo_distiller"
   ]
 }

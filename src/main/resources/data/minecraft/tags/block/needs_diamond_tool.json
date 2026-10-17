@@ -7,6 +7,7 @@
     "overdrive:wolfram_casing",
     "overdrive:electron_gun",
     "overdrive:wolfram_target",
-    "overdrive:positron_vacuum_output_port"
+    "overdrive:positron_vacuum_output_port",
+    "overdrive:corium_block"
   ]
 }

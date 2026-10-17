@@ -4,6 +4,6 @@
   "energy_cost": 50000,
   "process_time": 1,
   "results": [
-    { "id": "overdrive:positrons", "amount": 40000 }
+    { "id": "overdrive:positrons", "amount": 4000 }
   ]
 }

@@ -67,19 +67,6 @@ public class ODFluids {
                     .block(() -> (net.minecraft.world.level.block.LiquidBlock) ODFluidBlocks.POSITRONS.get())
                     .bucket(() -> ODItemsFluid.POSITRONS_BUCKET.get());
 
-    public static final Supplier<FlowingFluid> SODIUM_SOURCE = FLUIDS.register("sodium",
-            () -> new BaseFlowingFluid.Source(ODFluids.SODIUM_PROPERTIES));
-    public static final Supplier<FlowingFluid> SODIUM_FLOWING = FLUIDS.register("flowing_sodium",
-            () -> new BaseFlowingFluid.Flowing(ODFluids.SODIUM_PROPERTIES));
-    private static final BaseFlowingFluid.Properties SODIUM_PROPERTIES =
-            new BaseFlowingFluid.Properties(
-                    () -> ODFluidTypes.SODIUM_TYPE.get(),
-                    SODIUM_SOURCE,
-                    SODIUM_FLOWING
-            )
-                    .block(() -> (net.minecraft.world.level.block.LiquidBlock) ODFluidBlocks.SODIUM.get())
-                    .bucket(() -> ODItemsFluid.SODIUM_BUCKET.get());
-
     public static final Supplier<FlowingFluid> CRYOFLUID_SOURCE = FLUIDS.register("cryofluid",
             () -> new BaseFlowingFluid.Source(ODFluids.CRYOFLUID_PROPERTIES));
     public static final Supplier<FlowingFluid> CRYOFLUID_FLOWING = FLUIDS.register("flowing_cryofluid",
@@ -105,19 +92,6 @@ public class ODFluids {
             )
                     .block(() -> (net.minecraft.world.level.block.LiquidBlock) ODFluidBlocks.STEAM.get())
                     .bucket(() -> ODItemsFluid.STEAM_BUCKET.get());
-
-    public static final Supplier<FlowingFluid> SUPERHEATED_SODIUM_SOURCE = FLUIDS.register("superheated_sodium",
-            () -> new BaseFlowingFluid.Source(ODFluids.SUPERHEATED_SODIUM_PROPERTIES));
-    public static final Supplier<FlowingFluid> SUPERHEATED_SODIUM_FLOWING = FLUIDS.register("flowing_superheated_sodium",
-            () -> new BaseFlowingFluid.Flowing(ODFluids.SUPERHEATED_SODIUM_PROPERTIES));
-    private static final BaseFlowingFluid.Properties SUPERHEATED_SODIUM_PROPERTIES =
-            new BaseFlowingFluid.Properties(
-                    () -> ODFluidTypes.SUPERHEATED_SODIUM_TYPE.get(),
-                    SUPERHEATED_SODIUM_SOURCE,
-                    SUPERHEATED_SODIUM_FLOWING
-            )
-                    .block(() -> (net.minecraft.world.level.block.LiquidBlock) ODFluidBlocks.SUPERHEATED_SODIUM.get())
-                    .bucket(() -> ODItemsFluid.SUPERHEATED_SODIUM_BUCKET.get());
 
     public static final Supplier<FlowingFluid> LIQUID_IRIDIUM_SOURCE = FLUIDS.register("liquid_iridium",
             () -> new BaseFlowingFluid.Source(ODFluids.LIQUID_IRIDIUM_PROPERTIES));

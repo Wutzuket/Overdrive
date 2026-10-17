@@ -1,17 +1,10 @@
 package de.wutzuket.overdrive.block.accelerator;
 
-import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.index.ODBlockEntities;
-import de.wutzuket.overdrive.menu.AcceleratorOutputMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +16,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class AcceleratorOutputEntity extends BlockEntity implements MenuProvider {
+public class AcceleratorOutputEntity extends BlockEntity {
     // Muss 14.000 mB/Op (Max-Rate-Rezept) plus Puffer aufnehmen
     private static final int TANK_CAPACITY = 500_000;
 
@@ -76,16 +69,6 @@ public class AcceleratorOutputEntity extends BlockEntity implements MenuProvider
 
     public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
         return fluidTank.drain(maxDrain, action);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("container.overdrive.accelerator_output");
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new AcceleratorOutputMenu(containerId, inventory, this);
     }
 
     @Override

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ADA",
+    "ARA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "overdrive:aluminum_block"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:scanner"
+  }
+}

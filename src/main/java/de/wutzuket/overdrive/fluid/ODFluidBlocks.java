@@ -29,14 +29,10 @@ public class ODFluidBlocks {
             () -> new LiquidBlock(ODFluids.POSITRONS_SOURCE.get(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
-    public static final Supplier<Block> SODIUM = BLOCKS.register("sodium",
-            () -> new LiquidBlock(ODFluids.SODIUM_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
     public static final Supplier<Block> CRYOFLUID = BLOCKS.register("cryofluid",
             () -> new LiquidBlock(ODFluids.CRYOFLUID_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
     public static final Supplier<Block> STEAM = BLOCKS.register("steam",
             () -> new LiquidBlock(ODFluids.STEAM_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable().lightLevel(s -> 5)));
-    public static final Supplier<Block> SUPERHEATED_SODIUM = BLOCKS.register("superheated_sodium",
-            () -> new LiquidBlock(ODFluids.SUPERHEATED_SODIUM_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable().lightLevel(s -> 10)));
     public static final Supplier<Block> LIQUID_IRIDIUM = BLOCKS.register("liquid_iridium",
             () -> new LiquidBlock(ODFluids.LIQUID_IRIDIUM_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable().lightLevel(s -> 7)));
     public static final Supplier<Block> SUPERHEATED_CRYOFLUID = BLOCKS.register("superheated_cryofluid",

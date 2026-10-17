@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "overdrive:block/annihilation_heavy_casing",
   "textures": {
-    "all": "minecraft:block/blast_furnace_front"
+    "north": "overdrive:block/annihilation_controller"
   }
 }

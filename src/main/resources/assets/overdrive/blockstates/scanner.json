@@ -1,0 +1,19 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "overdrive:block/scanner"
+        },
+        "facing=south": {
+            "model": "overdrive:block/scanner",
+            "y": 180
+        },
+        "facing=east": {
+            "model": "overdrive:block/scanner",
+            "y": 90
+        },
+        "facing=west": {
+            "model": "overdrive:block/scanner",
+            "y": 270
+        }
+    }
+}

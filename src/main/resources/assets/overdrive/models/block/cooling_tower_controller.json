@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "overdrive:block/cooling_tower_casing",
   "textures": {
-    "all": "minecraft:block/furnace_front"
+    "north": "overdrive:block/cooling_tower_controller"
   }
 }

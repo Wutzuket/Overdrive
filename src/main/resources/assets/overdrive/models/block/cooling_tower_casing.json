@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/bricks"
+    "all": "overdrive:block/cooling_tower_casing"
   }
 }

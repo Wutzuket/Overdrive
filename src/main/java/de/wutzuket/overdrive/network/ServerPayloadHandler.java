@@ -37,6 +37,8 @@ public class ServerPayloadHandler {
                     ann.toggleHologram();
                 } else if (be instanceof de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerEntity cooling) {
                     cooling.toggleHologram();
+                } else if (be instanceof de.wutzuket.overdrive.block.distiller.CryoDistillerEntity distiller) {
+                    distiller.toggleHologram();
                 }
             }
         });

@@ -4,6 +4,7 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.recipe.CoolingTowerRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -28,11 +30,18 @@ import org.joml.Vector3f;
 
 public class CoolingTowerControllerEntity extends BlockEntity implements MenuProvider {
     public static final int W=5, H=9;
-    // Feste Port-Slots in der Turmwand (relativ zum Controller): Input unten-Ost, Output oben-West
+    // Controller sits in the base wall (radius 2), facing inward. Center is 2 blocks in front of controller.
+    // Port slots relative to CENTER: Input at (2, 1, 0), Output at (-2, 7, 0) in center coordinates
     public static final int INPUT_DX=2, INPUT_DY=1, INPUT_DZ=0;
     public static final int OUTPUT_DX=-2, OUTPUT_DY=7, OUTPUT_DZ=0;
     public static boolean isInputSlot(int x,int y,int z){ return x==INPUT_DX && y==INPUT_DY && z==INPUT_DZ; }
     public static boolean isOutputSlot(int x,int y,int z){ return x==OUTPUT_DX && y==OUTPUT_DY && z==OUTPUT_DZ; }
+
+    public static BlockPos getCenter(BlockPos controllerPos, BlockState state){
+        Direction facing=state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        // Controller faces outward (away from center), so center is opposite direction
+        return controllerPos.relative(facing.getOpposite(), 2);
+    }
     private final FluidTank inputTank = new FluidTank(8000){
         @Override protected void onContentsChanged(){ setChanged(); if(level!=null) level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),3); }
     };
@@ -73,7 +82,8 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
     public void tick(Level level, BlockPos pos, BlockState state){
         if(level.isClientSide){
             if(valid && active && level.random.nextFloat()<0.3f){
-                double x=pos.getX()+0.5, y=pos.getY()+H+0.5, z=pos.getZ()+0.5;
+                BlockPos center = getCenter(pos, state);
+                double x=center.getX()+0.5, y=pos.getY()+H+0.5, z=center.getZ()+0.5;
                 level.addParticle(ParticleTypes.CLOUD, x+level.random.nextGaussian()*0.5, y, z+level.random.nextGaussian()*0.5, 0,0.05,0);
                 level.addParticle(ParticleTypes.CLOUD, x+level.random.nextGaussian()*0.5, y+0.5, z+level.random.nextGaussian()*0.5, 0,0.05,0);
                 level.addParticle(ParticleTypes.CLOUD, x+level.random.nextGaussian()*0.5, y+1.0, z+level.random.nextGaussian()*0.5, 0,0.05,0);
@@ -86,11 +96,13 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
             if(level instanceof ServerLevel sl){
                 // Ganze Turm-Schale abgehen (gleiche Geometrie wie checkStructure).
                 DustParticleOptions opt=new DustParticleOptions(new Vector3f(1f, 0f, 0f), 2.5f);
+                BlockPos center = getCenter(pos, state);
+                int cx=center.getX(), cy=center.getY(), cz=center.getZ();
                 for(int y=0; y<H; y++){
                     int r = (y==0 || y==H-1) ? 2 : (y>=3 && y<=5 ? 1 : 2);
                     for(int x=-r; x<=r; x+=1) for(int z=-r; z<=r; z+=1){
                         if(Math.abs(x)!=r && Math.abs(z)!=r) continue;
-                        BlockPos pp=pos.offset(x,y,z);
+                        BlockPos pp=new BlockPos(cx+x, cy+y, cz+z);
                         sl.sendParticles(opt, pp.getX()+0.5, pp.getY()+0.5, pp.getZ()+0.5, 3, 0.2, 0.2, 0.2, 0.05);
                     }
                 }
@@ -125,7 +137,10 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
             inputTank.drain(recipe.inputFluid().getAmount(), IFluidHandler.FluidAction.EXECUTE);
             outputTank.fill(out.copy(), IFluidHandler.FluidAction.EXECUTE);
             progress=0; recipe=null;
-            if(level instanceof ServerLevel sl) sl.sendParticles(ParticleTypes.CLOUD, pos.getX()+0.5, pos.getY()+H+0.5, pos.getZ()+0.5, 10, 0.5,0.2,0.5,0.02);
+            if(level instanceof ServerLevel sl) {
+                BlockPos center = getCenter(pos, state);
+                sl.sendParticles(ParticleTypes.CLOUD, center.getX()+0.5, pos.getY()+H+0.5, center.getZ()+0.5, 10, 0.5,0.2,0.5,0.02);
+            }
             setChanged(); level.sendBlockUpdated(pos,state,state,3);
         } else {
             setChanged(); level.sendBlockUpdated(pos,state,state,2);
@@ -134,12 +149,14 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
 
     private void cachePorts(Level level, BlockPos ctrl){
         inputPortPos=null; outputPortPos=null;
+        BlockPos center = getCenter(ctrl, level.getBlockState(ctrl));
+        int cx=center.getX(), cy=center.getY(), cz=center.getZ();
         for(int y=0; y<H; y++){
             int r = (y==0 || y==H-1) ? 2 : (y>=3 && y<=5 ? 1 : 2);
             for(int x=-r; x<=r; x++) for(int z=-r; z<=r; z++){
                 boolean isWall = Math.abs(x)==r || Math.abs(z)==r;
                 if(!isWall) continue;
-                BlockPos p=ctrl.offset(x,y,z);
+                BlockPos p=new BlockPos(cx+x, cy+y, cz+z);
                 Block b=level.getBlockState(p).getBlock();
                 if(b instanceof CoolingTowerInputPortBlock && inputPortPos==null) inputPortPos=p.immutable();
                 else if(b instanceof CoolingTowerOutputPortBlock && outputPortPos==null) outputPortPos=p.immutable();
@@ -178,23 +195,37 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
 
     private boolean checkStructure(Level level, BlockPos ctrl){
         failCode=0; failPos=null;
-        // Ports zuerst zaehlen, damit das GUI auch bei sonst ungueltiger Struktur live Werte zeigt
-        BlockPos inSlot=ctrl.offset(INPUT_DX,INPUT_DY,INPUT_DZ);
-        BlockPos outSlot=ctrl.offset(OUTPUT_DX,OUTPUT_DY,OUTPUT_DZ);
+        BlockPos center = getCenter(ctrl, level.getBlockState(ctrl));
+        int cx=center.getX(), cy=center.getY(), cz=center.getZ();
+
+        // Ports an den festen Slots (relativ zum Center)
+        BlockPos inSlot=new BlockPos(cx+INPUT_DX, cy+INPUT_DY, cz+INPUT_DZ);
+        BlockPos outSlot=new BlockPos(cx+OUTPUT_DX, cy+OUTPUT_DY, cz+OUTPUT_DZ);
         if(level.getBlockState(inSlot).getBlock() instanceof CoolingTowerInputPortBlock){ lastInputPorts=1; inputPortPos=inSlot.immutable(); }
         else { lastInputPorts=0; inputPortPos=null; }
         if(level.getBlockState(outSlot).getBlock() instanceof CoolingTowerOutputPortBlock){ lastOutputPorts=1; outputPortPos=outSlot.immutable(); }
         else { lastOutputPorts=0; outputPortPos=null; }
 
-        // controller at base center, structure 5x5x9 with hyperbolic waist (middle narrower 3x3)
+        // Controller must be at base wall (y=cy, radius 2 from center) - facing outward from center
+        Direction facing=level.getBlockState(ctrl).getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockPos expectedCtrl=new BlockPos(cx + facing.getStepX()*2, cy, cz + facing.getStepZ()*2);
+        if(!ctrl.equals(expectedCtrl)){
+            failCode=1; failPos=ctrl.immutable(); return false;
+        }
+        if(!(level.getBlockState(ctrl).getBlock() instanceof CoolingTowerControllerBlock)){
+            failCode=1; failPos=ctrl.immutable(); return false;
+        }
+
+        // structure 5x5x9 with hyperbolic waist (middle narrower 3x3), centered at center
         for(int y=0; y<H; y++){
             int r = (y==0 || y==H-1) ? 2 : (y>=3 && y<=5 ? 1 : 2);
             for(int x=-r; x<=r; x++) for(int z=-r; z<=r; z++){
                 boolean isWall = Math.abs(x)==r || Math.abs(z)==r;
-                BlockPos pp=ctrl.offset(x,y,z);
+                BlockPos pp=new BlockPos(cx+x, cy+y, cz+z);
                 Block b=level.getBlockState(pp).getBlock();
-                if(y==0 && x==0 && z==0){
-                    if(!(b instanceof CoolingTowerControllerBlock)){ failCode=1; failPos=pp.immutable(); return false; }
+                if(pp.equals(ctrl)){
+                    // Controller position in wall - already checked above
+                    continue;
                 } else if(isWall){
                     if(isInputSlot(x,y,z)){
                         if(!(b instanceof CoolingTowerInputPortBlock)){ failCode=2; failPos=pp.immutable(); return false; }
@@ -218,7 +249,7 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
                 if(!isEdge) continue;
                 // middle levels (3-5) should be air at outer edge (hyperbolic)
                 if(y>=3 && y<=5){
-                    BlockPos pp=ctrl.offset(x,y,z);
+                    BlockPos pp=new BlockPos(cx+x, cy+y, cz+z);
                     if(!level.getBlockState(pp).isAir()){ failCode=4; failPos=pp.immutable(); return false; }
                 }
             }

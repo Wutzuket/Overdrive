@@ -264,7 +264,7 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         if(needMb<1) needMb=1;
         // Verdampfungs-Limit: pro Tick verdampft nur eine maximale mB-Anzahl.
         // Liegt der Bedarf darüber, ist die Kühlung gesättigt -> Überhitzung wie ohne Kühlmittel
-        // (Meltdown statt ewigem Parken am Cap). Leiter: Wasser ~340, Sodium ~1800, Cryofluid ~140000 Burn.
+        // (Meltdown statt ewigem Parken am Cap). Leiter: Wasser ~340, Cryofluid ~140000 Burn.
         int maxMb = Math.max(1, recipe.maxMbPerTick());
         if(needMb > maxMb){
             if(active) coreTemp += 5*Math.sqrt(burnRate);

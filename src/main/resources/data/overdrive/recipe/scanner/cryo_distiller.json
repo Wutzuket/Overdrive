@@ -1,0 +1,13 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:aluminum_block" },
+    "V": { "block": "minecraft:packed_ice" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],
+  "result": { "count": 1, "id": "overdrive:cryo_distiller" },
+  "show_notification": false
+}

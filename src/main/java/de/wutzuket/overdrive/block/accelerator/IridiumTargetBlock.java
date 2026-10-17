@@ -31,12 +31,6 @@ public class IridiumTargetBlock extends Block implements EntityBlock {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof IridiumTargetEntity target) {
-                player.openMenu(target, pos);
-            }
-        }
         return InteractionResult.SUCCESS;
     }
 

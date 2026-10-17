@@ -53,10 +53,8 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItemsFluid.DECELERATED_ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.COOLED_ANTIPROTONS_BUCKET.get());
                 output.accept(ODItemsFluid.POSITRONS_BUCKET.get());
-                output.accept(ODItemsFluid.SODIUM_BUCKET.get());
                 output.accept(ODItemsFluid.CRYOFLUID_BUCKET.get());
                 output.accept(ODItemsFluid.STEAM_BUCKET.get());
-                output.accept(ODItemsFluid.SUPERHEATED_SODIUM_BUCKET.get());
                 output.accept(ODItemsFluid.SUPERHEATED_CRYOFLUID_BUCKET.get());
                 output.accept(ODItemsFluid.LIQUID_IRIDIUM_BUCKET.get());
                 output.accept(ODItems.AD_CASING.get());
@@ -90,6 +88,9 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItems.COOLING_TOWER_CONTROLLER.get());
                 output.accept(ODItems.COOLING_TOWER_INPUT_PORT.get());
                 output.accept(ODItems.COOLING_TOWER_OUTPUT_PORT.get());
+                output.accept(ODItems.SCANNER.get());
+                output.accept(ODItems.CRYO_DISTILLER.get());
+                output.accept(ODItems.SIMPLE_FRAME.get());
             })
             .build());
 

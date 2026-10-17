@@ -154,20 +154,56 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
             () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
 
     // Step 4 - Annihilation
-    public static final Supplier<Item> ANNIHILATION_HEAVY_CASING = ITEMS.register("annihilation_heavy_casing", () -> new BlockItem(ODBlocks.ANNIHILATION_HEAVY_CASING.get(), new Item.Properties()));
-    public static final Supplier<Item> REACTOR_CORE_BLOCK = ITEMS.register("reactor_core_block", () -> new BlockItem(ODBlocks.REACTOR_CORE_BLOCK.get(), new Item.Properties()));
-    public static final Supplier<Item> CORE_CONTAINMENT_GLASS = ITEMS.register("core_containment_glass", () -> new BlockItem(ODBlocks.CORE_CONTAINMENT_GLASS.get(), new Item.Properties()));
-    public static final Supplier<Item> CORIUM_BLOCK = ITEMS.register("corium_block", () -> new BlockItem(ODBlocks.CORIUM_BLOCK.get(), new Item.Properties()));
-    public static final Supplier<Item> ANNIHILATION_CONTROLLER = ITEMS.register("annihilation_controller", () -> new BlockItem(ODBlocks.ANNIHILATION_CONTROLLER.get(), new Item.Properties()));
-    public static final Supplier<Item> ANNIHILATION_VACUUM_PORT = ITEMS.register("annihilation_vacuum_port", () -> new BlockItem(ODBlocks.ANNIHILATION_VACUUM_PORT.get(), new Item.Properties()));
-    public static final Supplier<Item> CELL_DOCKING_PORT = ITEMS.register("cell_docking_port", () -> new BlockItem(ODBlocks.CELL_DOCKING_PORT.get(), new Item.Properties()));
-    public static final Supplier<Item> COOLANT_INPUT_PORT = ITEMS.register("coolant_input_port", () -> new BlockItem(ODBlocks.COOLANT_INPUT_PORT.get(), new Item.Properties()));
-    public static final Supplier<Item> STEAM_OUTPUT_PORT = ITEMS.register("steam_output_port", () -> new BlockItem(ODBlocks.STEAM_OUTPUT_PORT.get(), new Item.Properties()));
-    public static final Supplier<Item> ANNIHILATION_ENERGY_OUTPUT = ITEMS.register("annihilation_energy_output", () -> new BlockItem(ODBlocks.ANNIHILATION_ENERGY_OUTPUT.get(), new Item.Properties()));
-    public static final Supplier<Item> COOLING_TOWER_CASING = ITEMS.register("cooling_tower_casing", () -> new BlockItem(ODBlocks.COOLING_TOWER_CASING.get(), new Item.Properties()));
-    public static final Supplier<Item> COOLING_TOWER_CONTROLLER = ITEMS.register("cooling_tower_controller", () -> new BlockItem(ODBlocks.COOLING_TOWER_CONTROLLER.get(), new Item.Properties()));
-    public static final Supplier<Item> COOLING_TOWER_INPUT_PORT = ITEMS.register("cooling_tower_input_port", () -> new BlockItem(ODBlocks.COOLING_TOWER_INPUT_PORT.get(), new Item.Properties()));
-    public static final Supplier<Item> COOLING_TOWER_OUTPUT_PORT = ITEMS.register("cooling_tower_output_port", () -> new BlockItem(ODBlocks.COOLING_TOWER_OUTPUT_PORT.get(), new Item.Properties()));
+    public static final Supplier<Item> ANNIHILATION_HEAVY_CASING = ITEMS.register("annihilation_heavy_casing",
+            () -> new BlockItem(ODBlocks.ANNIHILATION_HEAVY_CASING.get(), new Item.Properties()));
+
+    public static final Supplier<Item> REACTOR_CORE_BLOCK = ITEMS.register("reactor_core_block",
+            () -> new BlockItem(ODBlocks.REACTOR_CORE_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> CORE_CONTAINMENT_GLASS = ITEMS.register("core_containment_glass",
+            () -> new BlockItem(ODBlocks.CORE_CONTAINMENT_GLASS.get(), new Item.Properties()));
+
+    public static final Supplier<Item> CORIUM_BLOCK = ITEMS.register("corium_block",
+            () -> new BlockItem(ODBlocks.CORIUM_BLOCK.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANNIHILATION_CONTROLLER = ITEMS.register("annihilation_controller",
+            () -> new BlockItem(ODBlocks.ANNIHILATION_CONTROLLER.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANNIHILATION_VACUUM_PORT = ITEMS.register("annihilation_vacuum_port",
+            () -> new BlockItem(ODBlocks.ANNIHILATION_VACUUM_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> CELL_DOCKING_PORT = ITEMS.register("cell_docking_port",
+            () -> new BlockItem(ODBlocks.CELL_DOCKING_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> COOLANT_INPUT_PORT = ITEMS.register("coolant_input_port",
+            () -> new BlockItem(ODBlocks.COOLANT_INPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> STEAM_OUTPUT_PORT = ITEMS.register("steam_output_port",
+            () -> new BlockItem(ODBlocks.STEAM_OUTPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANNIHILATION_ENERGY_OUTPUT = ITEMS.register("annihilation_energy_output",
+            () -> new BlockItem(ODBlocks.ANNIHILATION_ENERGY_OUTPUT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> COOLING_TOWER_CASING = ITEMS.register("cooling_tower_casing",
+            () -> new BlockItem(ODBlocks.COOLING_TOWER_CASING.get(), new Item.Properties()));
+
+    public static final Supplier<Item> COOLING_TOWER_CONTROLLER = ITEMS.register("cooling_tower_controller",
+            () -> new BlockItem(ODBlocks.COOLING_TOWER_CONTROLLER.get(), new Item.Properties()));
+
+    public static final Supplier<Item> COOLING_TOWER_INPUT_PORT = ITEMS.register("cooling_tower_input_port",
+            () -> new BlockItem(ODBlocks.COOLING_TOWER_INPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> COOLING_TOWER_OUTPUT_PORT = ITEMS.register("cooling_tower_output_port",
+            () -> new BlockItem(ODBlocks.COOLING_TOWER_OUTPUT_PORT.get(), new Item.Properties()));
+
+    public static final Supplier<Item> SCANNER = ITEMS.register("scanner",
+            () -> new BlockItem(ODBlocks.SCANNER.get(), new Item.Properties()));
+
+    public static final Supplier<Item> CRYO_DISTILLER = ITEMS.register("cryo_distiller",
+            () -> new BlockItem(ODBlocks.CRYO_DISTILLER.get(), new Item.Properties()));
+
+    public static final Supplier<Item> SIMPLE_FRAME = ITEMS.register("simple_frame",
+            () -> new BlockItem(ODBlocks.SIMPLE_FRAME.get(), new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

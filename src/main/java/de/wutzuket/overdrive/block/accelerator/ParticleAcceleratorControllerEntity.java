@@ -831,6 +831,34 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         return fluidTank;
     }
 
+    public FluidStack getOutputFluidForDisplay() {
+        if (level != null) {
+            BlockPos displayOutputPos = outputPos;
+            if (displayOutputPos == null) {
+                displayOutputPos = findOutputPos(level, worldPosition, getBlockState());
+            }
+            if (displayOutputPos != null
+                    && level.getBlockEntity(displayOutputPos) instanceof AcceleratorOutputEntity output) {
+                return output.getFluidTank().getFluid().copy();
+            }
+        }
+        return fluidTank.getFluid().copy();
+    }
+
+    public int getOutputFluidCapacityForDisplay() {
+        if (level != null) {
+            BlockPos displayOutputPos = outputPos;
+            if (displayOutputPos == null) {
+                displayOutputPos = findOutputPos(level, worldPosition, getBlockState());
+            }
+            if (displayOutputPos != null
+                    && level.getBlockEntity(displayOutputPos) instanceof AcceleratorOutputEntity output) {
+                return output.getFluidTank().getCapacity();
+            }
+        }
+        return fluidTank.getCapacity();
+    }
+
     /** Target-Entity am Ring (null, wenn gerade keines gefunden). */
     public @Nullable IridiumTargetEntity getTarget() {
         if (level == null) return null;

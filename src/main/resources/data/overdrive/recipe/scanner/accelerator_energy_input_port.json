@@ -1,0 +1,17 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:accelerator_casing" },
+    "V": { "block": "minecraft:redstone_block" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [
+    ["BBB", "BAB", "BBB"],
+    ["BAB", "AVA", "BAB"],
+    ["BBB", "BAB", "BBB"]
+  ],
+  "result": { "count": 1, "id": "overdrive:accelerator_energy_input_port" },
+  "show_notification": false
+}

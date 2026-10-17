@@ -105,14 +105,23 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
                 menu.getVacuumScaled(BAR_H - 2) / (float) (BAR_H - 2), GuiStyle.COL_CYAN, null);
         GuiStyle.fluidGauge(guiGraphics, font, getIridiumStack(), menu.getIridiumInputCap(),
                 x + 48, y + 16, BAR_W, BAR_H, null);
+        GuiStyle.fluidGauge(guiGraphics, font, getOutputStack(), menu.getFluidCapacitySynced(),
+                x + 68, y + 16, BAR_W, BAR_H, null);
 
-        GuiStyle.hBar(guiGraphics, x + 70, y + 34, 76, 10,
+        GuiStyle.hBar(guiGraphics, x + 90, y + 34, 56, 10,
                 Math.max(Math.min(menu.getProgressTicks(), 200), menu.getChargeScaled()) / 200.0, GuiStyle.COL_CYAN);
     }
 
     private FluidStack getIridiumStack() {
         Fluid fluid = menu.getIridiumFluid();
         int amount = menu.getIridiumInputSynced();
+        if (fluid == null || fluid == Fluids.EMPTY || amount <= 0) return FluidStack.EMPTY;
+        return new FluidStack(fluid, amount);
+    }
+
+    private FluidStack getOutputStack() {
+        Fluid fluid = menu.getOutputFluid();
+        int amount = menu.getFluidAmountSynced();
         if (fluid == null || fluid == Fluids.EMPTY || amount <= 0) return FluidStack.EMPTY;
         return new FluidStack(fluid, amount);
     }
@@ -137,11 +146,11 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
                     Component.translatable(menu.isActive()
                             ? "container.overdrive.accelerator_controller.running"
                             : "container.overdrive.accelerator_controller.idle"),
-                    70, 50, menu.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_YELLOW, false);
+                    90, 50, menu.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_YELLOW, false);
         } else {
             guiGraphics.drawString(this.font,
                     Component.translatable("container.overdrive.accelerator_controller.invalid_structure"),
-                    70, 50, GuiStyle.COL_RED, false);
+                    90, 50, GuiStyle.COL_RED, false);
         }
 
         GuiStyle.kv(guiGraphics, font,
@@ -187,7 +196,13 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
             lines.add(stack.isEmpty() ? Component.literal("Empty") : stack.getHoverName());
             lines.add(Component.literal(ODFormat.formatFluidPair(menu.getIridiumInputSynced(), menu.getIridiumInputCap())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
-        } else if (mouseX >= x + 70 && mouseX < x + 146 && mouseY >= y + 34 && mouseY < y + 44
+        } else if (mouseX >= x + 68 && mouseX <= x + 84 && mouseY >= y + 16 && mouseY <= y + 70) {
+            List<Component> lines = new ArrayList<>();
+            FluidStack stack = getOutputStack();
+            lines.add(stack.isEmpty() ? Component.literal("Empty") : stack.getHoverName());
+            lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmountSynced(), menu.getFluidCapacitySynced())));
+            guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
+        } else if (mouseX >= x + 90 && mouseX < x + 146 && mouseY >= y + 34 && mouseY < y + 44
                 && menu.getChargeTicksTotal() > 1) {
             List<Component> lines = new ArrayList<>();
             lines.add(Component.literal(String.format(Locale.ROOT, "Charge: %.1f %%", menu.getChargeScaled() / 2.0)));

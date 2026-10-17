@@ -51,12 +51,6 @@ public class ODFluidTypes {
                             .viscosity(100)
                             .density(1000)
             ));
-    public static final Supplier<FluidType> SODIUM_TYPE = FLUID_TYPES.register("sodium",
-            () -> new FluidType(
-                    FluidType.Properties.create()
-                            .descriptionId("fluid.overdrive.sodium")
-                            .canSwim(false).canDrown(false).viscosity(200).density(1500)
-            ));
     public static final Supplier<FluidType> CRYOFLUID_TYPE = FLUID_TYPES.register("cryofluid",
             () -> new FluidType(
                     FluidType.Properties.create()
@@ -68,12 +62,6 @@ public class ODFluidTypes {
                     FluidType.Properties.create()
                             .descriptionId("fluid.overdrive.steam")
                             .canSwim(false).canDrown(false).viscosity(100).density(500).temperature(500).lightLevel(5)
-            ));
-    public static final Supplier<FluidType> SUPERHEATED_SODIUM_TYPE = FLUID_TYPES.register("superheated_sodium",
-            () -> new FluidType(
-                    FluidType.Properties.create()
-                            .descriptionId("fluid.overdrive.superheated_sodium")
-                            .canSwim(false).canDrown(false).viscosity(150).density(1400).temperature(800).lightLevel(10)
             ));
     public static final Supplier<FluidType> LIQUID_IRIDIUM_TYPE = FLUID_TYPES.register("liquid_iridium",
             () -> new FluidType(

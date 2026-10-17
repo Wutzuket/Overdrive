@@ -1,0 +1,13 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:wolfram_casing" },
+    "V": { "block": "minecraft:lapis_block" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],
+  "result": { "count": 1, "id": "overdrive:positron_vacuum_output_port" },
+  "show_notification": false
+}

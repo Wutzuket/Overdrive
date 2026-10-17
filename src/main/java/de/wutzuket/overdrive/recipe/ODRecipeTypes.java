@@ -31,6 +31,9 @@ public class ODRecipeTypes {
     public static final Supplier<RecipeType<ReactorCoolingRecipe>> REACTOR_COOLING =
             RECIPE_TYPES.register("reactor_cooling", () -> RecipeType.simple(Overdrive.id("reactor_cooling")));
 
+    public static final Supplier<RecipeType<CryoDistillerRecipe>> CRYO_DISTILLER =
+            RECIPE_TYPES.register("catalytic_reactor", () -> RecipeType.simple(Overdrive.id("catalytic_reactor")));
+
     public static void register(IEventBus modEventBus) {
         RECIPE_TYPES.register(modEventBus);
     }

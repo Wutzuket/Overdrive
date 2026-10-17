@@ -246,16 +246,24 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
         int panelX = 13;
         int panelY = 127;
         if (currentTab == 0) {
-            drawLine(g, "Vacuum", String.format(Locale.ROOT, "%.1f %%", menu.getVacuum()), panelX, panelY, COL_CYAN);
-            drawLine(g, "Energy", ODFormat.formatEnergyPair(menu.getEnergyLong(), menu.getMaxEnergyLong()), panelX, panelY + 10, COL_GREEN);
-            drawLine(g, "Heat", fmtTemp(dispTemp()) + " / " + fmtTemp(AnnihilationControllerEntity.CORE_TEMP_MAX), panelX, panelY + 20, dispTemp() > AnnihilationControllerEntity.CORE_TEMP_MAX - 200 ? COL_RED : COL_YELLOW);
+            drawRows(g, panelX, panelY,
+                    new Row("Vacuum", String.format(Locale.ROOT, "%.1f %%", menu.getVacuum()), COL_CYAN),
+                    new Row("Energy", ODFormat.formatEnergyPair(menu.getEnergyLong(), menu.getMaxEnergyLong()), COL_GREEN),
+                    new Row("Heat", fmtTemp(dispTemp()) + " / " + fmtTemp(AnnihilationControllerEntity.CORE_TEMP_MAX),
+                            dispTemp() > AnnihilationControllerEntity.CORE_TEMP_MAX - 200 ? COL_RED : COL_YELLOW));
         } else if (currentTab == 1) {
-            drawLine(g, AnnihilationControllerMenu.fluidName(menu.getFuelAntiprotonFluidStack(), "Antiproton"), ODFormat.formatFluidPair(menu.getFuelAntiprotonSynced(), menu.getFuelAntiprotonCap()), panelX, panelY, COL_TEXT);
-            drawLine(g, AnnihilationControllerMenu.fluidName(menu.getFuelPositronFluidStack(), "Positron"), ODFormat.formatFluidPair(menu.getFuelPositronSynced(), menu.getFuelPositronCap()), panelX, panelY + 10, COL_TEXT);
+            drawRows(g, panelX, panelY,
+                    new Row(AnnihilationControllerMenu.fluidName(menu.getFuelAntiprotonFluidStack(), "Antiproton"),
+                            ODFormat.formatFluidPair(menu.getFuelAntiprotonSynced(), menu.getFuelAntiprotonCap()), COL_TEXT),
+                    new Row(AnnihilationControllerMenu.fluidName(menu.getFuelPositronFluidStack(), "Positron"),
+                            ODFormat.formatFluidPair(menu.getFuelPositronSynced(), menu.getFuelPositronCap()), COL_TEXT));
             g.drawString(font, "Burn rate", 13, HEIGHT - 69, COL_TEXT_DIM, false);
         } else if (currentTab == 2) {
-            drawLine(g, AnnihilationControllerMenu.fluidName(menu.getCoolantFluidStack(), "Empty"), ODFormat.formatFluidPair(menu.getCoolantAmount(), menu.getCoolantCap()), panelX, panelY, COL_CYAN);
-            drawLine(g, AnnihilationControllerMenu.fluidName(menu.getSteamFluidStack(), "Empty"), ODFormat.formatFluidPair(menu.getSteamAmount(), menu.getSteamCap()), panelX, panelY + 10, COL_TEXT);
+            drawRows(g, panelX, panelY,
+                    new Row(AnnihilationControllerMenu.fluidName(menu.getCoolantFluidStack(), "Empty"),
+                            ODFormat.formatFluidPair(menu.getCoolantAmount(), menu.getCoolantCap()), COL_CYAN),
+                    new Row(AnnihilationControllerMenu.fluidName(menu.getSteamFluidStack(), "Empty"),
+                            ODFormat.formatFluidPair(menu.getSteamAmount(), menu.getSteamCap()), COL_TEXT));
         } else {
             drawPortLine(g, "Cells", menu.getLastCellSynced(), 2, panelX, panelY);
             drawPortLine(g, "Vacuum", menu.getLastVacSynced(), 1, panelX + 110, panelY);
@@ -276,9 +284,29 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
         };
     }
 
-    private void drawLine(GuiGraphics g, String label, String value, int x, int y, int color) {
-        g.drawString(font, label + ":", x, y, COL_TEXT_DIM, false);
-        g.drawString(font, value, x + 70, y, color, false);
+    private void drawRows(GuiGraphics g, int x, int y, Row... rows) {
+        int labelW = 0;
+        for (Row r : rows) {
+            labelW = Math.max(labelW, font.width(r.label + ":"));
+        }
+        int vx = x + labelW + 6;
+        for (int i = 0; i < rows.length; i++) {
+            int ry = y + i * 10;
+            g.drawString(font, rows[i].label + ":", x, ry, COL_TEXT_DIM, false);
+            g.drawString(font, rows[i].value, vx, ry, rows[i].color, false);
+        }
+    }
+
+    private static final class Row {
+        final String label;
+        final String value;
+        final int color;
+
+        Row(String label, String value, int color) {
+            this.label = label;
+            this.value = value;
+            this.color = color;
+        }
     }
 
     private void drawPortLine(GuiGraphics g, String label, int found, int need, int x, int y) {

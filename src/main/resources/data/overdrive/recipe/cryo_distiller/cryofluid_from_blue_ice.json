@@ -1,0 +1,16 @@
+{
+  "type": "overdrive:catalytic_reactor",
+  "input_fluid": {
+    "id": "minecraft:water",
+    "amount": 250
+  },
+  "catalysator": {
+    "block" : "minecraft:blue_ice"
+  },
+  "output_fluid": {
+    "id": "overdrive:cryofluid",
+    "amount": 100
+  },
+  "energy_per_tick": 10000,
+  "process_time": 20
+}

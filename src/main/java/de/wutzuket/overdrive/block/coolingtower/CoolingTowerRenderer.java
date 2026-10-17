@@ -8,28 +8,44 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 public class CoolingTowerRenderer implements BlockEntityRenderer<CoolingTowerControllerEntity> {
     public CoolingTowerRenderer(BlockEntityRendererProvider.Context ctx){}
     @Override public boolean shouldRenderOffScreen(@NotNull CoolingTowerControllerEntity be){ return true; }
-    @Override public @NotNull AABB getRenderBoundingBox(@NotNull CoolingTowerControllerEntity be){ return new AABB(be.getBlockPos()).inflate(4,9,4); }
+    @Override public @NotNull AABB getRenderBoundingBox(@NotNull CoolingTowerControllerEntity be){
+        BlockPos center=CoolingTowerControllerEntity.getCenter(be.getBlockPos(), be.getBlockState());
+        return new AABB(center).inflate(4,9,4);
+    }
     @Override public void render(@NotNull CoolingTowerControllerEntity be, float pt, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int light, int overlay){
         if(be.getLevel()==null || !be.isHologramEnabled()) return;
         if(be.isValid()) return; // complete -> hide ghost
         BlockPos ctrl=be.getBlockPos();
+        BlockState state=be.getBlockState();
+        BlockPos center=CoolingTowerControllerEntity.getCenter(ctrl, state);
+        Direction facing=state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         int buildY=findBuildLayer(be, ctrl);
         if(buildY==Integer.MAX_VALUE) return;
         int y=buildY;
         int r = (y==0 || y==8) ? 2 : (y>=3 && y<=5 ? 1 : 2);
+        // Controller position relative to center (in the wall, facing outward)
+        int ctrlX = facing.getStepX() * 2;
+        int ctrlZ = facing.getStepZ() * 2;
+        
         for(int x=-r;x<=r;x++) for(int z=-r;z<=r;z++){
-            if(y==0 && x==0 && z==0) continue;
+            // Skip controller position in the wall
+            if(y==0 && x==ctrlX && z==ctrlZ) continue;
             boolean isWall=Math.abs(x)==r || Math.abs(z)==r;
-            BlockPos p=ctrl.offset(x,y,z);
+            BlockPos p=new BlockPos(center.getX()+x, center.getY()+y, center.getZ()+z);
             var existing=be.getLevel().getBlockState(p);
-            double rx=x, ry=y, rz=z;
+            // Render coordinates relative to controller (pose stack origin)
+            double rx = p.getX() - ctrl.getX();
+            double ry = p.getY() - ctrl.getY();
+            double rz = p.getZ() - ctrl.getZ();
             if(!isWall){
                 // Innenraum muss Luft sein -> fremde Blöcke rot markieren
                 if(!existing.isAir()) renderGhostBox(pose,buffer,(float)rx,(float)ry,(float)rz,1.0f,0.0f,0.0f,0.45f);
@@ -55,19 +71,28 @@ public class CoolingTowerRenderer implements BlockEntityRenderer<CoolingTowerCon
         if(buildY>=3 && buildY<=5){
             for(int x=-2;x<=2;x++) for(int z=-2;z<=2;z++){
                 if(Math.abs(x)!=2 && Math.abs(z)!=2) continue;
-                BlockPos p=ctrl.offset(x,y,z);
+                BlockPos p=new BlockPos(center.getX()+x, center.getY()+y, center.getZ()+z);
                 if(!be.getLevel().getBlockState(p).isAir()) continue; // should stay air -> no ghost
+                double rx = p.getX() - ctrl.getX();
+                double ry = p.getY() - ctrl.getY();
+                double rz = p.getZ() - ctrl.getZ();
+                renderGhostBox(pose,buffer,(float)rx,(float)ry,(float)rz,0.0f,1.0f,0.0f,0.2f);
             }
         }
     }
     private int findBuildLayer(CoolingTowerControllerEntity be, BlockPos ctrl){
+        BlockState state=be.getBlockState();
+        BlockPos center=CoolingTowerControllerEntity.getCenter(ctrl, state);
+        Direction facing=state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        int ctrlX=facing.getStepX()*2;
+        int ctrlZ=facing.getStepZ()*2;
         for(int y=0;y<9;y++){
             boolean complete=true;
             int r = (y==0 || y==8) ? 2 : (y>=3 && y<=5 ? 1 : 2);
             for(int x=-r;x<=r;x++) for(int z=-r;z<=r;z++){
-                if(y==0 && x==0 && z==0) continue;
+                if(y==0 && x==ctrlX && z==ctrlZ) continue;
                 boolean isWall=Math.abs(x)==r || Math.abs(z)==r;
-                BlockPos p=ctrl.offset(x,y,z);
+                BlockPos p=new BlockPos(center.getX()+x, center.getY()+y, center.getZ()+z);
                 var st=be.getLevel().getBlockState(p);
                 if(!isWall){
                     if(!st.isAir()) complete=false;
@@ -86,7 +111,7 @@ public class CoolingTowerRenderer implements BlockEntityRenderer<CoolingTowerCon
             if(y>=3 && y<=5){
                 for(int x=-2;x<=2;x++) for(int z=-2;z<=2;z++){
                     if(Math.abs(x)!=2 && Math.abs(z)!=2) continue;
-                    BlockPos p=ctrl.offset(x,y,z);
+                    BlockPos p=new BlockPos(center.getX()+x, center.getY()+y, center.getZ()+z);
                     if(!be.getLevel().getBlockState(p).isAir()){ complete=false; break; }
                 }
                 if(!complete) return y;

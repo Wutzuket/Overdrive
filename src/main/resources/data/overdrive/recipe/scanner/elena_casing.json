@@ -1,0 +1,17 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:ad_casing" },
+    "V": { "block": "minecraft:simple_frame" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [
+    ["BBB", "BAB", "BBB"],
+    ["BAB", "AVA", "BAB"],
+    ["BBB", "BAB", "BBB"]
+  ],
+  "result": { "count": 6, "id": "overdrive:elena_casing" },
+  "show_notification": false
+}

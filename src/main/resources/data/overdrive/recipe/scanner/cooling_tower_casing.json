@@ -1,0 +1,14 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:aluminum_block" },
+    "F": { "block": "overdrive:simple_frame" },
+    "V": { "block": "minecraft:packed_ice" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [["AAA", "AAA", "AAA"], ["VVV", "VFV", "VVV"], ["BBB", "BBB", "BBB"]],
+  "result": { "count": 12, "id": "overdrive:cooling_tower_casing" },
+  "show_notification": false
+}

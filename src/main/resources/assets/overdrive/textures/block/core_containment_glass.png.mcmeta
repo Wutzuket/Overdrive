@@ -1,0 +1,15 @@
+{
+  "ctm": {
+    "ctm_version": 1,
+    "type": "CTM",
+    "layer": "TRANSLUCENT",
+    "textures": [
+      "overdrive:ctm/core_containment_glass"
+    ],
+    "extra": {
+      "connect_to": [
+        { "block": "overdrive:core_containment_glass" }
+      ]
+    }
+  }
+}

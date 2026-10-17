@@ -1,0 +1,17 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/cooling_tower_casing"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:cooling_tower_casing" },
+                { "block": "overdrive:cooling_tower_input_port" },
+                { "block": "overdrive:cooling_tower_output_port" }
+            ]
+        }
+    }
+}

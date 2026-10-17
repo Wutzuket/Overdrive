@@ -2,16 +2,10 @@ package de.wutzuket.overdrive.block.accelerator;
 
 import de.wutzuket.overdrive.fluid.ODFluids;
 import de.wutzuket.overdrive.index.ODBlockEntities;
-import de.wutzuket.overdrive.menu.IridiumTargetMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +14,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
-public class IridiumTargetEntity extends BlockEntity implements MenuProvider {
+public class IridiumTargetEntity extends BlockEntity {
     public static final int TANK_CAPACITY = 100_000;
 
     private final FluidTank tank = new FluidTank(TANK_CAPACITY) {
@@ -60,16 +54,6 @@ public class IridiumTargetEntity extends BlockEntity implements MenuProvider {
     /** Zaehlt als gueltiges Target, sobald fluessiges Iridium eingefuellt ist (Pipes oder Eimer). */
     public boolean hasValidBlock() {
         return !tank.isEmpty() && tank.getFluid().is(ODFluids.LIQUID_IRIDIUM_SOURCE.get());
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("container.overdrive.iridium_target");
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new IridiumTargetMenu(containerId, inventory, this);
     }
 
     @Override

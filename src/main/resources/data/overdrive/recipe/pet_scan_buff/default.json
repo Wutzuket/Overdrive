@@ -1,6 +1,0 @@
-{
-  "type": "overdrive:pet_scan_buff",
-  "energy_cost": 50000,
-  "scan_duration": 100,
-  "heal_amount": 20
-}

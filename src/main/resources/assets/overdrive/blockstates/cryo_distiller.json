@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "overdrive:block/cryo_distiller" },
+    "facing=east":  { "model": "overdrive:block/cryo_distiller", "y": 90 },
+    "facing=south": { "model": "overdrive:block/cryo_distiller", "y": 180 },
+    "facing=west":  { "model": "overdrive:block/cryo_distiller", "y": 270 }
+  }
+}

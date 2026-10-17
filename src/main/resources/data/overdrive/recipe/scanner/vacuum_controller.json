@@ -1,0 +1,26 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": {
+      "block": "overdrive:pump_casing"
+    },
+    "V": {
+      "block": "minecraft:diamond_block"
+    },
+    "B": {
+      "block": "minecraft:air"
+    }
+  },
+  "pattern": [
+    ["BBB", "BAB", "BBB"],
+    ["BAB", "AVA", "BAB"],
+    ["BBB", "BAB", "BBB"]
+  ],
+  "result": {
+    "count": 1,
+    "id": "overdrive:vacuum_pump"
+  },
+  "show_notification": false
+}

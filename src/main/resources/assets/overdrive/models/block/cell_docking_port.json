@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/barrel_top"
+    "all": "overdrive:block/cell_docking_port"
   }
 }

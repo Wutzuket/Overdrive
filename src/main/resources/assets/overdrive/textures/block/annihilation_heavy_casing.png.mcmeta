@@ -1,0 +1,20 @@
+{
+    "ctm": {
+        "ctm_version": 1,
+        "type": "CTM",
+        "layer": "SOLID",
+        "textures": [
+            "overdrive:ctm/annihilation_heavy_casing"
+        ],
+        "extra": {
+            "connect_to": [
+                { "block": "overdrive:annihilation_heavy_casing" },
+                { "block": "overdrive:annihilation_energy_output" },
+                { "block": "overdrive:annihilation_vacuum_port" },
+                { "block": "overdrive:cell_docking_port" },
+                { "block": "overdrive:steam_output_port" },
+                { "block": "overdrive:coolant_input_port" }
+            ]
+        }
+    }
+}

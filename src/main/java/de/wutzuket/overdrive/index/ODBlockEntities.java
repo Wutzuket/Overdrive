@@ -54,7 +54,7 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
 
     public static final java.util.function.Supplier<BlockEntityType<VacuumOutputPortBlockEntity>> VACUUM_OUTPUT_PORT_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register(
-                    "vacuum_output_port",
+                    "vacuum_output_port.json",
                     () -> BlockEntityType.Builder.of(VacuumOutputPortBlockEntity::new, ODBlocks.VACUUM_OUTPUT_PORT.get()).build(null)
             );
 
@@ -168,6 +168,11 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
             BLOCK_ENTITY_TYPES.register("cooling_tower_input_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coolingtower.CoolingTowerInputPortEntity::new, ODBlocks.COOLING_TOWER_INPUT_PORT.get()).build(null));
     public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coolingtower.CoolingTowerOutputPortEntity>> COOLING_TOWER_OUTPUT_PORT =
             BLOCK_ENTITY_TYPES.register("cooling_tower_output_port", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coolingtower.CoolingTowerOutputPortEntity::new, ODBlocks.COOLING_TOWER_OUTPUT_PORT.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.scanner.scanner_blockentity>> SCANNER_BLOCK_ENTITY =
+            BLOCK_ENTITY_TYPES.register("scanner", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.scanner.scanner_blockentity::new, ODBlocks.SCANNER.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.distiller.CryoDistillerEntity>> CRYO_DISTILLER =
+            BLOCK_ENTITY_TYPES.register("cryo_distiller", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.distiller.CryoDistillerEntity::new, ODBlocks.CRYO_DISTILLER.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITY_TYPES.register(modEventBus);
     }

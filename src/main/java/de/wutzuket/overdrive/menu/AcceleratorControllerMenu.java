@@ -13,7 +13,7 @@ import net.minecraft.world.level.material.Fluid;
 
 public class AcceleratorControllerMenu extends AbstractContainerMenu {
     private final ParticleAcceleratorControllerEntity blockEntity;
-    private final int[] data = new int[14];
+    private final int[] data = new int[17];
 
     public AcceleratorControllerMenu(int containerId, Inventory inventory, ParticleAcceleratorControllerEntity blockEntity) {
         super(ODMenuTypes.ACCELERATOR_CONTROLLER_MENU.get(), containerId);
@@ -32,6 +32,9 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
         data[11] = blockEntity.getChargeScaled();
         data[12] = blockEntity.getChargeTicksElapsed();
         data[13] = blockEntity.getChargeTicksTotal();
+        data[14] = blockEntity.getOutputFluidForDisplay().getAmount();
+        data[15] = blockEntity.getOutputFluidCapacityForDisplay();
+        data[16] = BuiltInRegistries.FLUID.getId(blockEntity.getOutputFluidForDisplay().getFluid());
         addDataSlots(new ContainerData() {
             @Override
             public int get(int index) {
@@ -50,6 +53,9 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
                     case 11 -> blockEntity.getChargeScaled();
                     case 12 -> blockEntity.getChargeTicksElapsed();
                     case 13 -> blockEntity.getChargeTicksTotal();
+                    case 14 -> blockEntity.getOutputFluidForDisplay().getAmount();
+                    case 15 -> blockEntity.getOutputFluidCapacityForDisplay();
+                    case 16 -> BuiltInRegistries.FLUID.getId(blockEntity.getOutputFluidForDisplay().getFluid());
                     default -> 0;
                 };
             }
@@ -155,5 +161,17 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
 
     public int getVacuumScaled(int max) {
         return getVacuumLevel() * max / 1000;
+    }
+
+    public int getFluidAmountSynced() {
+        return data[14];
+    }
+
+    public int getFluidCapacitySynced() {
+        return data[15];
+    }
+
+    public Fluid getOutputFluid() {
+        return BuiltInRegistries.FLUID.byId(data[16]);
     }
 }

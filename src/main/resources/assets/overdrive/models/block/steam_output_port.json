@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/deepslate_tiles"
+    "all": "overdrive:block/steam_output_port"
   }
 }

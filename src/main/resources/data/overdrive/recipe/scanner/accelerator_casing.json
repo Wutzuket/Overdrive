@@ -1,0 +1,18 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:aluminum_block" },
+    "F": { "block": "overdrive:simple_frame" },
+    "V": { "block": "overdrive:aluminum_block" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [
+    ["AAA", "AAA", "AAA"],
+    ["VVV", "VFV", "VVV"],
+    ["BBB", "BBB", "BBB"]
+  ],
+  "result": { "count": 12, "id": "overdrive:accelerator_casing" },
+  "show_notification": false
+}

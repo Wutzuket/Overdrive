@@ -23,7 +23,7 @@ multiblock recipes.
 ## Requirements
 
 - Minecraft **1.21.1**
-- NeoForge **21.1.x**
+- NeoForge **21.1.1**
 - Java **21**
 - [Just Enough Items (JEI)](https://modrinth.com/mod/jei) is recommended for
   viewing recipes in-game.

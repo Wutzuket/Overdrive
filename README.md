@@ -72,6 +72,10 @@ block's console.
 See [ADVANCED_HOLOGRAM_LUA.md](ADVANCED_HOLOGRAM_LUA.md) for the complete Lua
 API reference, examples and execution limits.
 
+## Documentation
+
+The project documentation is available in the [wiki pages](wiki/Home.md).
+
 ## License
 
 Overdrive is currently distributed under **All Rights Reserved**. See the

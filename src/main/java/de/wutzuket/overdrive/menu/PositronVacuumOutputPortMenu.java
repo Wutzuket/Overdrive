@@ -1,6 +1,6 @@
 package de.wutzuket.overdrive.menu;
 
-import de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity;
+import de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortEntity;
 import de.wutzuket.overdrive.index.ODMenuTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;

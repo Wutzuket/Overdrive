@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/tungsten"
+    }
+  },
+  "pattern": [
+    "I I",
+    "I I"
+  ],
+  "result": {
+    "count": 1,
+    "id": "overdrive:tungsten_mesh"
+  }
+}

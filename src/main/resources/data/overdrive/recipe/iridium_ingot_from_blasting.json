@@ -5,7 +5,7 @@
   "experience": 1.0,
   "group": "iridium_ingot",
   "ingredient": {
-    "item": "overdrive:raw_iridium"
+    "tag": "c:raw_materials/iridium"
   },
   "result": {
     "id": "overdrive:iridium_ingot"

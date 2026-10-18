@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "overdrive:iridium_block"
+      "tag": "c:storage_blocks/iridium"
     }
   ],
   "result": {

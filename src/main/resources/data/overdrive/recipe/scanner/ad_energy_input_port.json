@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:ad_casing" },
-    "V": { "block": "minecraft:redstone_block" },
+    "V": { "tag": "c:storage_blocks/redstone" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [

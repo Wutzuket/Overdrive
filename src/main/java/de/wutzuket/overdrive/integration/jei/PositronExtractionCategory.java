@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Elektronenkanone: Wolframnetz -> Positronen (Block Elektronenkanone + Wolfram-Target). */
+/** Elektronenkanone: Tungstennetz -> Positronen (Block Elektronenkanone + Tungsten-Target). */
 public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtractionRecipe> {
     public static final RecipeType<PositronExtractionRecipe> TYPE =
             RecipeType.create(OverdriveJeiPlugin.MODID, "positron_extraction", PositronExtractionRecipe.class);
@@ -32,7 +32,7 @@ public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtr
     @Override
     protected void addExtraSlots(@NotNull IRecipeLayoutBuilder builder, @NotNull PositronExtractionRecipe recipe) {
         builder.addSlot(RecipeIngredientRole.INPUT, extraInputSlotX(), SLOT_Y)
-                .addItemStack(new ItemStack(ODItems.WOLFRAM_MESH.get()));
+                .addItemStack(new ItemStack(ODItems.TUNGSTEN_MESH.get()));
         if (!recipe.outputCell().isEmpty()) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, centeredOutputX() + IN_OUT_GAP, SLOT_Y)
                     .addItemStack(recipe.outputCell());
@@ -56,7 +56,7 @@ public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtr
 
     @Override
     protected ItemLike[] getCatalysts() {
-        return new ItemLike[]{ODBlocks.ELECTRON_GUN.get(), ODBlocks.WOLFRAM_TARGET.get(),
+        return new ItemLike[]{ODBlocks.ELECTRON_GUN.get(), ODBlocks.TUNGSTEN_TARGET.get(),
                 ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get()};
     }
 }

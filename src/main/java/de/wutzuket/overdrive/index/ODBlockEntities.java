@@ -136,18 +136,18 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
             BLOCK_ENTITY_TYPES.register("elena_output_port",
                     () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity::new, ODBlocks.ELENA_OUTPUT_PORT.get()).build(null));
 
-    // Wolfram Target
-    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.ElectronGunEntity>> ELECTRON_GUN =
+    // Tungsten Target
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.tungsten.ElectronGunEntity>> ELECTRON_GUN =
             BLOCK_ENTITY_TYPES.register("electron_gun",
-                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.ElectronGunEntity::new, ODBlocks.ELECTRON_GUN.get()).build(null));
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.tungsten.ElectronGunEntity::new, ODBlocks.ELECTRON_GUN.get()).build(null));
 
-    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.WolframTargetEntity>> WOLFRAM_TARGET =
-            BLOCK_ENTITY_TYPES.register("wolfram_target",
-                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.WolframTargetEntity::new, ODBlocks.WOLFRAM_TARGET.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.tungsten.TungstenTargetEntity>> TUNGSTEN_TARGET =
+            BLOCK_ENTITY_TYPES.register("tungsten_target",
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.tungsten.TungstenTargetEntity::new, ODBlocks.TUNGSTEN_TARGET.get()).build(null));
 
-    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity>> POSITRON_VACUUM_OUTPUT_PORT =
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortEntity>> POSITRON_VACUUM_OUTPUT_PORT =
             BLOCK_ENTITY_TYPES.register("positron_vacuum_output_port",
-                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity::new, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get()).build(null));
+                    () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortEntity::new, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get()).build(null));
 
     // Step 4 - Annihilation
     public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity>> ANNIHILATION_CONTROLLER =

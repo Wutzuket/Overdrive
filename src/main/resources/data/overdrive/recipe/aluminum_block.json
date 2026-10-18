@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "#": {
-      "item": "overdrive:aluminum_ingot"
+      "tag": "c:ingots/aluminum"
     }
   },
   "pattern": [

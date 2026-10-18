@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "overdrive:aluminum_block"
+      "tag": "c:storage_blocks/aluminum"
     }
   ],
   "result": {

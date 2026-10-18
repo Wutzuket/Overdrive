@@ -1,5 +1,5 @@
 {
-  "parent": "overdrive:block/wolfram_casing",
+  "parent": "overdrive:block/tungsten_casing",
   "textures": {
     "north": "overdrive:block/electron_gun_front"
   }

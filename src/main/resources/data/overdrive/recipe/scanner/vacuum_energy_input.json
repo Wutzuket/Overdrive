@@ -7,7 +7,7 @@
       "block": "overdrive:pump_casing"
     },
     "V": {
-      "block": "minecraft:redstone_block"
+      "tag": "c:storage_blocks/redstone"
     },
     "B": {
       "block": "minecraft:air"

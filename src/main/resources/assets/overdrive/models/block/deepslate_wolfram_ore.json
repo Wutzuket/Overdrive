@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "overdrive:block/deepslate_wolfram_ore"
-  }
-}

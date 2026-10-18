@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:cooling_tower_casing" },
-    "V": { "block": "minecraft:gold_block" },
+    "V": { "tag": "c:storage_blocks/gold" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],

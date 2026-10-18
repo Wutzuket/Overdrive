@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/wolfram_casing",
-  "textures": {
-    "north": "overdrive:block/wolfram_target_front"
-  }
-}

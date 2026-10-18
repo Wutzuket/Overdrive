@@ -1,0 +1,13 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "block": "overdrive:tungsten_casing" },
+    "V": { "tag": "c:storage_blocks/tungsten" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],
+  "result": { "count": 1, "id": "overdrive:tungsten_target" },
+  "show_notification": false
+}

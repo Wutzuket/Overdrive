@@ -3,8 +3,8 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:wolfram_casing" },
-    "V": { "block": "minecraft:lapis_block" },
+    "A": { "block": "overdrive:tungsten_casing" },
+    "V": { "tag": "c:storage_blocks/lapis" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],

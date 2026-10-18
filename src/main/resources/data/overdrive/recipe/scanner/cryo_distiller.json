@@ -3,7 +3,7 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:aluminum_block" },
+    "A": { "tag": "c:storage_blocks/aluminum" },
     "V": { "block": "minecraft:packed_ice" },
     "B": { "block": "minecraft:air" }
   },

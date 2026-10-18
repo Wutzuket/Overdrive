@@ -31,7 +31,7 @@ public class ServerPayloadHandler {
                     ad.toggleHologram();
                 } else if (be instanceof de.wutzuket.overdrive.block.elena.ELENAControllerEntity elena) {
                     elena.toggleHologram();
-                } else if (be instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity gun) {
+                } else if (be instanceof de.wutzuket.overdrive.block.tungsten.ElectronGunEntity gun) {
                     gun.toggleHologram();
                 } else if (be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann) {
                     ann.toggleHologram();

@@ -7,13 +7,13 @@
   ],
   "key": {
     "A": {
-      "item": "overdrive:aluminum_block"
+      "tag": "c:storage_blocks/aluminum"
     },
     "D": {
-      "item": "minecraft:diamond"
+      "tag": "c:gems/diamond"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "tag": "c:dusts/redstone"
     }
   },
   "result": {

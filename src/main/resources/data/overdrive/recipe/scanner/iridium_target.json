@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:accelerator_casing" },
-    "V": { "block": "overdrive:iridium_block" },
+    "V": { "tag": "c:storage_blocks/iridium" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [

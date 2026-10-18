@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:accelerator_casing" },
-    "V": { "block": "minecraft:diamond_block" },
+    "V": { "tag": "c:storage_blocks/diamond" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [

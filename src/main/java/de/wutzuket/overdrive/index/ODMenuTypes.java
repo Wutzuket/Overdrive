@@ -33,8 +33,8 @@ public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
 
 
 
-    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.WolframTargetMenu>> WOLFRAM_TARGET_MENU =
-            MENUS.register("wolfram_target", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.WolframTargetMenu::new));
+    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.TungstenTargetMenu>> TUNGSTEN_TARGET_MENU =
+            MENUS.register("tungsten_target", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.TungstenTargetMenu::new));
 
     public static final Supplier<MenuType<de.wutzuket.overdrive.menu.ElectronGunMenu>> ELECTRON_GUN_MENU =
             MENUS.register("electron_gun", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.ElectronGunMenu::new));

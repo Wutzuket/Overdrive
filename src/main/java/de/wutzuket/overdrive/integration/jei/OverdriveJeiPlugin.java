@@ -117,7 +117,7 @@ public class OverdriveJeiPlugin implements IModPlugin {
         catalyst(registration, ODBlocks.COOLING_TOWER_OUTPUT_PORT.get(), CoolingTowerCategory.TYPE);
 
         catalyst(registration, ODBlocks.ELECTRON_GUN.get(), PositronExtractionCategory.TYPE);
-        catalyst(registration, ODBlocks.WOLFRAM_TARGET.get(), PositronExtractionCategory.TYPE);
+        catalyst(registration, ODBlocks.TUNGSTEN_TARGET.get(), PositronExtractionCategory.TYPE);
         catalyst(registration, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get(), PositronExtractionCategory.TYPE);
 
         catalyst(registration, ODItems.CRYO_DISTILLER.get(), CryoDistillerCategory.TYPE);

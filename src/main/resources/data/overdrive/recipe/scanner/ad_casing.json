@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:accelerator_casing" },
-    "V": { "block": "minecraft:simple_frame" },
+    "V": { "block": "overdrive:simple_frame" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [

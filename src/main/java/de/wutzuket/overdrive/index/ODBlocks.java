@@ -86,21 +86,21 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.METAL)));
 
-    public static final Supplier<Block> WOLFRAM_ORE = BLOCKS.register("wolfram_ore",
+    public static final Supplier<Block> TUNGSTEN_ORE = BLOCKS.register("tungsten_ore",
             () -> new Block(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.STONE)
                     .strength(4.5F, 5.0F)
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.STONE)));
 
-    public static final Supplier<Block> DEEPSLATE_WOLFRAM_ORE = BLOCKS.register("deepslate_wolfram_ore",
+    public static final Supplier<Block> DEEPSLATE_TUNGSTEN_ORE = BLOCKS.register("deepslate_tungsten_ore",
             () -> new Block(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DEEPSLATE)
                     .strength(6.0F, 5.0F)
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.DEEPSLATE)));
 
-    public static final Supplier<Block> WOLFRAM_BLOCK = BLOCKS.register("wolfram_block",
+    public static final Supplier<Block> TUNGSTEN_BLOCK = BLOCKS.register("tungsten_block",
             () -> new Block(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
                     .strength(7.0F, 8.0F)
@@ -215,21 +215,21 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
             () -> new de.wutzuket.overdrive.block.elena.ELENAOutputPortBlock(BlockBehaviour.Properties.of()
                     .strength(4.0F, 6.0F).sound(SoundType.METAL)));
 
-    // Wolfram Target
-    public static final Supplier<Block> WOLFRAM_CASING = BLOCKS.register("wolfram_casing",
+    // Tungsten Target
+    public static final Supplier<Block> TUNGSTEN_CASING = BLOCKS.register("tungsten_casing",
             () -> new Block(BlockBehaviour.Properties.of()
                     .strength(4.0F, 6.0F).sound(SoundType.METAL).noOcclusion()));
 
     public static final Supplier<Block> ELECTRON_GUN = BLOCKS.register("electron_gun",
-            () -> new de.wutzuket.overdrive.block.wolfram.ElectronGunBlock(BlockBehaviour.Properties.of()
+            () -> new de.wutzuket.overdrive.block.tungsten.ElectronGunBlock(BlockBehaviour.Properties.of()
                     .strength(5.0F, 8.0F).sound(SoundType.METAL)));
 
-    public static final Supplier<Block> WOLFRAM_TARGET = BLOCKS.register("wolfram_target",
-            () -> new de.wutzuket.overdrive.block.wolfram.WolframTargetBlock(BlockBehaviour.Properties.of()
+    public static final Supplier<Block> TUNGSTEN_TARGET = BLOCKS.register("tungsten_target",
+            () -> new de.wutzuket.overdrive.block.tungsten.TungstenTargetBlock(BlockBehaviour.Properties.of()
                     .strength(4.0F, 6.0F).sound(SoundType.METAL)));
 
     public static final Supplier<Block> POSITRON_VACUUM_OUTPUT_PORT = BLOCKS.register("positron_vacuum_output_port",
-            () -> new de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortBlock(BlockBehaviour.Properties.of()
+            () -> new de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortBlock(BlockBehaviour.Properties.of()
                     .strength(4.0F, 6.0F).sound(SoundType.METAL)));
 
     // Step 4 - Annihilation Reactor 25x25x25

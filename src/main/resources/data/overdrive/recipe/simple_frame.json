@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "overdrive:aluminum_ingot"
+      "tag": "c:ingots/aluminum"
     },
     "P": {
       "tag": "minecraft:planks"

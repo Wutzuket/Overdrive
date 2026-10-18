@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": {
-      "block": "overdrive:aluminum_block"
+      "tag": "c:storage_blocks/aluminum"
     },
     "F": {
       "block": "overdrive:simple_frame"

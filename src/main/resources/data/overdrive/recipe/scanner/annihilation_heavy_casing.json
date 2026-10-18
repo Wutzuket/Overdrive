@@ -3,10 +3,10 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:iridium_block" },
+    "A": { "tag": "c:storage_blocks/iridium" },
     "F": { "block": "overdrive:simple_frame" },
-    "V": { "block": "overdrive:iridium_block" },
-    "B": { "block": "overdrive:iridium_block" }
+    "V": { "tag": "c:storage_blocks/iridium" },
+    "B": { "tag": "c:storage_blocks/iridium" }
   },
   "pattern": [["AAA", "AAA", "AAA"], ["VVV", "VFV", "VVV"], ["BBB", "BBB", "BBB"]],
   "result": { "count": 12, "id": "overdrive:annihilation_heavy_casing" },

@@ -51,7 +51,7 @@ import de.wutzuket.overdrive.menu.AdvancedHologramScreen;
 import de.wutzuket.overdrive.menu.ELENAControllerScreen;
 import de.wutzuket.overdrive.menu.HologramScreen;
 import de.wutzuket.overdrive.menu.VacuumPumpScreen;
-import de.wutzuket.overdrive.menu.WolframTargetScreen;
+import de.wutzuket.overdrive.menu.TungstenTargetScreen;
 import de.wutzuket.overdrive.recipe.ODRecipeSerializers;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import de.wutzuket.overdrive.worldgen.ODBiomeModifiers;
@@ -241,11 +241,11 @@ registrar.playToClient(
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELENA_INPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAInputPortEntity) be).getTank());
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELENA_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.elena.ELENAOutputPortEntity) be).getFluidTank());
 
-            // Wolfram Target capabilities
+            // Tungsten Target capabilities
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.ELECTRON_GUN.get(), (be, side) -> be);
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELECTRON_GUN.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.ElectronGunEntity) be).getFluidTank());
-            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.POSITRON_VACUUM_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortEntity) be).getTank());
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.WOLFRAM_TARGET.get(), (be, side) -> ((de.wutzuket.overdrive.block.wolfram.WolframTargetEntity) be).getItemHandler());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ELECTRON_GUN.get(), (be, side) -> ((de.wutzuket.overdrive.block.tungsten.ElectronGunEntity) be).getFluidTank());
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.POSITRON_VACUUM_OUTPUT_PORT.get(), (be, side) -> ((de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortEntity) be).getTank());
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.TUNGSTEN_TARGET.get(), (be, side) -> ((de.wutzuket.overdrive.block.tungsten.TungstenTargetEntity) be).getItemHandler());
 
             // Step 4 - Annihilation
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.ANNIHILATION_VACUUM_PORT.get(), (be, side) -> null); // vacuum via IVacuumNode not fluid
@@ -321,16 +321,16 @@ registrar.playToClient(
                         if (be instanceof ParticleAcceleratorControllerEntity ||
                             be instanceof de.wutzuket.overdrive.block.ad.ADControllerEntity ||
                             be instanceof de.wutzuket.overdrive.block.elena.ELENAControllerEntity ||
-                            be instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity ||
+                            be instanceof de.wutzuket.overdrive.block.tungsten.ElectronGunEntity ||
                             be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ||
                             be instanceof de.wutzuket.overdrive.block.coolingtower.CoolingTowerControllerEntity ||
                             be instanceof de.wutzuket.overdrive.block.distiller.CryoDistillerEntity) {
                             togglePos = targetPos;
-                        } else if (be instanceof de.wutzuket.overdrive.block.wolfram.WolframTargetEntity) {
+                        } else if (be instanceof de.wutzuket.overdrive.block.tungsten.TungstenTargetEntity) {
                             for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
                                 if (!dir.getAxis().isHorizontal()) continue;
                                 net.minecraft.world.level.block.entity.BlockEntity nearby = mc.level.getBlockEntity(targetPos.relative(dir, 1));
-                                if (nearby instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunEntity) {
+                                if (nearby instanceof de.wutzuket.overdrive.block.tungsten.ElectronGunEntity) {
                                     togglePos = targetPos.relative(dir, 1);
                                     break;
                                 }
@@ -351,7 +351,7 @@ registrar.playToClient(
             event.registerBlockEntityRenderer(ODBlockEntities.PARTICLE_ACCELERATOR_CONTROLLER.get(), ParticleAcceleratorRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.AD_CONTROLLER.get(), de.wutzuket.overdrive.block.ad.ADRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ELENA_CONTROLLER.get(), de.wutzuket.overdrive.block.elena.ELENARenderer::new);
-            event.registerBlockEntityRenderer(ODBlockEntities.ELECTRON_GUN.get(), de.wutzuket.overdrive.block.wolfram.WolframTargetRenderer::new);
+            event.registerBlockEntityRenderer(ODBlockEntities.ELECTRON_GUN.get(), de.wutzuket.overdrive.block.tungsten.TungstenTargetRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.HOLOGRAM_BLOCK_ENTITY.get(), HologramBlockRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ADVANCED_HOLOGRAM_BLOCK_ENTITY.get(), AdvancedHologramBlockRenderer::new);
             event.registerBlockEntityRenderer(ODBlockEntities.ANNIHILATION_CONTROLLER.get(), de.wutzuket.overdrive.block.annihilation.AnnihilationRenderer::new);
@@ -365,7 +365,7 @@ registrar.playToClient(
             event.register(ODMenuTypes.ACCELERATOR_CONTROLLER_MENU.get(), AcceleratorControllerScreen::new);
             event.register(ODMenuTypes.AD_CONTROLLER_MENU.get(), ADControllerScreen::new);
             event.register(ODMenuTypes.ELENA_CONTROLLER_MENU.get(), ELENAControllerScreen::new);
-            event.register(ODMenuTypes.WOLFRAM_TARGET_MENU.get(), WolframTargetScreen::new);
+            event.register(ODMenuTypes.TUNGSTEN_TARGET_MENU.get(), TungstenTargetScreen::new);
             event.register(ODMenuTypes.ELECTRON_GUN_MENU.get(), de.wutzuket.overdrive.menu.ElectronGunScreen::new);
             event.register(ODMenuTypes.POSITRON_VACUUM_OUTPUT_PORT_MENU.get(), de.wutzuket.overdrive.menu.PositronVacuumOutputPortScreen::new);
             event.register(ODMenuTypes.HOLOGRAM_MENU.get(), HologramScreen::new);

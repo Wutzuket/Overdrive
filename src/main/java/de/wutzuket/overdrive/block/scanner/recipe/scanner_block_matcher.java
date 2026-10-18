@@ -69,15 +69,9 @@ public interface scanner_block_matcher {
         if (value.startsWith("#")) {
             ResourceLocation tagLocation = ResourceLocation.parse(value.substring(1));
             TagKey<Block> tagKey = TagKey.create(Registries.BLOCK, tagLocation);
-            List<ItemStack> displayStacks = BuiltInRegistries.BLOCK.getTag(tagKey)
-                    .map(tag -> tag.stream()
-                            .map(Holder::value)
-                            .map(Block::asItem)
-                            .map(ItemStack::new)
-                            .filter(stack -> !stack.isEmpty())
-                            .toList())
-                    .orElse(List.of());
             return new scanner_block_matcher() {
+                private List<ItemStack> displayStacks;
+
                 @Override
                 public boolean matches(@NotNull BlockState state) {
                     return state.is(tagKey);
@@ -85,6 +79,16 @@ public interface scanner_block_matcher {
 
                 @Override
                 public @NotNull List<ItemStack> displayStacks() {
+                    if (displayStacks == null || displayStacks.isEmpty()) {
+                        displayStacks = BuiltInRegistries.BLOCK.getTag(tagKey)
+                                .map(tag -> tag.stream()
+                                        .map(Holder::value)
+                                        .map(Block::asItem)
+                                        .map(ItemStack::new)
+                                        .filter(stack -> !stack.isEmpty())
+                                        .toList())
+                                .orElse(List.of());
+                    }
                     return displayStacks;
                 }
             };

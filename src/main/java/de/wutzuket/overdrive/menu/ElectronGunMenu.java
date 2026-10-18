@@ -1,6 +1,6 @@
 package de.wutzuket.overdrive.menu;
 
-import de.wutzuket.overdrive.block.wolfram.ElectronGunEntity;
+import de.wutzuket.overdrive.block.tungsten.ElectronGunEntity;
 import de.wutzuket.overdrive.index.ODMenuTypes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

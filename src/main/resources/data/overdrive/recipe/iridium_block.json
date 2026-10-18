@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "item": "overdrive:iridium_ingot"
+      "tag": "c:ingots/iridium"
     }
   },
   "pattern": [

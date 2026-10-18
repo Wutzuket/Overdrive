@@ -62,20 +62,20 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
     public static final Supplier<Item> IRIDIUM_INGOT = ITEMS.register("iridium_ingot",
             () -> new Item(new Item.Properties()));
 
-    // Wolfram
-    public static final Supplier<Item> WOLFRAM_ORE = ITEMS.register("wolfram_ore",
-            () -> new BlockItem(ODBlocks.WOLFRAM_ORE.get(), new Item.Properties()));
+    // Tungsten
+    public static final Supplier<Item> TUNGSTEN_ORE = ITEMS.register("tungsten_ore",
+            () -> new BlockItem(ODBlocks.TUNGSTEN_ORE.get(), new Item.Properties()));
 
-    public static final Supplier<Item> DEEPSLATE_WOLFRAM_ORE = ITEMS.register("deepslate_wolfram_ore",
-            () -> new BlockItem(ODBlocks.DEEPSLATE_WOLFRAM_ORE.get(), new Item.Properties()));
+    public static final Supplier<Item> DEEPSLATE_TUNGSTEN_ORE = ITEMS.register("deepslate_tungsten_ore",
+            () -> new BlockItem(ODBlocks.DEEPSLATE_TUNGSTEN_ORE.get(), new Item.Properties()));
 
-    public static final Supplier<Item> WOLFRAM_BLOCK = ITEMS.register("wolfram_block",
-            () -> new BlockItem(ODBlocks.WOLFRAM_BLOCK.get(), new Item.Properties()));
+    public static final Supplier<Item> TUNGSTEN_BLOCK = ITEMS.register("tungsten_block",
+            () -> new BlockItem(ODBlocks.TUNGSTEN_BLOCK.get(), new Item.Properties()));
 
-    public static final Supplier<Item> RAW_WOLFRAM = ITEMS.register("raw_wolfram",
+    public static final Supplier<Item> RAW_TUNGSTEN = ITEMS.register("raw_tungsten",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> WOLFRAM_INGOT = ITEMS.register("wolfram_ingot",
+    public static final Supplier<Item> TUNGSTEN_INGOT = ITEMS.register("tungsten_ingot",
             () -> new Item(new Item.Properties()));
 
     public static final Supplier<Item> VACUUM_PUMP = ITEMS.register("vacuum_pump",
@@ -139,18 +139,18 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
     public static final Supplier<Item> ELENA_OUTPUT_PORT = ITEMS.register("elena_output_port",
             () -> new BlockItem(ODBlocks.ELENA_OUTPUT_PORT.get(), new Item.Properties()));
 
-    // Wolfram Target
-    public static final Supplier<Item> WOLFRAM_CASING = ITEMS.register("wolfram_casing",
-            () -> new BlockItem(ODBlocks.WOLFRAM_CASING.get(), new Item.Properties()));
+    // Tungsten Target
+    public static final Supplier<Item> TUNGSTEN_CASING = ITEMS.register("tungsten_casing",
+            () -> new BlockItem(ODBlocks.TUNGSTEN_CASING.get(), new Item.Properties()));
     public static final Supplier<Item> ELECTRON_GUN = ITEMS.register("electron_gun",
             () -> new BlockItem(ODBlocks.ELECTRON_GUN.get(), new Item.Properties()));
-    public static final Supplier<Item> WOLFRAM_TARGET = ITEMS.register("wolfram_target",
-            () -> new BlockItem(ODBlocks.WOLFRAM_TARGET.get(), new Item.Properties()));
+    public static final Supplier<Item> TUNGSTEN_TARGET = ITEMS.register("tungsten_target",
+            () -> new BlockItem(ODBlocks.TUNGSTEN_TARGET.get(), new Item.Properties()));
     public static final Supplier<Item> POSITRON_VACUUM_OUTPUT_PORT = ITEMS.register("positron_vacuum_output_port",
             () -> new BlockItem(ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get(), new Item.Properties()));
 
     // Items
-    public static final Supplier<Item> WOLFRAM_MESH = ITEMS.register("wolfram_mesh",
+    public static final Supplier<Item> TUNGSTEN_MESH = ITEMS.register("tungsten_mesh",
             () -> new Item(new Item.Properties().stacksTo(1).durability(100)));
 
     // Step 4 - Annihilation

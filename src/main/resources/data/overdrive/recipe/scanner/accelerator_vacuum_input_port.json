@@ -4,7 +4,7 @@
   "accept_mirrored": true,
   "key": {
     "A": { "block": "overdrive:accelerator_casing" },
-    "V": { "block": "minecraft:lapis_block" },
+    "V": { "tag": "c:storage_blocks/lapis" },
     "B": { "block": "minecraft:air" }
   },
   "pattern": [

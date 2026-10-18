@@ -7,7 +7,7 @@
       "block": "overdrive:pump_casing"
     },
     "V": {
-      "block": "minecraft:lapis_block"
+      "tag": "c:storage_blocks/lapis"
     },
     "B": {
       "block": "minecraft:air"

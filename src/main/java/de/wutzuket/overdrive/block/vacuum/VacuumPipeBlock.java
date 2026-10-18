@@ -3,7 +3,7 @@ package de.wutzuket.overdrive.block.vacuum;
 import de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock;
 import de.wutzuket.overdrive.block.ad.ADVacuumPortBlock;
 import de.wutzuket.overdrive.block.elena.ELENAVacuumPortBlock;
-import de.wutzuket.overdrive.block.wolfram.PositronVacuumOutputPortBlock;
+import de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortBlock;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -123,7 +123,7 @@ public class VacuumPipeBlock extends Block implements EntityBlock {
             || state.getBlock() instanceof ADVacuumPortBlock
             || state.getBlock() instanceof ELENAVacuumPortBlock
                 || state.getBlock() instanceof PositronVacuumOutputPortBlock
-                || state.getBlock() instanceof de.wutzuket.overdrive.block.wolfram.ElectronGunBlock
+                || state.getBlock() instanceof de.wutzuket.overdrive.block.tungsten.ElectronGunBlock
                 || state.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock;
     }
 

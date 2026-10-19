@@ -263,5 +263,10 @@
   "jei.overdrive.cryo_distiller.layout": "1x1x1 machine",
   "jei.overdrive.cryo_distiller.catalyst_below": "Place %s below",
   "jei.overdrive.cryo_distiller.no_catalyst": "No catalyst required",
-  "jei.overdrive.cryo_distiller.catalyst_invalid": "Invalid catalyst: %s"
+  "jei.overdrive.cryo_distiller.catalyst_invalid": "Invalid catalyst: %s",
+  "block.overdrive.coal_generator": "Coal Generator",
+  "container.overdrive.coal_generator": "Coal Generator",
+  "jei.overdrive.coal_generator.title": "Coal Generator",
+  "jei.overdrive.coal_generator.fuel": "Fuel",
+  "jei.overdrive.coal_generator.output": "Energy Output"
 }

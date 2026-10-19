@@ -260,6 +260,12 @@ registrar.playToClient(
             // Cryo Distiller: Strom nur Eingang, Fluid getrennt Input/Output
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.CRYO_DISTILLER.get(), (be, side) -> be);
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.CRYO_DISTILLER.get(), (be, side) -> ((de.wutzuket.overdrive.block.distiller.CryoDistillerEntity) be).getFluidHandler());
+
+            // Coal Generator: Energie-Quelle (Ausgang), kann nichts empfangen
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.COAL_GENERATOR_BLOCK_ENTITY.get(),
+                    (net.minecraft.world.level.block.entity.BlockEntity be, net.minecraft.core.Direction side) -> (net.neoforged.neoforge.energy.IEnergyStorage) be);
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.COAL_GENERATOR_BLOCK_ENTITY.get(),
+                    (net.minecraft.world.level.block.entity.BlockEntity be, net.minecraft.core.Direction side) -> (net.neoforged.neoforge.items.IItemHandler) ((de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorEntity) be).getFuelHandler());
         });
     }
 
@@ -373,6 +379,7 @@ registrar.playToClient(
             event.register(ODMenuTypes.ANNIHILATION_CONTROLLER_MENU.get(), de.wutzuket.overdrive.menu.AnnihilationControllerScreen::new);
             event.register(ODMenuTypes.COOLING_TOWER_MENU.get(), de.wutzuket.overdrive.menu.CoolingTowerScreen::new);
             event.register(ODMenuTypes.CRYO_DISTILLER_MENU.get(), de.wutzuket.overdrive.menu.CryoDistillerScreen::new);
+            event.register(ODMenuTypes.COAL_GENERATOR_MENU.get(), de.wutzuket.overdrive.menu.CoalGeneratorScreen::new);
         }
         @SubscribeEvent
         public static void registerFluidTypeExtensions(RegisterClientExtensionsEvent event) {

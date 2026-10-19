@@ -268,5 +268,10 @@
   "jei.overdrive.cryo_distiller.layout": "1x1x1-Maschine",
   "jei.overdrive.cryo_distiller.catalyst_below": "%s darunter platzieren",
   "jei.overdrive.cryo_distiller.no_catalyst": "Kein Katalysator noetig",
-  "jei.overdrive.cryo_distiller.catalyst_invalid": "Ungueltiger Katalysator: %s"
+  "jei.overdrive.cryo_distiller.catalyst_invalid": "Ungueltiger Katalysator: %s",
+  "block.overdrive.coal_generator": "Kohlegenerator",
+  "container.overdrive.coal_generator": "Kohlegenerator",
+  "jei.overdrive.coal_generator.title": "Kohlegenerator",
+  "jei.overdrive.coal_generator.fuel": "Brennstoff",
+  "jei.overdrive.coal_generator.output": "Energieausgang"
 }

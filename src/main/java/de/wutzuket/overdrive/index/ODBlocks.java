@@ -295,6 +295,10 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
             () -> new de.wutzuket.overdrive.block.distiller.CryoDistillerBlock(BlockBehaviour.Properties.of()
                     .strength(5.5F, 12.0F).sound(SoundType.METAL).lightLevel(s -> 5)));
 
+    public static final Supplier<Block> COAL_GENERATOR = BLOCKS.register("coal_generator",
+            () -> new de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorBlock(BlockBehaviour.Properties.of()
+                    .strength(5.5F, 12.0F).sound(SoundType.METAL).lightLevel(s -> 0)));
+
     public static final Supplier<Block> SIMPLE_FRAME = BLOCKS.register("simple_frame",
             () -> new de.wutzuket.overdrive.block.frames.frame_blocks(BlockBehaviour.Properties.of()
                     .strength(2F, 3.0F).sound(SoundType.WOOD)));

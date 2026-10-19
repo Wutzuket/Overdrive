@@ -90,6 +90,7 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItems.COOLING_TOWER_OUTPUT_PORT.get());
                 output.accept(ODItems.SCANNER.get());
                 output.accept(ODItems.CRYO_DISTILLER.get());
+                output.accept(ODItems.COAL_GENERATOR.get());
                 output.accept(ODItems.SIMPLE_FRAME.get());
             })
             .build());

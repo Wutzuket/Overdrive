@@ -125,6 +125,38 @@ public class ODConfig {
         BUILDER.pop();
     }
 
+    // --- Coal Generator ---
+    static {
+        BUILDER.push("coal_generator");
+    }
+
+    public static final ModConfigSpec.IntValue COAL_GENERATOR_MAX_ENERGY = BUILDER
+            .comment("Maximum energy the Coal Generator can store (FE).")
+            .defineInRange("maxEnergy", 400_000, 1, 100_000_000);
+
+    public static final ModConfigSpec.IntValue COAL_GENERATOR_FE_PER_TICK = BUILDER
+            .comment("Energy output per tick while burning fuel (FE/t).")
+            .defineInRange("fePerTick", 20, 1, 100_000);
+
+    public static final ModConfigSpec.BooleanValue COAL_GENERATOR_AUTO_PUSH = BUILDER
+            .comment(
+                    "If true, the Coal Generator automatically pushes energy to adjacent blocks",
+                    "(pipes, energy ports, ...) that can receive energy.",
+                    "The pushed amount per tick is the same as the generation rate (fePerTick).")
+            .define("autoPush", true);
+
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends java.lang.String>> COAL_GENERATOR_EXTRA_FUELS = BUILDER
+            .comment(
+                    "Extra fuels for the Coal Generator, format: <itemid>=<burntime_in_ticks>.",
+                    "Example: minecraft:my_coal=1600",
+                    "Vanilla fuels, datapack values and mod fuels are detected automatically",
+                    "(same burn time as a vanilla furnace), this list is only for extra/custom fuels.")
+            .defineListAllowEmpty("extraFuels", java.util.List.<String>of(), o -> o instanceof String s && s.contains("="));
+
+    static {
+        BUILDER.pop();
+    }
+
     // --- Cooling Tower ---
     static {
         BUILDER.push("cooling_tower");

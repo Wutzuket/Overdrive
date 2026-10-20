@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/elena_output_port" }
+    "": { "model": "overdrive:block/elena/elena_output_port" }
   }
 }

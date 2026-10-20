@@ -7,7 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import de.wutzuket.overdrive.antimatter.Antimatter;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
+import de.wutzuket.overdrive.antimatter.ODAntimatters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +19,16 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
     private final int energyCost;
     private final int processTime;
     private final List<ResultEntry> resultEntries;
-    private final FluidStack outputFluid;
+    private final AntimatterStack outputAntimatter;
     private final ItemStack outputCell;
 
-    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, FluidStack outputFluid, ItemStack outputCell) {
+    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, AntimatterStack outputAntimatter, ItemStack outputCell) {
         this.meshDurabilityCost = meshDurabilityCost;
         this.energyCost = energyCost;
         this.processTime = processTime;
-        this.outputFluid = outputFluid;
+        this.outputAntimatter = outputAntimatter;
         this.outputCell = outputCell;
-        this.resultEntries = buildResultEntries(outputFluid, outputCell);
+        this.resultEntries = buildResultEntries(outputAntimatter, outputCell);
     }
 
     public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, List<ResultEntry> resultEntries) {
@@ -34,20 +36,20 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
         this.energyCost = energyCost;
         this.processTime = processTime;
         this.resultEntries = resultEntries;
-        this.outputFluid = extractFluid(resultEntries);
+        this.outputAntimatter = extractAntimatter(resultEntries);
         this.outputCell = extractItem(resultEntries);
     }
 
-    private static FluidStack extractFluid(List<ResultEntry> entries) {
+    private static AntimatterStack extractAntimatter(List<ResultEntry> entries) {
         for (ResultEntry entry : entries) {
             if (entry.amount() > 0) {
-                var holder = BuiltInRegistries.FLUID.getHolder(entry.id());
-                if (holder.isPresent()) {
-                    return new FluidStack(holder.get(), entry.amount());
+                Antimatter type = ODAntimatters.get(entry.id());
+                if (type != null) {
+                    return new AntimatterStack(type, entry.amount());
                 }
             }
         }
-        return FluidStack.EMPTY;
+        return new AntimatterStack(null, 0);
     }
 
     private static ItemStack extractItem(List<ResultEntry> entries) {
@@ -62,10 +64,10 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
         return ItemStack.EMPTY;
     }
 
-    private static List<ResultEntry> buildResultEntries(FluidStack fluid, ItemStack item) {
+    private static List<ResultEntry> buildResultEntries(AntimatterStack fluid, ItemStack item) {
         List<ResultEntry> list = new ArrayList<>();
-        if (!fluid.isEmpty()) {
-            list.add(new ResultEntry(fluid.getFluid().builtInRegistryHolder().key().location(), fluid.getAmount(), 0));
+        if (!fluid.isEmpty() && fluid.type() != null) {
+            list.add(new ResultEntry(fluid.type().id(), fluid.amount(), 0));
         }
         if (!item.isEmpty()) {
             list.add(new ResultEntry(item.getItem().builtInRegistryHolder().key().location(), 0, item.getCount()));
@@ -107,7 +109,7 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
     public int energyCost() { return energyCost; }
     public int processTime() { return processTime; }
     public List<ResultEntry> resultEntries() { return resultEntries; }
-    public FluidStack outputFluid() { return outputFluid; }
+    public AntimatterStack outputAntimatter() { return outputAntimatter; }
     public ItemStack outputCell() { return outputCell; }
 
     public record ResultEntry(ResourceLocation id, int amount, int count) {}

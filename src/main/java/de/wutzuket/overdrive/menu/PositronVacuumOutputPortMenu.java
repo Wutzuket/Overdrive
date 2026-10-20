@@ -42,9 +42,9 @@ public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> blockEntity.getTank().getFluidAmount();
-                    case 1 -> blockEntity.getTank().getCapacity();
-                    case 2 -> BuiltInRegistries.FLUID.getId(blockEntity.getTank().getFluid().getFluid());
+                    case 0 -> blockEntity.getTank().getAmount(0);
+                    case 1 -> blockEntity.getTank().getCapacity(0);
+                    case 2 -> blockEntity.getTank().getAntimatterInTank(0) == null ? 0 : blockEntity.getTank().getAntimatterInTank(0).color();
                     default -> 0;
                 };
             }

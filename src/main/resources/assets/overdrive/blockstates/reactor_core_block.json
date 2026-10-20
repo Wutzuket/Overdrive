@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/reactor_core_block"
+      "model": "overdrive:block/annihilation/reactor_core_block"
     }
   }
 }

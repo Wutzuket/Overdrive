@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/elena_casing",
-  "textures": {
-    "all": "overdrive:block/elena_output_port"
-  }
-}

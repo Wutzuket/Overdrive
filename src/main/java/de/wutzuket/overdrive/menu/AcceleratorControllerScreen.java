@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class AcceleratorControllerScreen extends AbstractContainerScreen<AcceleratorControllerMenu> {
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 136;
+    private static final int HEIGHT = 146;
 
     private static final int BAR_W = 16;
     private static final int BAR_H = 54;
@@ -48,11 +48,11 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
                 }, GuiStyle.COL_CYAN);
         addRenderableWidget(hologramButton);
 
-        rateField = new EditBox(font, x + 48, y + 104, 66, 14, Component.literal("rate"));
+        rateField = new EditBox(font, x + 48, y + 114, 66, 14, Component.literal("rate"));
         rateField.setMaxLength(16);
         rateField.setValue(ODFormat.formatEnergy(menu.getEnergyRateSynced()));
         addRenderableWidget(rateField);
-        rateSet = new ButtonHelper(x + 116, y + 104, 44, 14, Component.literal("Set"),
+        rateSet = new ButtonHelper(x + 116, y + 114, 44, 14, Component.literal("Set"),
                 b -> submitRate(), GuiStyle.COL_CYAN);
         addRenderableWidget(rateSet);
     }
@@ -85,9 +85,16 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (rateField != null && rateField.isFocused() && (keyCode == 257 || keyCode == 335)) {
-            submitRate();
-            return true;
+        if (rateField != null && rateField.isFocused()) {
+            if (keyCode == 257 || keyCode == 335) {
+                submitRate();
+                return true;
+            }
+            // Inventar-Taste (E) schlucken, solange das Textfeld aktiv ist - sonst
+            // schliesst sich der Screen, wenn man die FE-Rate eintippt.
+            if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -105,7 +112,8 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
                 menu.getVacuumScaled(BAR_H - 2) / (float) (BAR_H - 2), GuiStyle.COL_CYAN, null);
         GuiStyle.fluidGauge(guiGraphics, font, getIridiumStack(), menu.getIridiumInputCap(),
                 x + 48, y + 16, BAR_W, BAR_H, null);
-        GuiStyle.fluidGauge(guiGraphics, font, getOutputStack(), menu.getFluidCapacitySynced(),
+        GuiStyle.antimatterGauge(guiGraphics, font, menu.getOutputAntimatterType(),
+                menu.getOutputAmountSynced(), menu.getFluidCapacitySynced(),
                 x + 68, y + 16, BAR_W, BAR_H, null);
 
         GuiStyle.hBar(guiGraphics, x + 90, y + 34, 56, 10,
@@ -119,12 +127,6 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
         return new FluidStack(fluid, amount);
     }
 
-    private FluidStack getOutputStack() {
-        Fluid fluid = menu.getOutputFluid();
-        int amount = menu.getFluidAmountSynced();
-        if (fluid == null || fluid == Fluids.EMPTY || amount <= 0) return FluidStack.EMPTY;
-        return new FluidStack(fluid, amount);
-    }
 
     /** Ticks -> "45 s", "12 min 5 s", "5 h 33 min". */
     private static String fmtTime(long ticks) {
@@ -163,7 +165,13 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
                 Component.translatable("container.overdrive.accelerator_controller.usage",
                         ODFormat.formatEnergyPerTick(menu.getEnergyRateSynced())),
                 8, 94, GuiStyle.COL_TEXT, false);
-        guiGraphics.drawString(this.font, Component.literal("Rate:"), 8, 108, GuiStyle.COL_TEXT_DIM, false);
+        // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
+        double production = menu.isActive() ? menu.getProductionPerTickSynced() : 0.0;
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.production",
+                        ODFormat.formatFluidPerTick(production)),
+                8, 104, production > 0 ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font, Component.literal("Rate:"), 8, 118, GuiStyle.COL_TEXT_DIM, false);
 
         if (rateField != null && !rateField.isFocused()) {
             String current = ODFormat.formatEnergy(menu.getEnergyRateSynced());
@@ -198,8 +206,8 @@ public class AcceleratorControllerScreen extends AbstractContainerScreen<Acceler
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else if (mouseX >= x + 68 && mouseX <= x + 84 && mouseY >= y + 16 && mouseY <= y + 70) {
             List<Component> lines = new ArrayList<>();
-            FluidStack stack = getOutputStack();
-            lines.add(stack.isEmpty() ? Component.literal("Empty") : stack.getHoverName());
+            var type = menu.getOutputAntimatterType();
+            lines.add(type == null ? Component.literal("Empty") : type.displayName());
             lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmountSynced(), menu.getFluidCapacitySynced())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else if (mouseX >= x + 90 && mouseX < x + 146 && mouseY >= y + 34 && mouseY < y + 44

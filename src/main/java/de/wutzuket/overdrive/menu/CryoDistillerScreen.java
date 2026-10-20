@@ -153,6 +153,9 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
 
             g.drawString(font, "Energy: " + ODFormat.formatEnergyPair(be.getEnergyStored(), be.getMaxEnergyStored()),
                     8, 114, GuiStyle.COL_GREEN, false);
+            g.drawString(font, Component.translatable("container.overdrive.production",
+                            ODFormat.formatFluidPerTick(be.isActive() ? be.getProductionPerTick() : 0.0)),
+                    108, 114, be.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
         } else {
             int iy = 90;
             g.drawString(font, "Input: " + ODFormat.formatFluid(be.getInputTank().getFluidAmount()),
@@ -163,11 +166,9 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
                     8, iy + 18, GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, "Tank cap: " + ODFormat.formatFluid(CryoDistillerEntity.TANK_CAPACITY) + " each",
                     8, iy + 27, GuiStyle.COL_TEXT_DIM, false);
-            g.drawString(font, "Throughput: " + ODFormat.formatFluidPerTick(
-                            be.getInputTank().getFluidAmount() > 0
-                                    ? be.getInputTank().getFluidAmount() / (double) Math.max(1, be.getMaxProgress())
-                                    : 0.0) + " avg",
-                    8, iy + 36, GuiStyle.COL_TEXT_DIM, false);
+            g.drawString(font, Component.translatable("container.overdrive.production",
+                            ODFormat.formatFluidPerTick(be.isActive() ? be.getProductionPerTick() : 0.0)),
+                    8, iy + 36, be.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, "Energy input only (no extract)", 8, iy + 45, GuiStyle.COL_TEXT_DIM, false);
         }
     }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/steam_output_port"
+      "model": "overdrive:block/annihilation/steam_output_port"
     }
   }
 }

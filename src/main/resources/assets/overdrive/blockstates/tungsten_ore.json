@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/tungsten_ore" }
+    "": { "model": "overdrive:block/blocks/tungsten_ore" }
   }
 }

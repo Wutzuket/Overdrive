@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/aluminum_ore"
+      "model": "overdrive:block/blocks/aluminum_ore"
     }
   }
 }

@@ -1,8 +1,8 @@
 {
   "variants": {
-    "facing=north": { "model": "overdrive:block/vacuum_pump" },
-    "facing=south": { "model": "overdrive:block/vacuum_pump", "y": 180 },
-    "facing=east": { "model": "overdrive:block/vacuum_pump", "y": 90 },
-    "facing=west": { "model": "overdrive:block/vacuum_pump", "y": 270 }
+    "facing=north": { "model": "overdrive:block/vacuum/vacuum_pump" },
+    "facing=south": { "model": "overdrive:block/vacuum/vacuum_pump", "y": 180 },
+    "facing=east": { "model": "overdrive:block/vacuum/vacuum_pump", "y": 90 },
+    "facing=west": { "model": "overdrive:block/vacuum/vacuum_pump", "y": 270 }
   }
 }

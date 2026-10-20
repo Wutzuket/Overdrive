@@ -1,7 +1,10 @@
 package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.antimatter.Antimatter;
+import de.wutzuket.overdrive.antimatter.ODAntimatters;
 import de.wutzuket.overdrive.item.AdvancedHologramBlockItem;
+import de.wutzuket.overdrive.item.AntimatterCellItem;
 import de.wutzuket.overdrive.item.HologramBlockItem;
 import de.wutzuket.overdrive.item.WrenchItem;
 import net.minecraft.world.item.BlockItem;
@@ -207,6 +210,101 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
 
     public static final Supplier<Item> SIMPLE_FRAME = ITEMS.register("simple_frame",
             () -> new BlockItem(ODBlocks.SIMPLE_FRAME.get(), new Item.Properties()));
+
+    // Antimatter transport and storage
+    public static final Supplier<Item> ANTIMATTER_PIPE_BASIC = ITEMS.register("antimatter_pipe_basic",
+            () -> new BlockItem(ODBlocks.ANTIMATTER_PIPE_BASIC.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANTIMATTER_PIPE_ADVANCED = ITEMS.register("antimatter_pipe_advanced",
+            () -> new BlockItem(ODBlocks.ANTIMATTER_PIPE_ADVANCED.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANTIMATTER_PIPE_ELITE = ITEMS.register("antimatter_pipe_elite",
+            () -> new BlockItem(ODBlocks.ANTIMATTER_PIPE_ELITE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANTIMATTER_PIPE_ULTIMATE = ITEMS.register("antimatter_pipe_ultimate",
+            () -> new BlockItem(ODBlocks.ANTIMATTER_PIPE_ULTIMATE.get(), new Item.Properties()));
+
+    public static final Supplier<Item> ANTIMATTER_TANK = ITEMS.register("antimatter_tank",
+            () -> new BlockItem(ODBlocks.ANTIMATTER_TANK.get(), new Item.Properties()));
+
+    /** Universal cell, it takes over the type of the tank it is filled from. */
+    public static final Supplier<Item> EMPTY_ANTIMATTER_CELL = ITEMS.register("empty_antimatter_cell",
+            () -> new AntimatterCellItem(new Item.Properties().stacksTo(16), null, false));
+
+    /**
+     * The ids of the automatically registered antimatter cells. One cell is created for every type
+     * of antimatter, the list is filled while the items are registered.
+     */
+    private static final java.util.List<net.minecraft.resources.ResourceLocation> ANTIMATTER_CELL_IDS =
+            new java.util.ArrayList<>();
+
+    /** Maps a type of antimatter to the cell that is made for it. */
+    private static final java.util.Map<de.wutzuket.overdrive.antimatter.Antimatter, net.minecraft.resources.ResourceLocation>
+            ANTIMATTER_CELL_BY_TYPE = new java.util.LinkedHashMap<>();
+
+    /** Registers a cell for the given type of antimatter. Called for every type automatically. */
+    public static void registerAntimatterCell(de.wutzuket.overdrive.antimatter.Antimatter type,
+                                               net.minecraft.resources.ResourceLocation id) {
+        ANTIMATTER_CELL_IDS.add(id);
+        ANTIMATTER_CELL_BY_TYPE.put(type, id);
+    }
+
+    /** @return all automatically registered cells, one per type of antimatter. */
+    public static java.util.List<Item> getAntimatterCells() {
+        java.util.List<Item> cells = new java.util.ArrayList<>();
+        for (net.minecraft.resources.ResourceLocation id : ANTIMATTER_CELL_IDS) {
+            Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(id);
+            if (item != null) {
+                cells.add(item);
+            }
+        }
+        return cells;
+    }
+
+    /**
+     * @param type the type of antimatter
+     * @return the cell item that is used for the given type of antimatter
+     */
+    public static Item getCellFor(de.wutzuket.overdrive.antimatter.Antimatter type) {
+        net.minecraft.resources.ResourceLocation id = ANTIMATTER_CELL_BY_TYPE.get(type);
+        if (id == null) {
+            return EMPTY_ANTIMATTER_CELL.get();
+        }
+        Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(id);
+        return item == null ? EMPTY_ANTIMATTER_CELL.get() : item;
+    }
+
+    /**
+     * The ids of the automatically registered creative tanks. One creative tank is created for
+     * every type of antimatter.
+     */
+    private static final java.util.List<net.minecraft.resources.ResourceLocation> CREATIVE_TANK_IDS =
+            new java.util.ArrayList<>();
+
+    /** Maps a type of antimatter to the creative tank that is made for it. */
+    private static final java.util.Map<de.wutzuket.overdrive.antimatter.Antimatter, net.minecraft.resources.ResourceLocation>
+            CREATIVE_TANK_BY_TYPE = new java.util.LinkedHashMap<>();
+
+    /** Registers a creative tank for the given type of antimatter. Called for every type. */
+    public static void registerCreativeAntimatterTank(de.wutzuket.overdrive.antimatter.Antimatter type,
+                                                       net.minecraft.resources.ResourceLocation id) {
+        CREATIVE_TANK_IDS.add(id);
+        CREATIVE_TANK_BY_TYPE.put(type, id);
+    }
+
+    /** @return all automatically registered creative tanks, one per type of antimatter. */
+    public static java.util.List<Item> getCreativeAntimatterTanks() {
+        java.util.List<Item> tanks = new java.util.ArrayList<>();
+        for (net.minecraft.resources.ResourceLocation id : CREATIVE_TANK_IDS) {
+            Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(id);
+            if (item != null) {
+                tanks.add(item);
+            }
+        }
+        return tanks;
+    }
+
+
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

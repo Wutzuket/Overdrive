@@ -1,0 +1,128 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "overdrive:block/antimatter_pipe_particle",
+    "pipe": "overdrive:block/antimatter_pipe_glass",
+    "funnel": "overdrive:block/antimatter_pipe_funnel_push"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        11
+      ],
+      "to": [
+        11,
+        11,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#pipe",
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#pipe",
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#pipe",
+          "uv": [
+            11,
+            5,
+            16,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#pipe",
+          "uv": [
+            11,
+            5,
+            16,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        12
+      ],
+      "to": [
+        10,
+        10,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#funnel",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -45,6 +45,27 @@ public class WrenchItem extends Item {
                 }
                 return InteractionResult.PASS;
             }
+        } else if (state.getBlock() instanceof de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock antimatterPipe) {
+            // the wrench configures the antimatter pipe like the configurator did
+            if (!secondaryUse) {
+                if (level.isClientSide) {
+                    return InteractionResult.SUCCESS;
+                }
+                if (!(level.getBlockEntity(pos) instanceof de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlockEntity antimatterPipeEntity)) {
+                    return InteractionResult.PASS;
+                }
+                Direction arm = de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock.getClickedArm(context);
+                if (arm == null) {
+                    java.util.Map<Direction, de.wutzuket.overdrive.antimatter.PipeSideMode> changed =
+                            antimatterPipeEntity.cycleAllSideModes();
+                    showModes(player, changed);
+                } else {
+                    showModes(player, java.util.Map.of(arm, antimatterPipeEntity.cycleSideMode(arm)));
+                }
+                antimatterPipeEntity.refreshNetwork();
+                de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock.refreshState(level, pos, state);
+                return InteractionResult.CONSUME;
+            }
         } else if (!secondaryUse) {
             return InteractionResult.PASS;
         }
@@ -62,6 +83,31 @@ public class WrenchItem extends Item {
             level.removeBlock(pos, false);
         }
         return InteractionResult.CONSUME;
+    }
+
+    /**
+     * Shows the player which mode the sides of the pipe were switched to, so it is visible that
+     * the wrench really did something.
+     */
+    private static void showModes(Player player,
+                                   java.util.Map<Direction, de.wutzuket.overdrive.antimatter.PipeSideMode> changed) {
+        if (changed.isEmpty()) {
+            player.displayClientMessage(net.minecraft.network.chat.Component
+                    .translatable("message.overdrive.antimatter.pipe.no_side"), true);
+            return;
+        }
+        net.minecraft.network.chat.MutableComponent message =
+                net.minecraft.network.chat.Component.translatable("message.overdrive.antimatter.pipe.mode");
+        boolean first = true;
+        for (java.util.Map.Entry<Direction, de.wutzuket.overdrive.antimatter.PipeSideMode> entry : changed.entrySet()) {
+            if (!first) {
+                message.append(net.minecraft.network.chat.Component.literal(", "));
+            }
+            first = false;
+            message.append(net.minecraft.network.chat.Component.literal(entry.getKey().getName() + ": "))
+                    .append(entry.getValue().displayName());
+        }
+        player.displayClientMessage(message, true);
     }
 
     private static boolean canBreak(BlockState state) {

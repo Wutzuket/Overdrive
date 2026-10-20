@@ -4,7 +4,7 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.jetbrains.annotations.Nullable;
 
 /** Reiner Weiterleitungs-Port: kein eigener Speicher, keine GUI – Pipes landen im Input-Tank des Controllers. */
@@ -23,7 +23,7 @@ public class ADInputPortEntity extends BlockEntity {
         return cachedController;
     }
 
-    public @Nullable FluidTank getTank() {
+    public @Nullable AntimatterTank getTank() {
         ADControllerEntity ctrl = getController();
         return ctrl == null ? null : ctrl.getInputTank();
     }

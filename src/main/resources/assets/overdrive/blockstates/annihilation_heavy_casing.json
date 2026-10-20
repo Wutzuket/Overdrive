@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/annihilation_heavy_casing"
+      "model": "overdrive:block/annihilation/annihilation_heavy_casing"
     }
   }
 }

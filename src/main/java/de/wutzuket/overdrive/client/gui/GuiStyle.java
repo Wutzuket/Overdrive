@@ -53,6 +53,24 @@ public final class GuiStyle {
         }
     }
 
+    /** Fuellstandsanzeige fuer ein Antimatter-Tank, in der Farbe des Antimatters. */
+    public static void antimatterGauge(GuiGraphics g, Font font, de.wutzuket.overdrive.antimatter.Antimatter type,
+                                       int amount, int capacity, int x, int y, int w, int h, String label) {
+        g.fill(x, y, x + w, y + h, COL_BORDER);
+        g.fill(x + 1, y + 1, x + w - 1, y + h - 1, COL_INSET_DARK);
+        int innerH = h - 4;
+        int fill = capacity <= 0 ? 0 : Math.max(0, Math.min(innerH, (int) ((long) amount * innerH / capacity)));
+        if (fill > 0) {
+            int color = type == null ? COL_CYAN : type.color();
+            int top = y + 2 + innerH - fill;
+            g.fill(x + 2, top, x + w - 2, y + h - 2, color);
+            g.fill(x + 2, top, x + w - 2, top + 2, 0x45FFFFFF);
+        }
+        if (label != null) {
+            g.drawCenteredString(font, label, x + w / 2, y + h + 3, COL_TEXT_DIM);
+        }
+    }
+
     public static void metricGauge(GuiGraphics g, Font font, int x, int y, int w, int h,
                                    float percent, int color, String label) {
         g.fill(x, y, x + w, y + h, COL_BORDER);

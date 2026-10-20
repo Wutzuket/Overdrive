@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControllerMenu> {
     private static final int WIDTH = 200;
-    private static final int HEIGHT = 136;
+    private static final int HEIGHT = 146;
     private static final int BAR_W = 14;
     private static final int BAR_H = 44;
     private static final int BAR_Y = 16;
@@ -52,11 +52,11 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
                 GuiStyle.COL_CYAN);
         addRenderableWidget(hologramButton);
 
-        rateField = new EditBox(font, x + 48, y + 104, 80, 14, Component.literal("rate"));
+        rateField = new EditBox(font, x + 48, y + 114, 80, 14, Component.literal("rate"));
         rateField.setMaxLength(16);
         rateField.setValue(ODFormat.formatEnergy(menu.getEnergyRateSynced()));
         addRenderableWidget(rateField);
-        rateSet = new ButtonHelper(x + 130, y + 104, 44, 14, Component.literal("Set"),
+        rateSet = new ButtonHelper(x + 130, y + 114, 44, 14, Component.literal("Set"),
                 b -> submitRate(), GuiStyle.COL_CYAN);
         addRenderableWidget(rateSet);
     }
@@ -89,9 +89,16 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (rateField != null && rateField.isFocused() && (keyCode == 257 || keyCode == 335)) {
-            submitRate();
-            return true;
+        if (rateField != null && rateField.isFocused()) {
+            if (keyCode == 257 || keyCode == 335) {
+                submitRate();
+                return true;
+            }
+            // Inventar-Taste (E) schlucken, solange das Textfeld aktiv ist - sonst
+            // schliesst sich der Screen, wenn man die FE-Rate eintippt.
+            if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -112,10 +119,10 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
         var be = menu.getBlockEntity();
         if (be != null) {
             var inTank = be.getInputTank();
-            GuiStyle.fluidGauge(guiGraphics, font, inTank.getFluid(), inTank.getCapacity(),
+            GuiStyle.antimatterGauge(guiGraphics, font, inTank.getAntimatterInTank(0), inTank.getAmount(0), inTank.getCapacity(0),
                     x + BAR_INPUT_X, y + BAR_Y, BAR_W, BAR_H, "I");
             var outTank = be.getFluidTank();
-            GuiStyle.fluidGauge(guiGraphics, font, outTank.getFluid(), outTank.getCapacity(),
+            GuiStyle.antimatterGauge(guiGraphics, font, outTank.getAntimatterInTank(0), outTank.getAmount(0), outTank.getCapacity(0),
                     x + BAR_OUTPUT_X, y + BAR_Y, BAR_W, BAR_H, "O");
         }
 
@@ -151,7 +158,13 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
                 Component.translatable("container.overdrive.accelerator_controller.usage",
                         ODFormat.formatEnergyPerTick(menu.getEnergyRateSynced())),
                 8, 94, GuiStyle.COL_TEXT, false);
-        guiGraphics.drawString(this.font, Component.literal("Rate:"), 8, 108, GuiStyle.COL_TEXT_DIM, false);
+        // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
+        double production = menu.isActive() ? menu.getProductionPerTickSynced() : 0.0;
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.production",
+                        ODFormat.formatFluidPerTick(production)),
+                8, 104, production > 0 ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font, Component.literal("Rate:"), 8, 118, GuiStyle.COL_TEXT_DIM, false);
 
         if (rateField != null && !rateField.isFocused()) {
             String current = ODFormat.formatEnergy(menu.getEnergyRateSynced());
@@ -193,7 +206,7 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
             var be = menu.getBlockEntity();
             if (be != null) {
                 var tank = be.getInputTank();
-                renderFluidTooltip(guiGraphics, tank.getFluid(), tank.getFluidAmount(), tank.getCapacity(), "Empty", mouseX, mouseY);
+                renderAntimatterTooltip(guiGraphics, tank.getAntimatterInTank(0), tank.getAmount(0), tank.getCapacity(0), mouseX, mouseY);
             } else {
                 super.renderTooltip(guiGraphics, mouseX, mouseY);
             }
@@ -201,7 +214,7 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
             var be = menu.getBlockEntity();
             if (be != null) {
                 var tank = be.getFluidTank();
-                renderFluidTooltip(guiGraphics, tank.getFluid(), tank.getFluidAmount(), tank.getCapacity(), "Empty", mouseX, mouseY);
+                renderAntimatterTooltip(guiGraphics, tank.getAntimatterInTank(0), tank.getAmount(0), tank.getCapacity(0), mouseX, mouseY);
             } else {
                 super.renderTooltip(guiGraphics, mouseX, mouseY);
             }
@@ -215,6 +228,13 @@ public class ELENAControllerScreen extends AbstractContainerScreen<ELENAControll
         } else {
             super.renderTooltip(guiGraphics, mouseX, mouseY);
         }
+    }
+
+    private void renderAntimatterTooltip(GuiGraphics g, de.wutzuket.overdrive.antimatter.Antimatter type, int amount, int capacity, int mouseX, int mouseY) {
+        var lines = new java.util.ArrayList<net.minecraft.network.chat.Component>();
+        lines.add(net.minecraft.network.chat.Component.literal(type == null ? "Empty" : type.displayName().getString()));
+        lines.add(net.minecraft.network.chat.Component.literal(amount + " / " + capacity + " mB"));
+        g.renderTooltip(font, lines, java.util.Optional.empty(), mouseX, mouseY);
     }
 
     private void renderFluidTooltip(GuiGraphics g, net.neoforged.neoforge.fluids.FluidStack stack, int amount, int capacity, String fallback, int mouseX, int mouseY) {

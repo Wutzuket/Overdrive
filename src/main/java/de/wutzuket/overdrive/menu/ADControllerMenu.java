@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ADControllerMenu extends AbstractContainerMenu {
     private final ADControllerEntity blockEntity;
-    private final int[] data = new int[12];
+    private final int[] data = new int[13];
 
     public ADControllerMenu(int containerId, Inventory inventory, ADControllerEntity blockEntity) {
         super(ODMenuTypes.AD_CONTROLLER_MENU.get(), containerId);
@@ -32,6 +32,8 @@ public class ADControllerMenu extends AbstractContainerMenu {
                     case 9 -> blockEntity.getChargeScaled();
                     case 10 -> blockEntity.getChargeTicksElapsed();
                     case 11 -> blockEntity.getChargeTicksTotal();
+                    // Produktion in mB/t, x100 als Festkomma (Brokerrechnung).
+                    case 12 -> (int) Math.round(blockEntity.getProductionPerTick() * 100);
                     default -> 0;
                 };
             }
@@ -104,4 +106,7 @@ public class ADControllerMenu extends AbstractContainerMenu {
     public int getChargeTicksElapsed() { return Math.max(0, data[10]); }
 
     public int getChargeTicksTotal() { return Math.max(1, data[11]); }
+
+    /** Produktion der Maschine in mB pro Tick (z.B. 20000 -> "20 B/t"). */
+    public double getProductionPerTickSynced() { return data[12] / 100.0; }
 }

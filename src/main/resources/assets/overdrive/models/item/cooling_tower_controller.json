@@ -1,3 +1,3 @@
 {
-  "parent": "overdrive:block/cooling_tower_controller"
+  "parent": "overdrive:block/cooling_tower/cooling_tower_controller"
 }

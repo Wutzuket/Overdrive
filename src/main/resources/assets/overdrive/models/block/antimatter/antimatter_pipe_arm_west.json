@@ -1,0 +1,59 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "overdrive:block/antimatter_pipe_particle",
+    "pipe": "overdrive:block/antimatter_pipe_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        5,
+        5
+      ],
+      "to": [
+        5,
+        11,
+        11
+      ],
+      "faces": {
+        "down": {
+          "texture": "#pipe",
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#pipe",
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ]
+        },
+        "north": {
+          "texture": "#pipe",
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ]
+        },
+        "south": {
+          "texture": "#pipe",
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package de.wutzuket.overdrive.recipe;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -13,13 +14,13 @@ public class CollisionRecipe implements Recipe<RecipeInput> {
     private final FluidStack inputFluid;
     private final int energyCost;
     private final int processTime;
-    private final FluidStack outputFluid;
+    private final AntimatterStack outputAntimatter;
 
-    public CollisionRecipe(FluidStack inputFluid, int energyCost, int processTime, FluidStack outputFluid) {
+    public CollisionRecipe(FluidStack inputFluid, int energyCost, int processTime, AntimatterStack outputAntimatter) {
         this.inputFluid = inputFluid;
         this.energyCost = energyCost;
         this.processTime = processTime;
-        this.outputFluid = outputFluid;
+        this.outputAntimatter = outputAntimatter;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class CollisionRecipe implements Recipe<RecipeInput> {
         return processTime;
     }
 
-    public FluidStack outputFluid() {
-        return outputFluid;
+    public AntimatterStack outputAntimatter() {
+        return outputAntimatter;
     }
 }

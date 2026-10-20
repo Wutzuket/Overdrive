@@ -26,7 +26,7 @@ public class CryoDistillerCategory implements IRecipeCategory<CryoDistillerRecip
             RecipeType.create(OverdriveJeiPlugin.MODID, "cryo_distiller", CryoDistillerRecipe.class);
 
     public static final int WIDTH = 200;
-    public static final int HEIGHT = 140;
+    public static final int HEIGHT = 150;
 
     private final IDrawable background;
     private final IDrawable icon;

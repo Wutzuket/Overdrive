@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/cooling_tower_casing",
-  "textures": {
-    "north": "overdrive:block/cooling_tower_controller"
-  }
-}

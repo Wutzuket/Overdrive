@@ -1,3 +1,3 @@
 {
-    "parent": "overdrive:block/scanner"
+    "parent": "overdrive:block/misc/scanner"
 }

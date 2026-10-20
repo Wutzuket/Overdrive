@@ -27,7 +27,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.joml.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,7 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
     public static final int DEFAULT_ENERGY_RATE = 250_000_000;
     private int energyRate = DEFAULT_ENERGY_RATE;
     // Output-Tank fuer Antiprotonen; fluessiges Iridium wird direkt aus dem Iridium-Target-Tank verbraucht
-    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY);
+    private final AntimatterTank fluidTank = new AntimatterTank(TANK_CAPACITY);
     private boolean validStructure = false;
     private boolean hologramEnabled = false;
     private boolean active = false;
@@ -56,6 +57,8 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
     private boolean particlesSpawned = false;
 
     private @Nullable CollisionRecipe currentRecipe = null;
+    /** Gecachtes Basisrezept der Maschine (fuer die Produktionsanzeige, unabhaengig vom Target). */
+    private @Nullable CollisionRecipe baseRecipe = null;
     private @Nullable BlockPos iridiumTargetPos = null;
     private @Nullable BlockPos outputPos = null;
 
@@ -158,10 +161,10 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
             return;
         }
 
-        FluidStack roomCheck = fractional
-                ? currentRecipe.outputFluid().copyWithAmount(quantum[1])
+        AntimatterStack roomCheck = fractional
+                ? currentRecipe.outputAntimatter().withAmount(quantum[1])
                 : getScaledOutput(currentRecipe);
-        if (!currentRecipe.outputFluid().isEmpty() && !canOutputAcceptFluid(level, roomCheck)) {
+        if (!currentRecipe.outputAntimatter().isEmpty() && !canOutputAcceptAntimatter(level, roomCheck)) {
             if (active) {
                 active = false;
                 progressTicks = 0;
@@ -204,12 +207,37 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         return (double) ((long) energyRate * Math.max(1, recipe.processTime())) / base;
     }
 
-    public FluidStack getScaledOutput(@Nullable CollisionRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()) return FluidStack.EMPTY;
-        long amount = (long) (recipe.outputFluid().getAmount() * getRateFactor(recipe));
+    /**
+     * Produktion pro Tick in mB (fuer die GUI-Anzeige, z.B. 20000 -&gt; "20 B/t").
+     * Nutzt das aktive Rezept, sonst das Basisrezept der Maschine, damit die Rate auch
+     * ohne Iridium im Target angezeigt wird.
+     */
+    public double getProductionPerTick() {
+        CollisionRecipe recipe = currentRecipe != null ? currentRecipe : getBaseRecipe();
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return 0;
+        return recipe.outputAntimatter().amount() * getRateFactor(recipe) / Math.max(1, recipe.processTime());
+    }
+
+    /** Das (erste) Kollisionsrezept der Maschine, unabhaengig vom Inhalt des Target-Tanks. */
+    private @Nullable CollisionRecipe getBaseRecipe() {
+        if (baseRecipe != null) return baseRecipe;
+        if (level == null) return null;
+        for (RecipeHolder<?> holder : level.getRecipeManager().getRecipes()) {
+            if (holder.value() instanceof CollisionRecipe recipe
+                    && recipe.getType() == ODRecipeTypes.COLLISION.get()) {
+                baseRecipe = recipe;
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    public AntimatterStack getScaledOutput(@Nullable CollisionRecipe recipe) {
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return new AntimatterStack(null, 0);
+        long amount = (long) (recipe.outputAntimatter().amount() * getRateFactor(recipe));
         if (amount < 1) amount = 1;
         if (amount > Integer.MAX_VALUE) amount = Integer.MAX_VALUE;
-        return recipe.outputFluid().copyWithAmount((int) amount);
+        return recipe.outputAntimatter().withAmount((int) amount);
     }
 
     /** Skalierter Iridium-Input pro Op in mB (Faktor aus GUI-Rate vs. Rezeptkosten). */
@@ -223,8 +251,8 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
     /** Exakte Output-Menge pro Tick als double (ohne Aufrunden, kann < 1 sein). */
     public double exactOutputPerTick(@Nullable CollisionRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()) return 0;
-        return recipe.outputFluid().getAmount() * getRateFactor(recipe);
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return 0;
+        return recipe.outputAntimatter().amount() * getRateFactor(recipe);
     }
 
     /** Exakte Iridium-Menge pro Tick als double (ohne Aufrunden, kann < 1 sein). */
@@ -235,8 +263,8 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
     /** True, wenn pro Tick keine ganzen mB anfallen wuerden -> Lademodus statt Aufrunden. */
     public boolean isFractionalOp(@Nullable CollisionRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()
-                || recipe.inputFluid().isEmpty() || recipe.outputFluid().getAmount() <= 0
+        if (recipe == null || recipe.outputAntimatter().isEmpty()
+                || recipe.inputFluid().isEmpty() || recipe.outputAntimatter().amount() <= 0
                 || recipe.inputFluid().getAmount() <= 0) return false;
         return exactOutputPerTick(recipe) < 1.0 || exactInputPerTick(recipe) < 1.0;
     }
@@ -254,12 +282,12 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
     /** Ganzzahliges Mindest-Quantum {iridiumMb, outputMb} aus dem gekuerzten Rezeptverhaeltnis. */
     public int[] chargeQuantum(@Nullable CollisionRecipe recipe) {
-        if (recipe == null || recipe.inputFluid().isEmpty() || recipe.outputFluid().isEmpty()) {
+        if (recipe == null || recipe.inputFluid().isEmpty() || recipe.outputAntimatter().isEmpty()) {
             return new int[]{1, 1};
         }
-        int g = gcd(recipe.inputFluid().getAmount(), recipe.outputFluid().getAmount());
+        int g = gcd(recipe.inputFluid().getAmount(), recipe.outputAntimatter().amount());
         return new int[]{Math.max(1, recipe.inputFluid().getAmount() / g),
-                Math.max(1, recipe.outputFluid().getAmount() / g)};
+                Math.max(1, recipe.outputAntimatter().amount() / g)};
     }
 
     /** Sammelt Output-Bruchteile; vollendet ganze Quanten, sobald Iridium + Output-Platz reichen. */
@@ -270,13 +298,13 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         partialOutput += exactOutputPerTick(currentRecipe);
 
         while (partialOutput >= makeOut) {
-            FluidStack chunk = currentRecipe.outputFluid().copyWithAmount(makeOut);
-            int canFill = fluidTank.fill(chunk.copy(), IFluidHandler.FluidAction.SIMULATE);
+            AntimatterStack chunk = currentRecipe.outputAntimatter().withAmount(makeOut);
+            int canFill = fluidTank.insertAntimatter(0, chunk.type(), makeOut, true);
             if (canFill < makeOut) break;
             FluidStack drained = target.getTank().drain(needIn, IFluidHandler.FluidAction.SIMULATE);
             if (drained.getAmount() < needIn || !drained.is(currentRecipe.inputFluid().getFluid())) break;
             target.getTank().drain(needIn, IFluidHandler.FluidAction.EXECUTE);
-            int filled = fluidTank.fill(chunk.copy(), IFluidHandler.FluidAction.EXECUTE);
+            int filled = fluidTank.insertAntimatter(0, chunk.type(), makeOut, false);
             if (filled > 0) {
                 spawnOutputParticles(level, pos, state);
             }
@@ -340,10 +368,10 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
     private void completeProcessing(ServerLevel level, BlockPos pos, BlockState state, IridiumTargetEntity target) {
         if (currentRecipe == null) return;
 
-        FluidStack output = getScaledOutput(currentRecipe);
+        AntimatterStack output = getScaledOutput(currentRecipe);
         if (!output.isEmpty()) {
-            int canFill = fluidTank.fill(output.copy(), IFluidHandler.FluidAction.SIMULATE);
-            if (canFill < output.getAmount()) {
+            int canFill = fluidTank.insertAntimatter(0, output.type(), output.amount(), true);
+            if (canFill < output.amount()) {
                 return;
             }
         }
@@ -355,7 +383,7 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         target.getTank().drain(needIridium, IFluidHandler.FluidAction.EXECUTE);
 
         if (!output.isEmpty()) {
-            int filled = fluidTank.fill(output.copy(), IFluidHandler.FluidAction.EXECUTE);
+            int filled = fluidTank.insertAntimatter(0, output.type(), output.amount(), false);
             if (filled > 0) {
                 spawnOutputParticles(level, pos, state);
             }
@@ -445,20 +473,20 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         return null;
     }
 
-    private boolean canOutputAcceptFluid(Level level, FluidStack fluidStack) {
+    private boolean canOutputAcceptAntimatter(Level level, AntimatterStack stack) {
         if (outputPos == null) return false;
         BlockEntity be = level.getBlockEntity(outputPos);
         if (!(be instanceof AcceleratorOutputEntity output)) {
             outputPos = null;
             return false;
         }
-        int canFill = output.fill(fluidStack.copy(), IFluidHandler.FluidAction.SIMULATE);
-        return canFill >= fluidStack.getAmount();
+        int canFill = output.getAntimatterTank().insertAntimatter(0, stack.type(), stack.amount(), true);
+        return canFill >= stack.amount();
     }
 
     private void pushFluidToOutput(Level level) {
         if (outputPos == null) return;
-        if (fluidTank.isEmpty()) return;
+        if (fluidTank.getAmount(0) <= 0) return;
 
         BlockEntity be = level.getBlockEntity(outputPos);
         if (!(be instanceof AcceleratorOutputEntity output)) {
@@ -466,12 +494,12 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
             return;
         }
 
-        FluidStack toDrain = fluidTank.drain(fluidTank.getFluidAmount(), IFluidHandler.FluidAction.SIMULATE);
-        if (toDrain.isEmpty()) return;
+        int toDrain = fluidTank.getAmount(0);
+        if (toDrain <= 0) return;
 
-        int filled = output.fill(toDrain.copy(), IFluidHandler.FluidAction.EXECUTE);
+        int filled = output.getAntimatterTank().insertAntimatter(0, fluidTank.getAntimatterInTank(0), toDrain, false);
         if (filled > 0) {
-            fluidTank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+            fluidTank.extractAntimatter(0, filled, false);
             setChanged();
         }
     }
@@ -827,11 +855,12 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         return validStructure;
     }
 
-    public FluidTank getFluidTank() {
+    public AntimatterTank getAntimatterTank() {
         return fluidTank;
     }
 
-    public FluidStack getOutputFluidForDisplay() {
+    /** @return der Antimatter-Typ, der aktuell im Output liegt (fuer die Anzeige). */
+    public de.wutzuket.overdrive.antimatter.Antimatter getOutputAntimatterForDisplay() {
         if (level != null) {
             BlockPos displayOutputPos = outputPos;
             if (displayOutputPos == null) {
@@ -839,13 +868,13 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
             }
             if (displayOutputPos != null
                     && level.getBlockEntity(displayOutputPos) instanceof AcceleratorOutputEntity output) {
-                return output.getFluidTank().getFluid().copy();
+                return output.getAntimatterTank().getAntimatterInTank(0);
             }
         }
-        return fluidTank.getFluid().copy();
+        return fluidTank.getAntimatterInTank(0);
     }
 
-    public int getOutputFluidCapacityForDisplay() {
+    public int getOutputAntimatterAmountForDisplay() {
         if (level != null) {
             BlockPos displayOutputPos = outputPos;
             if (displayOutputPos == null) {
@@ -853,10 +882,24 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
             }
             if (displayOutputPos != null
                     && level.getBlockEntity(displayOutputPos) instanceof AcceleratorOutputEntity output) {
-                return output.getFluidTank().getCapacity();
+                return output.getAntimatterTank().getAmount(0);
             }
         }
-        return fluidTank.getCapacity();
+        return fluidTank.getAmount(0);
+    }
+
+    public int getOutputAntimatterCapacityForDisplay() {
+        if (level != null) {
+            BlockPos displayOutputPos = outputPos;
+            if (displayOutputPos == null) {
+                displayOutputPos = findOutputPos(level, worldPosition, getBlockState());
+            }
+            if (displayOutputPos != null
+                    && level.getBlockEntity(displayOutputPos) instanceof AcceleratorOutputEntity output) {
+                return output.getAntimatterTank().getCapacity(0);
+            }
+        }
+        return fluidTank.getCapacity(0);
     }
 
     /** Target-Entity am Ring (null, wenn gerade keines gefunden). */
@@ -892,7 +935,9 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         tag.putBoolean("hologramEnabled", hologramEnabled);
         tag.putBoolean("active", active);
         tag.putInt("progressTicks", progressTicks);
-        tag.put("fluid", fluidTank.writeToNBT(registries, new CompoundTag()));
+        CompoundTag fluidTag = new CompoundTag();
+        fluidTank.saveToNBT(fluidTag);
+        tag.put("fluid", fluidTag);
         tag.putDouble("partialOutput", partialOutput);
         // "inputFluid" aus aelteren Versionen wird ignoriert (Iridium liegt jetzt im Target-Tank).
     }
@@ -908,7 +953,7 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
         active = tag.getBoolean("active");
         progressTicks = tag.getInt("progressTicks");
         if (tag.contains("fluid")) {
-            fluidTank.readFromNBT(registries, tag.getCompound("fluid"));
+            fluidTank.loadFromNBT(tag.getCompound("fluid"));
         }
         partialOutput = tag.contains("partialOutput") ? Math.max(0, tag.getDouble("partialOutput")) : 0;
     }

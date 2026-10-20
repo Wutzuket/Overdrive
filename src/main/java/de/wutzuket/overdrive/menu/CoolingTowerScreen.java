@@ -98,6 +98,10 @@ public class CoolingTowerScreen extends AbstractContainerScreen<CoolingTowerMenu
                 g.drawString(font, inName+": "+ODFormat.formatFluidPair(be.getInputTank().getFluidAmount(), 8000), 8,94, GuiStyle.COL_TEXT,false);
                 String outName = fluidName(be.getOutputFluidForDisplay(), "Empty");
                 g.drawString(font, outName+": "+ODFormat.formatFluidPair(be.getOutputTotalAmount(), be.getOutputTotalCapacity()), 8,104, GuiStyle.COL_TEXT_DIM,false);
+                // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
+                double production = be.isActive() ? be.getProductionPerTick() : 0.0;
+                g.drawString(font, Component.translatable("container.overdrive.production",
+                        ODFormat.formatFluidPerTick(production)), 8,114, production>0? GuiStyle.COL_GREEN: GuiStyle.COL_TEXT_DIM,false);
             } else {
                 drawPortLine(g, "Steam In:"+be.getLastInputPorts()+"/1", be.getLastInputPorts()>=1? GuiStyle.COL_GREEN: GuiStyle.COL_RED, 8,94);
                 drawPortLine(g, "Water Out:"+be.getLastOutputPorts()+"/1", be.getLastOutputPorts()>=1? GuiStyle.COL_GREEN: GuiStyle.COL_RED, 100,94);

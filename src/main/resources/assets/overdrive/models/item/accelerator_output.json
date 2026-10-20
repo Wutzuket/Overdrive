@@ -1,3 +1,3 @@
 {
-  "parent": "overdrive:block/accelerator_output"
+  "parent": "overdrive:block/accelerator/accelerator_output"
 }

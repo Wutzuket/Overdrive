@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/deepslate_tungsten_ore" }
+    "": { "model": "overdrive:block/blocks/deepslate_tungsten_ore" }
   }
 }

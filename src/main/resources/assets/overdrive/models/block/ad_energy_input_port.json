@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/ad_casing",
-  "textures": {
-    "north": "overdrive:block/ad_energy_input_port"
-  }
-}

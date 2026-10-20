@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/annihilation_energy_output"
+      "model": "overdrive:block/annihilation/annihilation_energy_output"
     }
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/ad/ad_casing",
+  "textures": {
+    "all": "overdrive:block/ad_output_port"
+  }
+}

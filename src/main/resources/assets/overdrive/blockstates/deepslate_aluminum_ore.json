@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/deepslate_aluminum_ore"
+      "model": "overdrive:block/blocks/deepslate_aluminum_ore"
     }
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/tungsten/tungsten_casing",
+  "textures": {
+    "north": "overdrive:block/tungsten_target_front"
+  }
+}

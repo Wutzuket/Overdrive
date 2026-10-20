@@ -1,12 +1,15 @@
 package de.wutzuket.overdrive.integration.jei;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
+import de.wutzuket.overdrive.antimatter.ODAntimatters;
 import de.wutzuket.overdrive.index.ODBlocks;
 import de.wutzuket.overdrive.index.ODItems;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.registration.IModIngredientRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -57,6 +60,21 @@ public class OverdriveJeiPlugin implements IModPlugin {
                 new PositronExtractionCategory(guiHelper),
                 new CryoDistillerCategory(guiHelper)
         );
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+        // Die Antimatter werden bei JEI wie ein Fluid registriert, damit sie in der
+        // Zutatenliste auftauchen und eigene Rezept-Slots bekommen. Die Liste entsteht
+        // automatisch aus den Antimatter-Typen.
+        List<AntimatterStack> stacks = new ArrayList<>();
+        for (de.wutzuket.overdrive.antimatter.Antimatter type : ODAntimatters.getTypes()) {
+            stacks.add(new AntimatterStack(type, 1000));
+        }
+        registration.register(AntimatterIngredientType.INSTANCE, stacks,
+                new AntimatterIngredientHelper(),
+                AntimatterIngredientRenderer.INSTANCE,
+                AntimatterStack.CODEC);
     }
 
     @Override

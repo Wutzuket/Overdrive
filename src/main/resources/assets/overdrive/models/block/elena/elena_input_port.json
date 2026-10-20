@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/elena/elena_casing",
+  "textures": {
+    "north": "overdrive:block/elena_input_port"
+  }
+}

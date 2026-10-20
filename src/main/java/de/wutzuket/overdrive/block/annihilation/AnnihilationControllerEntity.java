@@ -167,8 +167,8 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         CellDockingPortEntity portB = cellPortB!=null? (CellDockingPortEntity)level.getBlockEntity(cellPortB): null;
         // Fuel-Check skaliert mit burnRate und Recipe (Divisor per Config, Default: 10 mB * 100 / 20 = 50 mB/Tick je Seite bei Max-Burnrate)
         double fuelDivisor=de.wutzuket.overdrive.config.ODConfig.FUEL_DIVISOR.get();
-        int needAnti = currentRecipe.inputAntiproton().isEmpty()?Math.max(1,(int)Math.min(Integer.MAX_VALUE, burnRate/2)):(int)Math.max(1, Math.min(Integer.MAX_VALUE, (long)(currentRecipe.inputAntiproton().getAmount()*burnRate/fuelDivisor)));
-        int needPos = currentRecipe.inputPositron().isEmpty()?Math.max(1,(int)Math.min(Integer.MAX_VALUE, burnRate/2)):(int)Math.max(1, Math.min(Integer.MAX_VALUE, (long)(currentRecipe.inputPositron().getAmount()*burnRate/fuelDivisor)));
+        int needAnti = currentRecipe.inputAntiproton().isEmpty()?Math.max(1,(int)Math.min(Integer.MAX_VALUE, burnRate/2)):(int)Math.max(1, Math.min(Integer.MAX_VALUE, (long)(currentRecipe.inputAntiproton().amount()*burnRate/fuelDivisor)));
+        int needPos = currentRecipe.inputPositron().isEmpty()?Math.max(1,(int)Math.min(Integer.MAX_VALUE, burnRate/2)):(int)Math.max(1, Math.min(Integer.MAX_VALUE, (long)(currentRecipe.inputPositron().amount()*burnRate/fuelDivisor)));
         if(needAnti<1) needAnti=1; if(needPos<1) needPos=1;
         boolean hasBoth = hasFuelForRecipe(portA, portB, needAnti, needPos);
         if(!hasBoth){
@@ -211,8 +211,8 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         int totalAnti=0, totalPos=0;
         for(CellDockingPortEntity p: new CellDockingPortEntity[]{a,b}){
             if(p==null) continue;
-            if(p.hasAntiprotonFluid()) totalAnti+=p.getTank().getFluidAmount();
-            if(p.hasPositronFluid()) totalPos+=p.getTank().getFluidAmount();
+            if(p.hasAntiprotonFluid()) totalAnti+=p.getTank().getAmount(0);
+            if(p.hasPositronFluid()) totalPos+=p.getTank().getAmount(0);
         }
         return totalAnti>=needAnti && totalPos>=needPos;
     }
@@ -318,13 +318,13 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         for(CellDockingPortEntity p: new CellDockingPortEntity[]{a,b}){
             if(p==null) continue;
             if(leftAnti>0 && p.hasAntiprotonFluid()){
-                int take=Math.min(leftAnti, p.getTank().getFluidAmount());
-                p.getTank().drain(take, net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
+                int take=Math.min(leftAnti, p.getTank().getAmount(0));
+                p.getTank().extractAntimatter(0, take, false);
                 leftAnti-=take;
             }
             if(leftPos>0 && p.hasPositronFluid()){
-                int take=Math.min(leftPos, p.getTank().getFluidAmount());
-                p.getTank().drain(take, net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
+                int take=Math.min(leftPos, p.getTank().getAmount(0));
+                p.getTank().extractAntimatter(0, take, false);
                 leftPos-=take;
             }
         }
@@ -590,33 +590,33 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         }
         return 300_000_000;
     }
-    public net.neoforged.neoforge.fluids.FluidStack getFuelAntiprotonStack(){
-        int total=0; net.minecraft.world.level.material.Fluid fluid=null;
+    /** @return der Antimatter, der als Antiprotonen in den Cell-Ports liegt. */
+    public de.wutzuket.overdrive.antimatter.AntimatterStack getFuelAntiprotonStack(){
+        int total=0; de.wutzuket.overdrive.antimatter.Antimatter type=null;
         for(BlockPos p: new BlockPos[]{cellPortA, cellPortB}){
             if(p!=null && level!=null){
                 BlockEntity be=level.getBlockEntity(p);
                 if(be instanceof CellDockingPortEntity port && port.hasAntiprotonFluid()){
-                    total+=port.getTank().getFluidAmount();
-                    if(fluid==null) fluid=port.getTank().getFluid().getFluid();
+                    total+=port.getTank().getAmount(0);
+                    if(type==null) type=port.getTank().getAntimatterInTank(0);
                 }
             }
         }
-        if(fluid==null) return net.neoforged.neoforge.fluids.FluidStack.EMPTY;
-        return new net.neoforged.neoforge.fluids.FluidStack(fluid, total);
+        return new de.wutzuket.overdrive.antimatter.AntimatterStack(type, total);
     }
-    public net.neoforged.neoforge.fluids.FluidStack getFuelPositronStack(){
-        int total=0; net.minecraft.world.level.material.Fluid fluid=null;
+    /** @return der Antimatter, der als Positronen in den Cell-Ports liegt. */
+    public de.wutzuket.overdrive.antimatter.AntimatterStack getFuelPositronStack(){
+        int total=0; de.wutzuket.overdrive.antimatter.Antimatter type=null;
         for(BlockPos p: new BlockPos[]{cellPortA, cellPortB}){
             if(p!=null && level!=null){
                 BlockEntity be=level.getBlockEntity(p);
                 if(be instanceof CellDockingPortEntity port && port.hasPositronFluid()){
-                    total+=port.getTank().getFluidAmount();
-                    if(fluid==null) fluid=port.getTank().getFluid().getFluid();
+                    total+=port.getTank().getAmount(0);
+                    if(type==null) type=port.getTank().getAntimatterInTank(0);
                 }
             }
         }
-        if(fluid==null) return net.neoforged.neoforge.fluids.FluidStack.EMPTY;
-        return new net.neoforged.neoforge.fluids.FluidStack(fluid, total);
+        return new de.wutzuket.overdrive.antimatter.AntimatterStack(type, total);
     }
     public int getFuelCapacity(){ return 4_000_000; } // Summe beider CellDockingPorts (nur Fallback)
     // Kapazitaet pro Sorte: Summe der Ports, die leer sind oder bereits dieses Fluid halten.
@@ -627,7 +627,7 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
             if(p!=null && level!=null){
                 BlockEntity be=level.getBlockEntity(p);
                 if(be instanceof CellDockingPortEntity port
-                        && (port.getTank().isEmpty() || port.hasAntiprotonFluid())) cap+=port.getTank().getCapacity();
+                        && (port.getTank().getAmount(0) <= 0 || port.hasAntiprotonFluid())) cap+=port.getTank().getCapacity(0);
             }
         }
         return Math.max(1, cap);
@@ -638,7 +638,7 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
             if(p!=null && level!=null){
                 BlockEntity be=level.getBlockEntity(p);
                 if(be instanceof CellDockingPortEntity port
-                        && (port.getTank().isEmpty() || port.hasPositronFluid())) cap+=port.getTank().getCapacity();
+                        && (port.getTank().getAmount(0) <= 0 || port.hasPositronFluid())) cap+=port.getTank().getCapacity(0);
             }
         }
         return Math.max(1, cap);

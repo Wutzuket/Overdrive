@@ -54,8 +54,12 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
     private int progress=0;
     private int lastProcessTime=40;
     private @Nullable CoolingTowerRecipe recipe=null;
+    /** Produktion pro Tick in mB (fuer die GUI-Anzeige, z.B. 1000 -> "1 B/t"). */
+    private double lastProductionPerTick=0;
     public int getProgress(){ return progress; }
     public int getMaxProgress(){ return Math.max(1,lastProcessTime); }
+    /** Produktion des Turms pro Tick in mB (Output-Menge pro Rezept-Op / Dauer). */
+    public double getProductionPerTick(){ return lastProductionPerTick; }
     private @Nullable BlockPos inputPortPos=null;
     private @Nullable BlockPos outputPortPos=null;
     private int lastInputPorts=0, lastOutputPorts=0;
@@ -117,6 +121,10 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
         //  und fremdes Fluid in den Output schreibt)
         if(recipe!=null && !recipeMatchesTanks(recipe)){ recipe=null; progress=0; }
         if(recipe==null) recipe=findRecipe(level);
+        // Produktionsrate fuer die GUI merken (Output pro Tick des aktiven Rezepts).
+        lastProductionPerTick = recipe!=null
+                ? recipe.outputFluid().getAmount() / (double) Math.max(1, recipe.processTime())
+                : 0;
         if(recipe==null || inputTank.getFluidAmount() < recipe.inputFluid().getAmount()){
             active=false; progress=0; setChanged(); level.sendBlockUpdated(pos,state,state,3); return;
         }
@@ -336,6 +344,7 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider r){
         super.saveAdditional(tag,r);
         tag.putBoolean("valid",valid); tag.putBoolean("active",active); tag.putBoolean("holo",hologramEnabled); tag.putInt("progress",progress); tag.putInt("failCode",failCode); tag.putInt("lastTime",lastProcessTime);
+        tag.putDouble("production",lastProductionPerTick);
         if(failPos!=null) tag.putLong("failPos",failPos.asLong());
         tag.putInt("inPorts",lastInputPorts); tag.putInt("outPorts",lastOutputPorts);
         if(inputPortPos!=null) tag.putLong("inPort",inputPortPos.asLong());
@@ -347,6 +356,7 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
         super.loadAdditional(tag,r);
         valid=tag.getBoolean("valid"); active=tag.getBoolean("active"); hologramEnabled=tag.getBoolean("holo"); progress=tag.getInt("progress"); failCode=tag.getInt("failCode");
         if(tag.contains("lastTime")) lastProcessTime=Math.max(1,tag.getInt("lastTime"));
+        if(tag.contains("production")) lastProductionPerTick=Math.max(0,tag.getDouble("production"));
         failPos=tag.contains("failPos")?BlockPos.of(tag.getLong("failPos")):null;
         lastInputPorts=tag.getInt("inPorts"); lastOutputPorts=tag.getInt("outPorts");
         inputPortPos=tag.contains("inPort")?BlockPos.of(tag.getLong("inPort")):null;

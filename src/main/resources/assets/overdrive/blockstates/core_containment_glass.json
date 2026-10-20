@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/core_containment_glass"
+      "model": "overdrive:block/annihilation/core_containment_glass"
     }
   }
 }

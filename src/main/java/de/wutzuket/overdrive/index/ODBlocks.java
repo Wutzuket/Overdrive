@@ -303,6 +303,40 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
             () -> new de.wutzuket.overdrive.block.frames.frame_blocks(BlockBehaviour.Properties.of()
                     .strength(2F, 3.0F).sound(SoundType.WOOD)));
 
+    // Antimatter transport and storage
+    public static final Supplier<Block> ANTIMATTER_PIPE_BASIC = BLOCKS.register("antimatter_pipe_basic",
+            () -> new de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F, 3.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion(),
+                    de.wutzuket.overdrive.antimatter.PipeTier.BASIC));
+
+    public static final Supplier<Block> ANTIMATTER_PIPE_ADVANCED = BLOCKS.register("antimatter_pipe_advanced",
+            () -> new de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F, 3.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion(),
+                    de.wutzuket.overdrive.antimatter.PipeTier.ADVANCED));
+
+    public static final Supplier<Block> ANTIMATTER_PIPE_ELITE = BLOCKS.register("antimatter_pipe_elite",
+            () -> new de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F, 3.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion(),
+                    de.wutzuket.overdrive.antimatter.PipeTier.ELITE));
+
+    public static final Supplier<Block> ANTIMATTER_PIPE_ULTIMATE = BLOCKS.register("antimatter_pipe_ultimate",
+            () -> new de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlock(BlockBehaviour.Properties.of()
+                    .strength(2.0F, 3.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion(),
+                    de.wutzuket.overdrive.antimatter.PipeTier.ULTIMATE));
+
+    public static final Supplier<Block> ANTIMATTER_TANK = BLOCKS.register("antimatter_tank",
+            () -> new de.wutzuket.overdrive.block.antimatter.AntimatterTankBlock(BlockBehaviour.Properties.of()
+                    .strength(4.0F, 6.0F)
+                    .sound(SoundType.METAL)));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
     }

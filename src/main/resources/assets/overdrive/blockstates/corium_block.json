@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/corium_block"
+      "model": "overdrive:block/blocks/corium_block"
     }
   }
 }

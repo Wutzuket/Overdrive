@@ -9,9 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -30,15 +28,7 @@ public class AcceleratorOutputEntity extends BlockEntity {
         }
     };
 
-    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY) {
-        @Override
-        protected void onContentsChanged() {
-            setChanged();
-            if (level != null) {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-            }
-        }
-    };
+    private final AntimatterTank fluidTank = new AntimatterTank(TANK_CAPACITY);
 
     public AcceleratorOutputEntity(BlockPos pos, BlockState state) {
         super(ODBlockEntities.ACCELERATOR_OUTPUT.get(), pos, state);
@@ -47,7 +37,7 @@ public class AcceleratorOutputEntity extends BlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, AcceleratorOutputEntity be) {
     }
 
-    public FluidTank getFluidTank() {
+    public AntimatterTank getAntimatterTank() {
         return fluidTank;
     }
 
@@ -55,27 +45,21 @@ public class AcceleratorOutputEntity extends BlockEntity {
         return itemHandler;
     }
 
-    public int getFluidAmount() {
-        return fluidTank.getFluidAmount();
+    public int getAntimatterAmount() {
+        return fluidTank.getAmount(0);
     }
 
-    public int getFluidCapacity() {
-        return fluidTank.getCapacity();
-    }
-
-    public int fill(FluidStack stack, IFluidHandler.FluidAction action) {
-        return fluidTank.fill(stack, action);
-    }
-
-    public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
-        return fluidTank.drain(maxDrain, action);
+    public int getAntimatterCapacity() {
+        return fluidTank.getCapacity(0);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", itemHandler.serializeNBT(registries));
-        tag.put("fluid", fluidTank.writeToNBT(registries, new CompoundTag()));
+        CompoundTag fluidTag = new CompoundTag();
+        fluidTank.saveToNBT(fluidTag);
+        tag.put("fluid", fluidTag);
     }
 
     @Override
@@ -85,7 +69,7 @@ public class AcceleratorOutputEntity extends BlockEntity {
             itemHandler.deserializeNBT(registries, tag.getCompound("Inventory"));
         }
         if (tag.contains("fluid")) {
-            fluidTank.readFromNBT(registries, tag.getCompound("fluid"));
+            fluidTank.loadFromNBT(tag.getCompound("fluid"));
         }
     }
 

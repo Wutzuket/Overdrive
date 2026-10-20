@@ -24,9 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -36,7 +35,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
 
     private int energy = 0;
     // Positron-Max-Rate: 14.000 mB/Op
-    private final FluidTank fluidTank = new FluidTank(500_000);
+    private final AntimatterTank fluidTank = new AntimatterTank(500_000);
     private boolean active = false;
     private boolean hologramEnabled = false;
     private int progressTicks = 0;
@@ -138,11 +137,11 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     private void completeProcessing(ServerLevel level, BlockPos pos, BlockState state, TungstenTargetEntity target) {
         if (currentRecipe == null) return;
 
-        FluidStack output = currentRecipe.outputFluid();
+        AntimatterStack output = currentRecipe.outputAntimatter();
         if (!output.isEmpty()) {
-            int canFill = fluidTank.fill(output.copy(), IFluidHandler.FluidAction.SIMULATE);
-            if (canFill < output.getAmount()) return;
-            fluidTank.fill(output.copy(), IFluidHandler.FluidAction.EXECUTE);
+            int canFill = fluidTank.insertAntimatter(0, output.type(), output.amount(), true);
+            if (canFill < output.amount()) return;
+            fluidTank.insertAntimatter(0, output.type(), output.amount(), false);
         }
 
         if (!currentRecipe.outputCell().isEmpty() && outputPos != null) {
@@ -169,10 +168,10 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             return false;
         }
         if (currentRecipe == null) return false;
-        FluidStack output = currentRecipe.outputFluid();
+        AntimatterStack output = currentRecipe.outputAntimatter();
         if (!output.isEmpty()) {
-            int canFill = port.getTank().fill(output.copy(), IFluidHandler.FluidAction.SIMULATE);
-            if (canFill < output.getAmount()) return false;
+            int canFill = port.getTank().insertAntimatter(0, output.type(), output.amount(), true);
+            if (canFill < output.amount()) return false;
         }
         if (!currentRecipe.outputCell().isEmpty()) {
             if (!port.canAcceptItem(currentRecipe.outputCell())) return false;
@@ -182,17 +181,17 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
 
     private void pushFluidToOutput(Level level) {
         if (outputPos == null) return;
-        if (fluidTank.isEmpty()) return;
+        if (fluidTank.getAmount(0) <= 0) return;
         BlockEntity be = level.getBlockEntity(outputPos);
         if (!(be instanceof PositronVacuumOutputPortEntity port)) {
             outputPos = null;
             return;
         }
-        FluidStack toPush = fluidTank.drain(fluidTank.getFluidAmount(), IFluidHandler.FluidAction.SIMULATE);
-        if (toPush.isEmpty()) return;
-        int filled = port.getTank().fill(toPush.copy(), IFluidHandler.FluidAction.EXECUTE);
+        int toPush = fluidTank.getAmount(0);
+        if (toPush <= 0) return;
+        int filled = port.getTank().insertAntimatter(0, fluidTank.getAntimatterInTank(0), toPush, false);
         if (filled > 0) {
-            fluidTank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+            fluidTank.extractAntimatter(0, filled, false);
             setChanged();
         }
     }
@@ -268,8 +267,14 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     public int getEnergy() { return energy; }
     public int getMaxEnergy() { return MAX_ENERGY; }
     public boolean isActive() { return active; }
-    public FluidTank getFluidTank() { return fluidTank; }
+    public AntimatterTank getAntimatterTank() { return fluidTank; }
     public int getCurrentRecipeProcessTime() { return currentRecipe != null ? currentRecipe.processTime() : 0; }
+
+    /** Produktion pro Tick in mB (fuer die GUI-Anzeige, z.B. 4000 -> "4 B/t"). */
+    public double getProductionPerTick() {
+        if (currentRecipe == null || currentRecipe.outputAntimatter().isEmpty()) return 0;
+        return currentRecipe.outputAntimatter().amount() / (double) Math.max(1, currentRecipe.processTime());
+    }
 
     public boolean isHologramEnabled() {
         if (level != null && level.isClientSide) {
@@ -321,7 +326,9 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
         tag.putBoolean("hologramEnabled", hologramEnabled);
         tag.putInt("progressTicks", progressTicks);
         tag.putFloat("vacuumLevel", vacuumLevel);
-        tag.put("fluid", fluidTank.writeToNBT(registries, new CompoundTag()));
+        CompoundTag fluidTag = new CompoundTag();
+        fluidTank.saveToNBT(fluidTag);
+        tag.put("fluid", fluidTag);
     }
 
     @Override
@@ -332,7 +339,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
         hologramEnabled = tag.getBoolean("hologramEnabled");
         progressTicks = tag.getInt("progressTicks");
         vacuumLevel = tag.getFloat("vacuumLevel");
-        if (tag.contains("fluid")) fluidTank.readFromNBT(registries, tag.getCompound("fluid"));
+        if (tag.contains("fluid")) fluidTank.loadFromNBT(tag.getCompound("fluid"));
     }
 
     @Override

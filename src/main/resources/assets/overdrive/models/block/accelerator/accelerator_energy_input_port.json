@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/accelerator/accelerator_casing",
+  "textures": {
+    "all": "overdrive:block/accelerator_energy_input_port"
+  }
+}

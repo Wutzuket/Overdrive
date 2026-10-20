@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/iridium_ore"
+      "model": "overdrive:block/blocks/iridium_ore"
     }
   }
 }

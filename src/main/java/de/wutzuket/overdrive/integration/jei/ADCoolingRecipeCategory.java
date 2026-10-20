@@ -21,7 +21,13 @@ public class ADCoolingRecipeCategory extends FluidRecipeCategory<AntiprotonCooli
 
     @Override
     protected FluidIO getFluids(AntiprotonCoolingRecipe recipe) {
-        return FluidIO.of(recipe.inputFluid(), recipe.outputFluid());
+        // Die Antiprotonen werden ueber das Antimatter-System bewegt, es gibt keinen Fluid-Slot.
+        return new FluidIO(List.of(), null);
+    }
+
+    @Override
+    protected AntimatterIO getAntimatters(AntiprotonCoolingRecipe recipe) {
+        return AntimatterIO.of(recipe.inputAntimatter(), recipe.outputAntimatter());
     }
 
     @Override
@@ -30,6 +36,9 @@ public class ADCoolingRecipeCategory extends FluidRecipeCategory<AntiprotonCooli
         lines.add(energy("jei.overdrive.fluid.energy", ODFormat.formatEnergy(recipe.energyCost())));
         lines.add(value("jei.overdrive.fluid.time", recipe.processTime(),
                 String.format(java.util.Locale.ROOT, "%.2f", recipe.processTime() / 20.0)));
+        antimatter(recipe.inputAntimatter()).ifPresent(lines::add);
+        antimatter(recipe.outputAntimatter()).ifPresent(lines::add);
+        lines.add(production(recipe.outputAntimatter().amount() / (double) Math.max(1, recipe.processTime())));
         if (!recipe.outputCell().isEmpty()) {
             lines.add(value("jei.overdrive.fluid.cell_output", recipe.outputCell().getHoverName().getString()));
         }

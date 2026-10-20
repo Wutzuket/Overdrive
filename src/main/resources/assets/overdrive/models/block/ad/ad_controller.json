@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/ad/ad_casing",
+  "textures": {
+    "north": "overdrive:block/ad_controller_front"
+  }
+}

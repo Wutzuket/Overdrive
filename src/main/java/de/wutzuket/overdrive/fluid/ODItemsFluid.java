@@ -12,21 +12,9 @@ import java.util.function.Supplier;
 public class ODItemsFluid {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Overdrive.MODID);
 
-    public static final Supplier<Item> ANTIPROTONS_BUCKET = ITEMS.register("antiprotons_bucket",
-            () -> new BucketItem(ODFluids.ANTIPROTONS_SOURCE.get(),
-                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    // The antiprotons and positrons are not in buckets, they are transported with the antimatter
+    // pipe network and the antimatter cells instead.
 
-    public static final Supplier<Item> DECELERATED_ANTIPROTONS_BUCKET = ITEMS.register("decelerated_antiprotons_bucket",
-            () -> new BucketItem(ODFluids.DECELERATED_ANTIPROTONS_SOURCE.get(),
-                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-
-    public static final Supplier<Item> COOLED_ANTIPROTONS_BUCKET = ITEMS.register("cooled_antiprotons_bucket",
-            () -> new BucketItem(ODFluids.COOLED_ANTIPROTONS_SOURCE.get(),
-                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-
-    public static final Supplier<Item> POSITRONS_BUCKET = ITEMS.register("positrons_bucket",
-            () -> new BucketItem(ODFluids.POSITRONS_SOURCE.get(),
-                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Supplier<Item> CRYOFLUID_BUCKET = ITEMS.register("cryofluid_bucket",
             () -> new BucketItem(ODFluids.CRYOFLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Supplier<Item> STEAM_BUCKET = ITEMS.register("steam_bucket",

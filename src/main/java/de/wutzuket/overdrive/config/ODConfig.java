@@ -157,6 +157,97 @@ public class ODConfig {
         BUILDER.pop();
     }
 
+    // --- Antimatter ---
+    static {
+        BUILDER.push("antimatter");
+    }
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_TANK_CAPACITY = BUILDER
+            .comment("Capacity of a single Antimatter Tank in antimatter units. " +
+                    "The value should be at least as big as the transfer rate of the fastest pipe, " +
+                    "because a pipe can only take out what the tank holds.")
+            .defineInRange("tankCapacity", 32_000, 1, 1_000_000_000);
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_CELL_CAPACITY = BUILDER
+            .comment("Capacity of a single Antimatter Cell in antimatter units.")
+            .defineInRange("cellCapacity", 4_000, 1, 1_000_000_000);
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_PIPE_BASIC_RATE = BUILDER
+            .comment("How many mB a basic antimatter pipe moves per tick and side (4 buckets).")
+            .defineInRange("pipeBasicRate", 4_000, 1, 1_000_000);
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_PIPE_ADVANCED_RATE = BUILDER
+            .comment("How many mB an advanced antimatter pipe moves per tick and side (8 buckets).")
+            .defineInRange("pipeAdvancedRate", 8_000, 1, 1_000_000);
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_PIPE_ELITE_RATE = BUILDER
+            .comment("How many mB an elite antimatter pipe moves per tick and side (16 buckets).")
+            .defineInRange("pipeEliteRate", 16_000, 1, 1_000_000);
+
+    public static final ModConfigSpec.IntValue ANTIMATTER_PIPE_ULTIMATE_RATE = BUILDER
+            .comment("How many mB an ultimate antimatter pipe moves per tick and side (32 buckets per tick).")
+            .defineInRange("pipeUltimateRate", 32_000, 1, 1_000_000);
+
+    static {
+        BUILDER.pop();
+    }
+
+    // --- Vacuum Pump ---
+    static {
+        BUILDER.push("vacuum");
+    }
+
+    public static final ModConfigSpec.DoubleValue VACUUM_BASE_FE_PER_TICK = BUILDER
+            .comment(
+                    "Base energy consumption of the vacuum pump while it evacuates or leaks (FE/t).",
+                    "The volume of the pump structure itself (27 blocks) is already included in the volume.",
+                    "The real consumption is scaled with the connected volume, see 'scaling'.")
+            .defineInRange("baseFePerTick", 100.0, 0.0, 1_000_000.0);
+
+    public static final ModConfigSpec.DoubleValue VACUUM_FE_PER_BLOCK = BUILDER
+            .comment(
+                    "Additional consumption per block of the connected volume (FE/t) in LINEAR mode.",
+                    "Example: 0.2 -> a volume of 1000 blocks costs 200 FE/t more than the base.",
+                    "Only used in LINEAR mode.")
+            .defineInRange("fePerBlock", 0.2, 0.0, 10_000.0);
+
+    public static final ModConfigSpec.EnumValue<VacuumScaling> VACUUM_SCALING = BUILDER
+            .comment(
+                    "How the consumption grows with the volume:",
+                    "LINEAR: baseFePerTick + fePerBlock * volume",
+                    "EXPONENTIAL: baseFePerTick * exponentialFactor ^ volume")
+            .defineEnum("scaling", VacuumScaling.LINEAR);
+
+    public static final ModConfigSpec.DoubleValue VACUUM_EXPONENTIAL_FACTOR = BUILDER
+            .comment(
+                    "Factor per block of volume in EXPONENTIAL mode.",
+                    "Example: 1.001 -> a volume of 1000 blocks costs 2.7x the base.",
+                    "Only used in EXPONENTIAL mode.")
+            .defineInRange("exponentialFactor", 1.001, 1.0, 1.1);
+
+    public static final ModConfigSpec.DoubleValue VACUUM_STABLE_FACTOR = BUILDER
+            .comment(
+                    "Share of the consumption while the vacuum is stable (0.1 = 10% of the evacuating rate).",
+                    "The stable rate is also scaled with the volume.")
+            .defineInRange("stableFactor", 0.1, 0.0, 10.0);
+
+    public static final ModConfigSpec.DoubleValue VACUUM_EVAC_TICKS_PER_BLOCK = BUILDER
+            .comment(
+                    "Ticks of evacuation per block of volume (default 200/27 = 7.4 ticks per block).",
+                    "The pump needs this many ticks to evacuate the whole connected volume.")
+            .defineInRange("evacTicksPerBlock", 200.0 / 27.0, 0.0, 1000.0);
+
+    public static final ModConfigSpec.BooleanValue VACUUM_COUNT_MACHINE_BLOCKS = BUILDER
+            .comment(
+                    "If true, the blocks of the connected multiblocks (accelerator, AD, ELENA, reactor,",
+                    "tungsten) are counted into the volume of the pump, like the reactor already does.",
+                    "If false, only the pump structure and the pipes are counted.")
+            .define("countMachineBlocks", true);
+
+    static {
+        BUILDER.pop();
+    }
+
     // --- Cooling Tower ---
     static {
         BUILDER.push("cooling_tower");
@@ -176,5 +267,11 @@ public class ODConfig {
         MELTDOWN,
         EXPLOSION,
         NONE
+    }
+
+    /** Wie der Verbrauch der Vakuum-Pumpe mit dem Volumen wächst. */
+    public enum VacuumScaling {
+        LINEAR,
+        EXPONENTIAL
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> {
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 116;
+    private static final int HEIGHT = 126;
     private static final int BAR_W = 16;
     private static final int BAR_H = 54;
 
@@ -43,9 +43,9 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
     private FluidStack getFluidStack() {
         var be = menu.getBlockEntity();
         if (be == null) return FluidStack.EMPTY;
-        FluidStack fluid = be.getFluidTank().getFluid();
-        if (fluid.isEmpty()) return FluidStack.EMPTY;
-        return fluid.copyWithAmount(menu.getFluidAmount());
+        de.wutzuket.overdrive.antimatter.Antimatter fluid = be.getAntimatterTank().getAntimatterInTank(0);
+        if (fluid == null) return FluidStack.EMPTY;
+        return FluidStack.EMPTY;
     }
 
     @Override
@@ -87,6 +87,12 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
         guiGraphics.drawString(this.font,
                 Component.translatable("container.overdrive.electron_gun.usage", 3000),
                 8, 94, GuiStyle.COL_TEXT, false);
+        // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
+        double production = menu.isActive() ? menu.getProductionPerTickSynced() : 0.0;
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.production",
+                        ODFormat.formatFluidPerTick(production)),
+                8, 104, production > 0 ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
     }
 
     @Override

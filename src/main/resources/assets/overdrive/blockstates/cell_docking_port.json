@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/cell_docking_port"
+      "model": "overdrive:block/annihilation/cell_docking_port"
     }
   }
 }

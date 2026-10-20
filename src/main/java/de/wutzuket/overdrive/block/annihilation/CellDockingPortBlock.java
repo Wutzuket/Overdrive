@@ -1,5 +1,7 @@
 package de.wutzuket.overdrive.block.annihilation;
 
+import de.wutzuket.overdrive.antimatter.IAntimatterPort;
+
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -16,13 +18,10 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CellDockingPortBlock extends Block implements EntityBlock {
+public class CellDockingPortBlock extends Block implements EntityBlock, IAntimatterPort {
     public CellDockingPortBlock(Properties p){ super(p); }
     @Override protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit){
         return InteractionResult.SUCCESS;
@@ -30,35 +29,31 @@ public class CellDockingPortBlock extends Block implements EntityBlock {
     @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
         BlockEntity be=level.getBlockEntity(pos);
         if(!(be instanceof CellDockingPortEntity port)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        FluidTank tank=port.getTank();
-        if(stack.is(Items.BUCKET)){
-            if(!level.isClientSide && tank.getFluidAmount()>=1000){
-                FluidStack drained=tank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-                if(!drained.isEmpty()){
-                    ItemStack filled=new ItemStack(drained.getFluid().getBucket());
-                    if(!player.isCreative()) stack.shrink(1);
-                    if(!player.getInventory().add(filled)) player.drop(filled,false);
-                }
+        // Die Antimatter werden ausschliesslich ueber das Antimatter-System bewegt, also ueber
+        // eine Zelle statt ueber einen Eimer.
+        if (stack.getItem() instanceof de.wutzuket.overdrive.item.AntimatterCellItem) {
+            if (level.isClientSide) {
+                return ItemInteractionResult.SUCCESS;
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        }
-        var cap=stack.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.ITEM);
-        if(cap!=null && !stack.is(Items.BUCKET)){
-            FluidStack sim=cap.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-            if(!sim.isEmpty() && tank.isFluidValid(sim) && tank.fill(sim, IFluidHandler.FluidAction.SIMULATE)>=1000){
-                if(!level.isClientSide){
-                    cap.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-                    tank.fill(sim, IFluidHandler.FluidAction.EXECUTE);
-                    level.sendBlockUpdated(pos, state, state, 3);
+            if (port.getItemHandler().getStackInSlot(0).isEmpty()
+                    && port.getItemHandler().getStackInSlot(1).isEmpty()) {
+                port.getItemHandler().setStackInSlot(0, stack.copy());
+                if (!player.isCreative()) {
+                    stack.shrink(1);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.CONSUME;
             }
+            return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
     @Override public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state){ return new CellDockingPortEntity(pos,state); }
     @Override public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type){
         if(type!=ODBlockEntities.ANNIHILATION_CELL_PORT.get()) return null;
-        return (l,po,st,be)-> {};
+        return (l,po,st,be)-> {
+            if (be instanceof CellDockingPortEntity port) {
+                CellDockingPortEntity.tick(l, po, st, port);
+            }
+        };
     }
 }

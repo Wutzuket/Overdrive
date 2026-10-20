@@ -13,21 +13,8 @@ import java.util.function.Supplier;
 public class ODFluidBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Overdrive.MODID);
 
-    public static final Supplier<Block> ANTIPROTONS = BLOCKS.register("antiprotons",
-            () -> new LiquidBlock(ODFluids.ANTIPROTONS_SOURCE.get(),
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
-
-    public static final Supplier<Block> DECELERATED_ANTIPROTONS = BLOCKS.register("decelerated_antiprotons",
-            () -> new LiquidBlock(ODFluids.DECELERATED_ANTIPROTONS_SOURCE.get(),
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
-
-    public static final Supplier<Block> COOLED_ANTIPROTONS = BLOCKS.register("cooled_antiprotons",
-            () -> new LiquidBlock(ODFluids.COOLED_ANTIPROTONS_SOURCE.get(),
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
-
-    public static final Supplier<Block> POSITRONS = BLOCKS.register("positrons",
-            () -> new LiquidBlock(ODFluids.POSITRONS_SOURCE.get(),
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+    // The antiprotons and positrons are not blocks in the world, they are transported with the
+    // antimatter pipe network and the antimatter cells instead.
 
     public static final Supplier<Block> CRYOFLUID = BLOCKS.register("cryofluid",
             () -> new LiquidBlock(ODFluids.CRYOFLUID_SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));

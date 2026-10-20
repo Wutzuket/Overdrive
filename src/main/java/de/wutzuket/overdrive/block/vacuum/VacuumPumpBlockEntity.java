@@ -32,7 +32,12 @@ import java.util.Set;
 
 public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode {
     private static final int MAX_ENERGY = 200_000;
-    private static final int ENERGY_PER_TICK = 100;
+    /** Volumen der Pumpe selbst (3x3x3 Blocks). */
+    private static final int OWN_VOLUME = 27;
+    /** Wie oft das angeschlossene Volumen neu berechnet wird (Ticks). */
+    private static final long VOLUME_SCAN_INTERVAL = 40;
+    /** Wie oft gesucht wird, solange keine Maschine am Netz haengt (Ticks). */
+    private static final long VOLUME_SCAN_INTERVAL_IDLE = 200;
 
     public enum VacuumStatus {
         OFFLINE,
@@ -50,9 +55,21 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
     private int pipeCount = 0;
     private BlockPos outputPortPos = null;
     private boolean particlesSpawned = false;
+    /** Gesamtvolumen: Pumpe + Pipes + angeschlossene Multiblock-Strukturen. */
+    private int volume = OWN_VOLUME;
+    /** Volumen der angeschlossenen Multiblock-Strukturen (gecacht, -1 = noch nicht berechnet). */
+    private int structureVolume = -1;
+    private long structureVolumeScanTick = Long.MIN_VALUE;
+    private int lastScanPipeCount = -1;
 
     private int getEvacTime() {
-        return getVolume() * 200 / 27;
+        return evacTimeFor(volume);
+    }
+
+    /** Ticks, die fuer ein Volumen von {@code vol} Bloecken benoetigt werden. */
+    private static int evacTimeFor(int vol) {
+        double ticks = vol * de.wutzuket.overdrive.config.ODConfig.VACUUM_EVAC_TICKS_PER_BLOCK.get();
+        return (int) Math.max(1, Math.round(ticks));
     }
 
     public VacuumPumpBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -63,9 +80,10 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         if (level.isClientSide) return;
 
         boolean wasValid = validStructure;
-        int prevPipeCount = pipeCount;
+        int prevVolume = volume;
         validStructure = checkStructure(level, pos, state);
         boolean structureChanged = wasValid != validStructure;
+        updateVolume(level);
 
         if (structureChanged && validStructure) {
             status = VacuumStatus.EVACUATING;
@@ -84,15 +102,15 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
             particlesSpawned = false;
             setChanged();
             level.sendBlockUpdated(pos, state, state, 3);
-        } else if (pipeCount != prevPipeCount) {
+        } else if (volume != prevVolume) {
+            // Volumen geaendert (z.B. Multiblock angehaengt): neu evakuieren.
             if (status == VacuumStatus.STABLE) {
                 int newEvacTime = getEvacTime();
-                if (pipeCount > prevPipeCount) {
-                    int prevVolume = 27 + prevPipeCount;
-                    int oldEvacTime = prevVolume * 200 / 27;
+                if (volume > prevVolume) {
+                    int oldEvacTime = evacTimeFor(prevVolume);
                     status = VacuumStatus.EVACUATING;
                     evacTicks = oldEvacTime;
-                    vacuumProgress = Math.min(100, (evacTicks * 100) / newEvacTime);
+                    vacuumProgress = Math.min(100, (evacTicks * 100) / Math.max(1, newEvacTime));
                 } else {
                     evacTicks = newEvacTime;
                 }
@@ -103,7 +121,7 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
 
         if (!validStructure) {
             if (status == VacuumStatus.OFFLINE && energy > 0) {
-                energy = Math.max(0, energy - ENERGY_PER_TICK);
+                energy = Math.max(0, energy - (int) Math.round(de.wutzuket.overdrive.config.ODConfig.VACUUM_BASE_FE_PER_TICK.get()));
                 setChanged();
             }
             pushVacuumToPort(level, 0);
@@ -129,8 +147,9 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         }
 
         if (status == VacuumStatus.EVACUATING || status == VacuumStatus.LEAK) {
-            if (energy >= ENERGY_PER_TICK) {
-                energy -= ENERGY_PER_TICK;
+            int usage = usageEvacuating();
+            if (energy >= usage) {
+                energy -= usage;
                 if (status == VacuumStatus.EVACUATING) {
                     evacTicks++;
                     int evacTime = getEvacTime();
@@ -149,13 +168,14 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
                 pushVacuumToPort(level, 0);
             }
         } else if (status == VacuumStatus.STABLE) {
-            if (energy < ENERGY_PER_TICK) {
+            int usage = usageStable();
+            if (energy < usage) {
                 status = VacuumStatus.OFFLINE;
                 vacuumProgress = 0;
                 setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
             } else {
-                energy -= ENERGY_PER_TICK / 10;
+                energy -= usage;
                 pushVacuumToPort(level, getVacuumLevel());
                 setChanged();
             }
@@ -336,65 +356,93 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
     }
 
     public int getVolume() {
-        int torusVol = getConnectedTorusVolume();
-        return 27 + pipeCount + torusVol;
+        return volume;
     }
 
-    private int getConnectedTorusVolume(){
-        // Wenn Pumpen-Netzwerk mit Annihilation-Reaktor verbunden ist, füge dessen Hohlraum-Volumen hinzu
-        if(outputPortPos==null || level==null) return 0;
-        // BFS durch Pipes um AnnihilationVacuumPort zu finden
+    /** Aktualisiert das Volumen (Pumpe + Pipes + Multiblocks) und merkt sich den Stand. */
+    private void updateVolume(Level level) {
+        long now = level.getGameTime();
+        boolean pipesChanged = pipeCount != lastScanPipeCount;
+        // Ohne angeschlossene Maschine wird seltener gesucht (die Suche ist nicht billig).
+        long interval = structureVolume > 0 ? VOLUME_SCAN_INTERVAL : VOLUME_SCAN_INTERVAL_IDLE;
+        if (structureVolume < 0 || pipesChanged || now - structureVolumeScanTick >= interval) {
+            structureVolume = de.wutzuket.overdrive.config.ODConfig.VACUUM_COUNT_MACHINE_BLOCKS.get()
+                    ? scanStructureVolume(level) : 0;
+            structureVolumeScanTick = now;
+            lastScanPipeCount = pipeCount;
+        }
+        volume = OWN_VOLUME + pipeCount + Math.max(0, structureVolume);
+    }
+
+    /**
+     * Zaehlt die Bloecke aller Multiblock-Strukturen, die am Vakuum-Netz der Pumpe haengen.
+     * Der Reaktor zaehlt seinen Torus-Hohlraum, die anderen Maschinen ihre Ring-Bloecke.
+     */
+    private int scanStructureVolume(Level level) {
+        if (outputPortPos == null) return 0;
         Set<BlockPos> visited = new HashSet<>();
-        Queue<BlockPos> q = new ArrayDeque<>();
-        q.add(outputPortPos);
+        Queue<BlockPos> queue = new ArrayDeque<>();
+        queue.add(outputPortPos);
         visited.add(outputPortPos);
-        int steps=0;
-        while(!q.isEmpty() && steps<2000){
-            BlockPos cur=q.poll();
+        int vol = 0;
+        int steps = 0;
+        while (!queue.isEmpty() && steps < 4000) {
+            BlockPos cur = queue.poll();
             steps++;
-            BlockState st=level.getBlockState(cur);
-            // Wenn wir einen AnnihilationVacuumPort finden, wurde Torus erreicht -> füge dessen Hohlvolumen hinzu
-            if(st.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock){
-                // Hole Controller für diesen Port um Torus-Zentrum zu finden
-                // Suche Controller im 25er Radius um den Port
-                for(int dx=-15;dx<=15;dx++) for(int dy=-15;dy<=15;dy++) for(int dz=-15;dz<=15;dz++){
-                    BlockPos p=cur.offset(dx,dy,dz);
-                    BlockState bs=level.getBlockState(p);
-                    if(bs.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerBlock){
-                        BlockEntity be=level.getBlockEntity(p);
-                        if(be instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity ann){
-                            // Zähle Torus-Hohlraum Blöcke (isTorusHollow) für diesen Reaktor
-                            BlockPos center=de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.getCenter(p, bs);
-                            int cnt=0;
-                            int OUTER=de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.OUTER;
-                            for(int x=center.getX()-OUTER;x<=center.getX()+OUTER;x++)
-                                for(int y=center.getY()-OUTER;y<=center.getY()+OUTER;y++)
-                                    for(int z=center.getZ()-OUTER;z<=center.getZ()+OUTER;z++){
-                                        int ddx=Math.abs(x-center.getX()), ddy=Math.abs(y-center.getY()), ddz=Math.abs(z-center.getZ());
-                                        if(de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.isTorusHollow(ddx,ddy,ddz)) cnt++;
-                                    }
-                            return cnt;
-                        }
-                    }
-                }
-                return 1200; // Fallback Torus-Volumen wenn Controller nicht gefunden (~1200)
+            BlockEntity be = level.getBlockEntity(cur);
+            if (be instanceof IVacuumNode node) {
+                vol += node.getStructureVolume();
             }
-            for(Direction dir: Direction.values()){
-                BlockPos nb=cur.relative(dir);
-                if(visited.contains(nb)) continue;
-                BlockState nbs=level.getBlockState(nb);
-                if(nbs.getBlock() instanceof VacuumPipeBlock || nbs.getBlock() instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock){
-                    visited.add(nb);
-                    q.add(nb);
-                }
+            for (Direction dir : Direction.values()) {
+                BlockPos nb = cur.relative(dir);
+                if (visited.contains(nb)) continue;
+                if (!sideEnabled(level, cur, dir)) continue;
+                Block nbBlock = level.getBlockState(nb).getBlock();
+                if (!isNetworkBlock(nbBlock)) continue;
+                if (!sideEnabled(level, nb, dir.getOpposite())) continue;
+                visited.add(nb);
+                queue.add(nb);
             }
         }
-        return 0;
+        return vol;
+    }
+
+    /** Abgeschaltete Pipe-Seiten trennen das Vakuum-Netz. */
+    private static boolean sideEnabled(Level level, BlockPos pos, Direction dir) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof VacuumPipeBlockEntity pipe) return pipe.isSideEnabled(dir);
+        return true;
+    }
+
+    /** Bloecke, die zum Vakuum-Netz gehoeren: Pipes und die Vakuum-Ports der Multiblocks. */
+    private static boolean isNetworkBlock(Block block) {
+        return block instanceof VacuumPipeBlock
+                || block instanceof de.wutzuket.overdrive.block.accelerator.AcceleratorVacuumInputPortBlock
+                || block instanceof de.wutzuket.overdrive.block.ad.ADVacuumPortBlock
+                || block instanceof de.wutzuket.overdrive.block.elena.ELENAVacuumPortBlock
+                || block instanceof de.wutzuket.overdrive.block.annihilation.AnnihilationVacuumPortBlock
+                || block instanceof de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortBlock;
+    }
+
+    /** Verbrauch beim Evakuieren oder im Leck (FE/t) - skaliert mit dem Volumen. */
+    private int usageEvacuating() {
+        double base = de.wutzuket.overdrive.config.ODConfig.VACUUM_BASE_FE_PER_TICK.get();
+        double usage = de.wutzuket.overdrive.config.ODConfig.VACUUM_SCALING.get()
+                == de.wutzuket.overdrive.config.ODConfig.VacuumScaling.EXPONENTIAL
+                ? base * Math.pow(de.wutzuket.overdrive.config.ODConfig.VACUUM_EXPONENTIAL_FACTOR.get(), volume)
+                : base + de.wutzuket.overdrive.config.ODConfig.VACUUM_FE_PER_BLOCK.get() * volume;
+        return (int) Math.max(0, Math.min(MAX_ENERGY, Math.round(usage)));
+    }
+
+    /** Verbrauch im STABLE-Zustand (FE/t) - ebenfalls volumenabhaengig. */
+    private int usageStable() {
+        return (int) Math.max(0, Math.min(MAX_ENERGY,
+                Math.round(usageEvacuating() * de.wutzuket.overdrive.config.ODConfig.VACUUM_STABLE_FACTOR.get())));
     }
 
     public int getEnergyUsage() {
-        if (status == VacuumStatus.EVACUATING || status == VacuumStatus.LEAK) return ENERGY_PER_TICK;
-        if (status == VacuumStatus.STABLE) return ENERGY_PER_TICK / 10;
+        if (status == VacuumStatus.EVACUATING || status == VacuumStatus.LEAK) return usageEvacuating();
+        if (status == VacuumStatus.STABLE) return usageStable();
         return 0;
     }
 
@@ -466,6 +514,7 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         tag.putInt("vacuumProgress", vacuumProgress);
         tag.putInt("evacTicks", evacTicks);
         tag.putInt("pipeCount", pipeCount);
+        tag.putInt("volume", volume);
         if (outputPortPos != null) {
             tag.putLong("outputPortPos", outputPortPos.asLong());
         }
@@ -482,6 +531,7 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
         vacuumProgress = tag.getInt("vacuumProgress");
         evacTicks = tag.getInt("evacTicks");
         pipeCount = tag.getInt("pipeCount");
+        volume = tag.contains("volume") ? Math.max(OWN_VOLUME, tag.getInt("volume")) : OWN_VOLUME;
         if (tag.contains("outputPortPos")) {
             outputPortPos = BlockPos.of(tag.getLong("outputPortPos"));
         }

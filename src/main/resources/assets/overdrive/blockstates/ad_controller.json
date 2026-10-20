@@ -1,8 +1,8 @@
 {
   "variants": {
-    "facing=north": { "model": "overdrive:block/ad_controller", "y": 180 },
-    "facing=east": { "model": "overdrive:block/ad_controller", "y": 270 },
-    "facing=south": { "model": "overdrive:block/ad_controller", "y": 0 },
-    "facing=west": { "model": "overdrive:block/ad_controller", "y": 90 }
+    "facing=north": { "model": "overdrive:block/ad/ad_controller", "y": 180 },
+    "facing=east": { "model": "overdrive:block/ad/ad_controller", "y": 270 },
+    "facing=south": { "model": "overdrive:block/ad/ad_controller", "y": 0 },
+    "facing=west": { "model": "overdrive:block/ad/ad_controller", "y": 90 }
   }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/elena_casing"
+      "model": "overdrive:block/elena/elena_casing"
     }
   }
 }

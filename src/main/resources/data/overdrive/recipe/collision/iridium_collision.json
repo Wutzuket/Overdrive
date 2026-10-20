@@ -6,10 +6,8 @@
   },
   "energy_cost": 250000000,
   "process_time": 1,
-  "results": [
-    {
-      "amount": 20000,
-      "id": "overdrive:antiprotons"
-    }
-  ]
+  "output_antimatter": {
+    "type": "overdrive:antiprotons",
+    "amount": 20000
+  }
 }

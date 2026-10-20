@@ -56,7 +56,7 @@ public class CryoDistillerWidget implements IRecipeWidget, IJeiGuiEventListener 
     private static final int CAPTION_X = 4;
     private static final int CAPTION_Y = 108;
     private static final int CAPTION_W = 192;
-    private static final int CAPTION_H = 28;
+    private static final int CAPTION_H = 38;
 
     private static final int COL_PANEL_BORDER = 0xFF6A6A72;
     private static final int COL_PANEL = 0xFFF2F2F5;
@@ -137,6 +137,11 @@ public class CryoDistillerWidget implements IRecipeWidget, IJeiGuiEventListener 
 
         draw(g, font, Component.literal(ODFormat.formatFluid(recipe.inputFluid().getAmount())), INPUT_SLOT_X, INPUT_SLOT_Y + 22, COL_CYAN);
         draw(g, font, Component.literal(ODFormat.formatFluid(recipe.outputFluid().getAmount())), OUTPUT_SLOT_X, OUTPUT_SLOT_Y + 22, COL_GREEN);
+
+        // ---- Produktionsrate des Rezepts (z.B. 5 mB/t) ----
+        draw(g, font, Component.translatable("jei.overdrive.fluid.production",
+                        ODFormat.formatFluidPerTick(recipe.outputFluid().getAmount() / (double) Math.max(1, recipe.processTime()))),
+                CAPTION_X + 4, CAPTION_Y + 28, COL_CYAN);
     }
 
     /** Helle Box mit dunklem Rand als sichere Leseflaeche fuer die Textzeilen. */

@@ -1,8 +1,8 @@
 {
   "variants": {
-    "facing=north": { "model": "overdrive:block/coal_generator" },
-    "facing=east":  { "model": "overdrive:block/coal_generator", "y": 90 },
-    "facing=south": { "model": "overdrive:block/coal_generator", "y": 180 },
-    "facing=west":  { "model": "overdrive:block/coal_generator", "y": 270 }
+    "facing=north": { "model": "overdrive:block/misc/coal_generator" },
+    "facing=east":  { "model": "overdrive:block/misc/coal_generator", "y": 90 },
+    "facing=south": { "model": "overdrive:block/misc/coal_generator", "y": 180 },
+    "facing=west":  { "model": "overdrive:block/misc/coal_generator", "y": 270 }
   }
 }

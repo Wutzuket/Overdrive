@@ -22,7 +22,13 @@ public class AcceleratorRecipeCategory extends FluidRecipeCategory<CollisionReci
 
     @Override
     protected FluidIO getFluids(CollisionRecipe recipe) {
-        return new FluidIO(List.of(recipe.inputFluid()), recipe.outputFluid());
+        // Der Output sind Antiprotonen, die ueber das Antimatter-System bewegt werden.
+        return new FluidIO(List.of(recipe.inputFluid()), null);
+    }
+
+    @Override
+    protected AntimatterIO getAntimatters(CollisionRecipe recipe) {
+        return AntimatterIO.of(null, recipe.outputAntimatter());
     }
 
     @Override
@@ -32,6 +38,8 @@ public class AcceleratorRecipeCategory extends FluidRecipeCategory<CollisionReci
         lines.add(value("jei.overdrive.fluid.time", recipe.processTime(),
                 String.format(java.util.Locale.ROOT, "%.2f", recipe.processTime() / 20.0)));
         lines.add(line(Component.translatable("jei.overdrive.accelerator_collision.input"), COL_LABEL));
+        antimatter(recipe.outputAntimatter()).ifPresent(lines::add);
+        lines.add(production(recipe.outputAntimatter().amount() / (double) Math.max(1, recipe.processTime())));
         lines.add(line(Component.translatable("jei.overdrive.accelerator_collision.rate_hint"), COL_LABEL));
         return lines;
     }

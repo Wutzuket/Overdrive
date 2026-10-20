@@ -1,11 +1,11 @@
 {
   "multipart": [
-    { "apply": { "model": "overdrive:block/vacuum_pipe_center" } },
-    { "when": { "north": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_north" } },
-    { "when": { "east": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_east" } },
-    { "when": { "south": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_south" } },
-    { "when": { "west": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_west" } },
-    { "when": { "up": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_up" } },
-    { "when": { "down": "true" }, "apply": { "model": "overdrive:block/vacuum_pipe_connection_down" } }
+    { "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_center" } },
+    { "when": { "north": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_north" } },
+    { "when": { "east": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_east" } },
+    { "when": { "south": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_south" } },
+    { "when": { "west": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_west" } },
+    { "when": { "up": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_up" } },
+    { "when": { "down": "true" }, "apply": { "model": "overdrive:block/vacuum/vacuum_pipe_connection_down" } }
   ]
 }

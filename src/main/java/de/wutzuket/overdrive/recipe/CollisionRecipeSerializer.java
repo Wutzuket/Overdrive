@@ -3,12 +3,11 @@ package de.wutzuket.overdrive.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.List;
 
 public class CollisionRecipeSerializer implements RecipeSerializer<CollisionRecipe> {
     private static final MapCodec<CollisionRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
@@ -16,9 +15,8 @@ public class CollisionRecipeSerializer implements RecipeSerializer<CollisionReci
                     FluidStack.CODEC.fieldOf("input_fluid").forGetter(CollisionRecipe::inputFluid),
                     Codec.INT.fieldOf("energy_cost").forGetter(CollisionRecipe::energyCost),
                     Codec.INT.fieldOf("process_time").forGetter(CollisionRecipe::processTime),
-                    Codec.list(FluidStack.CODEC).fieldOf("results").forGetter(r -> List.of(r.outputFluid()))
-            ).apply(instance, (input, energy, time, results) ->
-                    new CollisionRecipe(input, energy, time, results.isEmpty() ? FluidStack.EMPTY : results.getFirst()))
+                    AntimatterStack.MAP_CODEC.fieldOf("output_antimatter").forGetter(CollisionRecipe::outputAntimatter)
+            ).apply(instance, CollisionRecipe::new)
     );
 
     private static final StreamCodec<RegistryFriendlyByteBuf, CollisionRecipe> STREAM_CODEC =
@@ -41,14 +39,14 @@ public class CollisionRecipeSerializer implements RecipeSerializer<CollisionReci
         FluidStack inputFluid = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
         int energyCost = buffer.readInt();
         int processTime = buffer.readInt();
-        FluidStack outputFluid = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
-        return new CollisionRecipe(inputFluid, energyCost, processTime, outputFluid);
+        AntimatterStack outputAntimatter = AntimatterStack.STREAM_CODEC.decode(buffer);
+        return new CollisionRecipe(inputFluid, energyCost, processTime, outputAntimatter);
     }
 
     private static void toNetwork(RegistryFriendlyByteBuf buffer, CollisionRecipe recipe) {
         FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, recipe.inputFluid());
         buffer.writeInt(recipe.energyCost());
         buffer.writeInt(recipe.processTime());
-        FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, recipe.outputFluid());
+        AntimatterStack.STREAM_CODEC.encode(buffer, recipe.outputAntimatter());
     }
 }

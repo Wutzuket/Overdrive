@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/hologram_block"
+      "model": "overdrive:block/misc/hologram_block"
     }
   }
 }

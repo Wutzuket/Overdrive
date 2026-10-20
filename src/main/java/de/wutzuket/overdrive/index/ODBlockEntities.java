@@ -176,6 +176,18 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
     public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorEntity>> COAL_GENERATOR_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("coal_generator", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorEntity::new, ODBlocks.COAL_GENERATOR.get()).build(null));
 
+    // Antimatter transport and storage
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlockEntity>> ANTIMATTER_PIPE =
+            BLOCK_ENTITY_TYPES.register("antimatter_pipe", () -> BlockEntityType.Builder.of(
+                    de.wutzuket.overdrive.block.antimatter.AntimatterPipeBlockEntity::new,
+                    ODBlocks.ANTIMATTER_PIPE_BASIC.get(),
+                    ODBlocks.ANTIMATTER_PIPE_ADVANCED.get(),
+                    ODBlocks.ANTIMATTER_PIPE_ELITE.get(),
+                    ODBlocks.ANTIMATTER_PIPE_ULTIMATE.get()).build(null));
+
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.antimatter.AntimatterTankEntity>> ANTIMATTER_TANK =
+            BLOCK_ENTITY_TYPES.register("antimatter_tank", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.antimatter.AntimatterTankEntity::new, ODBlocks.ANTIMATTER_TANK.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITY_TYPES.register(modEventBus);
     }

@@ -1,27 +1,27 @@
 package de.wutzuket.overdrive.recipe;
 
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 public class AntiprotonCoolingRecipe implements Recipe<RecipeInput> {
     private final RecipeType<?> recipeType;
     private final RecipeSerializer<?> serializer;
-    private final FluidStack inputFluid;
+    private final AntimatterStack inputAntimatter;
     private final int energyCost;
     private final int processTime;
-    private final FluidStack outputFluid;
+    private final AntimatterStack outputAntimatter;
     private final ItemStack outputCell;
 
-    public AntiprotonCoolingRecipe(RecipeType<?> recipeType, RecipeSerializer<?> serializer, FluidStack inputFluid, int energyCost, int processTime, FluidStack outputFluid, ItemStack outputCell) {
+    public AntiprotonCoolingRecipe(RecipeType<?> recipeType, RecipeSerializer<?> serializer, AntimatterStack inputAntimatter, int energyCost, int processTime, AntimatterStack outputAntimatter, ItemStack outputCell) {
         this.recipeType = recipeType;
         this.serializer = serializer;
-        this.inputFluid = inputFluid;
+        this.inputAntimatter = inputAntimatter;
         this.energyCost = energyCost;
         this.processTime = processTime;
-        this.outputFluid = outputFluid;
+        this.outputAntimatter = outputAntimatter;
         this.outputCell = outputCell;
     }
 
@@ -47,13 +47,12 @@ public class AntiprotonCoolingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() { return serializer; }
-
     @Override
     public RecipeType<?> getType() { return recipeType; }
 
-    public FluidStack inputFluid() { return inputFluid; }
+    public AntimatterStack inputAntimatter() { return inputAntimatter; }
     public int energyCost() { return energyCost; }
     public int processTime() { return processTime; }
-    public FluidStack outputFluid() { return outputFluid; }
+    public AntimatterStack outputAntimatter() { return outputAntimatter; }
     public ItemStack outputCell() { return outputCell; }
 }

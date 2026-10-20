@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/pump_casing",
-  "textures": {
-    "north": "overdrive:block/vacuum_pump_front"
-  }
-}

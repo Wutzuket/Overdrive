@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/vacuum/pump_casing",
+  "textures": {
+    "all": "overdrive:block/vacuum_output_port"
+  }
+}

@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/ad_output_port" }
+    "": { "model": "overdrive:block/ad/ad_output_port" }
   }
 }

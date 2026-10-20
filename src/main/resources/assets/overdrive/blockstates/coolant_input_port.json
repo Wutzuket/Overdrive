@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/coolant_input_port"
+      "model": "overdrive:block/annihilation/coolant_input_port"
     }
   }
 }

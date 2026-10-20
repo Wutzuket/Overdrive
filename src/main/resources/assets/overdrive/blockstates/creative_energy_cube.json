@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/creative_energy_cube"
+      "model": "overdrive:block/blocks/creative_energy_cube"
     }
   }
 }

@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/accelerator_vacuum_input_port" }
+    "": { "model": "overdrive:block/accelerator/accelerator_vacuum_input_port" }
   }
 }

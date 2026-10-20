@@ -26,7 +26,7 @@ public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtr
 
     @Override
     protected FluidIO getFluids(PositronExtractionRecipe recipe) {
-        return new FluidIO(List.of(), recipe.outputFluid());
+        return new FluidIO(List.of(), null);
     }
 
     @Override
@@ -51,6 +51,10 @@ public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtr
         lines.add(value("jei.overdrive.fluid.time", recipe.processTime(),
                 String.format(java.util.Locale.ROOT, "%.2f", recipe.processTime() / 20.0)));
         lines.add(value("jei.overdrive.fluid.mesh", recipe.meshDurabilityCost()));
+        if (!recipe.outputAntimatter().isEmpty()) {
+            antimatter(recipe.outputAntimatter()).ifPresent(lines::add);
+            lines.add(production(recipe.outputAntimatter().amount() / (double) Math.max(1, recipe.processTime())));
+        }
         return lines;
     }
 

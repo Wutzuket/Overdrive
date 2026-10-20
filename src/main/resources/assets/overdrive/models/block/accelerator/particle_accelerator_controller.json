@@ -1,0 +1,6 @@
+{
+  "parent": "overdrive:block/accelerator/accelerator_casing",
+  "textures": {
+    "north": "overdrive:block/accelerator_controller_front"
+  }
+}

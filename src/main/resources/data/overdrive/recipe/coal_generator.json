@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/aluminum"
+    },
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "S": {
+      "item": "overdrive:simple_frame"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ASA",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "overdrive:coal_generator"
+  }
+}

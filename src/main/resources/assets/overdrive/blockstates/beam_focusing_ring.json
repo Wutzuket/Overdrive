@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/beam_focusing_ring"
+      "model": "overdrive:block/misc/beam_focusing_ring"
     }
   }
 }

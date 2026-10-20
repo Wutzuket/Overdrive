@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ElectronGunMenu extends AbstractContainerMenu {
     private final ElectronGunEntity blockEntity;
-    private final int[] data = new int[9];
+    private final int[] data = new int[10];
 
     public ElectronGunMenu(int containerId, Inventory inventory, ElectronGunEntity blockEntity) {
         super(ODMenuTypes.ELECTRON_GUN_MENU.get(), containerId);
@@ -25,11 +25,13 @@ public class ElectronGunMenu extends AbstractContainerMenu {
                     case 1 -> blockEntity.getMaxEnergyStored();
                     case 2 -> (int) (blockEntity.getVacuumLevel() * 1000);
                     case 3 -> blockEntity.isHologramEnabled() ? 1 : 0;
-                    case 4 -> blockEntity.getFluidTank().getFluidAmount();
-                    case 5 -> blockEntity.getFluidTank().getCapacity();
+                    case 4 -> blockEntity.getAntimatterTank().getAmount(0);
+                    case 5 -> blockEntity.getAntimatterTank().getCapacity(0);
                     case 6 -> blockEntity.isActive() ? 1 : 0;
                     case 7 -> blockEntity.getProgressTicks();
                     case 8 -> blockEntity.getCurrentRecipeProcessTime();
+                    // Produktion in mB/t, x100 als Festkomma (Brokerrechnung).
+                    case 9 -> (int) Math.round(blockEntity.getProductionPerTick() * 100);
                     default -> 0;
                 };
             }
@@ -72,6 +74,9 @@ public class ElectronGunMenu extends AbstractContainerMenu {
     public boolean isActive() { return data[6] == 1; }
     public int getProgressTicks() { return data[7]; }
     public int getRecipeProcessTime() { return data[8]; }
+
+    /** Produktion der Kanone in mB pro Tick (z.B. 4000 -> "4 B/t"). */
+    public double getProductionPerTickSynced() { return data[9] / 100.0; }
 
     public int getEnergyScaled(int max) {
         int maxEnergy = getMaxEnergy();

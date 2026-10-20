@@ -60,6 +60,8 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
     private int progress = 0;
     private int lastProcessTime = 100;
     private int lastEnergyPerTick = 0;
+    /** Output-Menge des aktuellen Rezepts (fuer die Produktionsanzeige pro Tick). */
+    private int lastOutputAmount = 0;
     private @Nullable ResourceLocation catalystBlockId = null;
     private boolean catalystPresent = false;
     private @Nullable CryoDistillerRecipe recipe = null;
@@ -74,12 +76,14 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
 
         recipe = findRecipe(level);
         if (recipe == null) {
+            lastOutputAmount = 0;
             stop(level, pos, state);
             setCatalyst(null, false);
             return;
         }
         lastProcessTime = Math.max(1, recipe.processTime());
         lastEnergyPerTick = recipe.energyPerTick();
+        lastOutputAmount = recipe.outputFluid().getAmount();
 
         Block catalystBlock = resolveBlock(recipe.catalystBlockId());
         boolean catalystOk = catalystSatisfied(catalystBlock, level.getBlockState(pos.below()).getBlock());
@@ -229,6 +233,10 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
     public int getProgress() { return progress; }
     public int getMaxProgress() { return Math.max(1, lastProcessTime); }
     public int getEnergyPerTick() { return lastEnergyPerTick; }
+    /** Produktion pro Tick in mB (Output-Menge pro Op / Dauer), z.B. 100/20 -> 5 mB/t. */
+    public double getProductionPerTick() {
+        return lastOutputAmount / (double) Math.max(1, lastProcessTime);
+    }
     public boolean isActive() { return active; }
 
     /** Block-ID des aktuell geforderten Katalysators, oder null. */
@@ -302,6 +310,7 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
         tag.putInt("progress", progress);
         tag.putInt("lastTime", lastProcessTime);
         tag.putInt("lastEpt", lastEnergyPerTick);
+        tag.putInt("lastOut", lastOutputAmount);
         tag.putBoolean("catalystPresent", catalystPresent);
         if (catalystBlockId != null) tag.putString("catalyst", catalystBlockId.toString());
         tag.put("in", inputTank.writeToNBT(registries, new CompoundTag()));
@@ -317,6 +326,7 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
         progress = tag.getInt("progress");
         if (tag.contains("lastTime")) lastProcessTime = Math.max(1, tag.getInt("lastTime"));
         lastEnergyPerTick = tag.getInt("lastEpt");
+        lastOutputAmount = Math.max(0, tag.getInt("lastOut"));
         catalystPresent = tag.getBoolean("catalystPresent");
         catalystBlockId = tag.contains("catalyst") ? ResourceLocation.tryParse(tag.getString("catalyst")) : null;
         if (tag.contains("in")) inputTank.readFromNBT(registries, tag.getCompound("in"));

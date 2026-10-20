@@ -3,7 +3,8 @@ package de.wutzuket.overdrive.block.elena;
 import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.block.vacuum.IVacuumNode;
 import de.wutzuket.overdrive.config.ODConfig;
-import de.wutzuket.overdrive.fluid.InOutFluidHandler;
+import de.wutzuket.overdrive.antimatter.IAntimatterHandler;
+import de.wutzuket.overdrive.antimatter.InOutAntimatterHandler;
 import de.wutzuket.overdrive.fluid.ODFluids;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.recipe.AntiprotonCoolingRecipe;
@@ -27,9 +28,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import de.wutzuket.overdrive.antimatter.Antimatter;
+import de.wutzuket.overdrive.antimatter.AntimatterStack;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -47,17 +48,9 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
     public static final int DEFAULT_ENERGY_RATE = 50_000_000;
     private int energyRate = DEFAULT_ENERGY_RATE;
     // Input-Tank (frueher ELENA-Input-Port) + Output-Tank (frueher ELENA-Output-Port): beide im Controller.
-    private final FluidTank inputTank = new FluidTank(TANK_CAPACITY) {
-        @Override
-        protected void onContentsChanged() {
-            setChanged();
-            if (level != null) {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-            }
-        }
-    };
-    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY);
-    private IFluidHandler fluidHandler;
+    private final AntimatterTank inputTank = new AntimatterTank(TANK_CAPACITY);
+    private final AntimatterTank fluidTank = new AntimatterTank(TANK_CAPACITY);
+    private IAntimatterHandler antimatterHandler;
     private boolean validStructure = false;
     private boolean hologramEnabled = false;
     private boolean active = false;
@@ -66,6 +59,8 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
     private double partialOutput = 0;
 
     private @Nullable AntiprotonCoolingRecipe currentRecipe = null;
+    /** Gecachtes Basisrezept der Maschine (fuer die Produktionsanzeige, unabhaengig vom Input-Tank). */
+    private @Nullable AntiprotonCoolingRecipe baseRecipe = null;
 
     public ELENAControllerEntity(BlockPos pos, BlockState state) {
         super(ODBlockEntities.ELENA_CONTROLLER.get(), pos, state);
@@ -111,13 +106,14 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
             return;
         }
 
-        FluidStack inputFluid = getInputFluid();
+        Antimatter inputType = getInputAntimatter();
         // Lademodus bei niedriger Rate: exakte Menge pro Tick wäre ein Bruchteil von 1 mB.
         // Statt aufzurunden wird Energie weiter verbraucht und angesammelt (wie beim Accelerator).
         boolean fractional = isFractionalOp(currentRecipe);
         int[] quantum = fractional ? chargeQuantum(currentRecipe) : new int[]{1, 1};
         int needInput = fractional ? quantum[0] : getScaledInputAmount(currentRecipe);
-        if (inputFluid.isEmpty() || !inputFluid.is(currentRecipe.inputFluid().getFluid()) || inputFluid.getAmount() < needInput) {
+        if (inputType == null || !inputType.equals(currentRecipe.inputAntimatter().type())
+                || inputTank.getAmount(0) < needInput) {
             if (active) {
                 active = false;
                 progressTicks = 0;
@@ -127,8 +123,8 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
             return;
         }
 
-        FluidStack roomCheck = fractional
-                ? currentRecipe.outputFluid().copyWithAmount(quantum[1])
+        AntimatterStack roomCheck = fractional
+                ? currentRecipe.outputAntimatter().withAmount(quantum[1])
                 : getScaledOutput(currentRecipe);
         if (!finalOutputCanAccept(roomCheck)) {
             if (active) {
@@ -193,18 +189,44 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
         return (double) ((long) energyRate * Math.max(1, recipe.processTime())) / base;
     }
 
-    public FluidStack getScaledOutput(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()) return FluidStack.EMPTY;
-        long amount = (long) (recipe.outputFluid().getAmount() * getRateFactor(recipe));
+    /**
+     * Produktion pro Tick in mB (fuer die GUI-Anzeige, z.B. 20000 -&gt; "20 B/t").
+     * Nutzt das aktive Rezept, sonst das Basisrezept der Maschine, damit die Rate auch
+     * ohne Input im Tank angezeigt wird.
+     */
+    public double getProductionPerTick() {
+        AntiprotonCoolingRecipe recipe = currentRecipe != null ? currentRecipe : getBaseRecipe();
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return 0;
+        return recipe.outputAntimatter().amount() * getRateFactor(recipe) / Math.max(1, recipe.processTime());
+    }
+
+    /** Das (erste) ELENA-Rezept der Maschine, unabhaengig vom Inhalt des Input-Tanks. */
+    private @Nullable AntiprotonCoolingRecipe getBaseRecipe() {
+        if (baseRecipe != null) return baseRecipe;
+        if (level == null) return null;
+        for (RecipeHolder<?> holder : level.getRecipeManager().getRecipes()) {
+            if (holder.value() instanceof AntiprotonCoolingRecipe recipe
+                    && recipe.getType() == ODRecipeTypes.ELENA_RECIPE.get()) {
+                baseRecipe = recipe;
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+
+    public AntimatterStack getScaledOutput(@Nullable AntiprotonCoolingRecipe recipe) {
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return new AntimatterStack(null, 0);
+        long amount = (long) (recipe.outputAntimatter().amount() * getRateFactor(recipe));
         if (amount < 1) amount = 1;
         if (amount > Integer.MAX_VALUE) amount = Integer.MAX_VALUE;
-        return recipe.outputFluid().copyWithAmount((int) amount);
+        return recipe.outputAntimatter().withAmount((int) amount);
     }
 
     /** Skalierter Fluid-Input pro Op in mB (Faktor aus GUI-Rate vs. Rezeptkosten). */
     public int getScaledInputAmount(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.inputFluid().isEmpty()) return 1;
-        long amount = (long) (recipe.inputFluid().getAmount() * getRateFactor(recipe));
+        if (recipe == null || recipe.inputAntimatter().isEmpty()) return 1;
+        long amount = (long) (recipe.inputAntimatter().amount() * getRateFactor(recipe));
         if (amount < 1) amount = 1;
         if (amount > Integer.MAX_VALUE) amount = Integer.MAX_VALUE;
         return (int) amount;
@@ -212,21 +234,21 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
 
     /** Exakte Output-Menge pro Tick als double (ohne Aufrunden, kann < 1 sein). */
     public double exactOutputPerTick(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()) return 0;
-        return recipe.outputFluid().getAmount() * getRateFactor(recipe);
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return 0;
+        return recipe.outputAntimatter().amount() * getRateFactor(recipe);
     }
 
     /** Exakte Input-Menge pro Tick als double (ohne Aufrunden, kann < 1 sein). */
     public double exactInputPerTick(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.inputFluid().isEmpty()) return 0;
-        return recipe.inputFluid().getAmount() * getRateFactor(recipe);
+        if (recipe == null || recipe.inputAntimatter().isEmpty()) return 0;
+        return recipe.inputAntimatter().amount() * getRateFactor(recipe);
     }
 
     /** True, wenn pro Tick keine ganzen mB anfallen wuerden -> Lademodus statt Aufrunden. Items (Cells) sind nicht teilbar. */
     public boolean isFractionalOp(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.outputFluid().isEmpty()
-                || recipe.inputFluid().isEmpty() || recipe.outputFluid().getAmount() <= 0
-                || recipe.inputFluid().getAmount() <= 0 || !recipe.outputCell().isEmpty()) return false;
+        if (recipe == null || recipe.outputAntimatter().isEmpty()
+                || recipe.inputAntimatter().isEmpty() || recipe.outputAntimatter().amount() <= 0
+                || recipe.inputAntimatter().amount() <= 0 || !recipe.outputCell().isEmpty()) return false;
         return exactOutputPerTick(recipe) < 1.0 || exactInputPerTick(recipe) < 1.0;
     }
 
@@ -243,12 +265,12 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
 
     /** Ganzzahliges Mindest-Quantum {inputMb, outputMb} aus dem gekuerzten Rezeptverhaeltnis. */
     public int[] chargeQuantum(@Nullable AntiprotonCoolingRecipe recipe) {
-        if (recipe == null || recipe.inputFluid().isEmpty() || recipe.outputFluid().isEmpty()) {
+        if (recipe == null || recipe.inputAntimatter().isEmpty() || recipe.outputAntimatter().isEmpty()) {
             return new int[]{1, 1};
         }
-        int g = gcd(recipe.inputFluid().getAmount(), recipe.outputFluid().getAmount());
-        return new int[]{Math.max(1, recipe.inputFluid().getAmount() / g),
-                Math.max(1, recipe.outputFluid().getAmount() / g)};
+        int g = gcd(recipe.inputAntimatter().amount(), recipe.outputAntimatter().amount());
+        return new int[]{Math.max(1, recipe.inputAntimatter().amount() / g),
+                Math.max(1, recipe.outputAntimatter().amount() / g)};
     }
 
     /** Sammelt Output-Bruchteile aus dem Input-Tank; vollendet ganze Quanten, sobald Tank + Output-Platz reichen. */
@@ -259,13 +281,13 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
         partialOutput += exactOutputPerTick(currentRecipe);
 
         while (partialOutput >= makeOut) {
-            FluidStack chunk = currentRecipe.outputFluid().copyWithAmount(makeOut);
-            int canFill = fluidTank.fill(chunk.copy(), IFluidHandler.FluidAction.SIMULATE);
+            AntimatterStack chunk = currentRecipe.outputAntimatter().withAmount(makeOut);
+            int canFill = fluidTank.insertAntimatter(0, chunk.type(), makeOut, true);
             if (canFill < makeOut) break;
-            FluidStack drained = inputTank.drain(needIn, IFluidHandler.FluidAction.SIMULATE);
-            if (drained.getAmount() < needIn || !drained.is(currentRecipe.inputFluid().getFluid())) break;
-            inputTank.drain(needIn, IFluidHandler.FluidAction.EXECUTE);
-            int filled = fluidTank.fill(chunk.copy(), IFluidHandler.FluidAction.EXECUTE);
+            int drained = inputTank.extractAntimatter(0, needIn, true);
+            if (drained < needIn) break;
+            inputTank.extractAntimatter(0, needIn, false);
+            int filled = fluidTank.insertAntimatter(0, chunk.type(), makeOut, false);
             if (filled > 0) {
                 spawnOutputParticles(level, pos, state);
             }
@@ -273,7 +295,7 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
             progressTicks = 0;
         }
 
-        if (inputTank.isEmpty()) {
+        if (inputTank.getAmount(0) <= 0) {
             active = false;
             currentRecipe = null;
         }
@@ -329,20 +351,20 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
     private void completeProcessing(ServerLevel level, BlockPos pos, BlockState state) {
         if (currentRecipe == null) return;
 
-        FluidStack output = getScaledOutput(currentRecipe);
+        AntimatterStack output = getScaledOutput(currentRecipe);
         int needIn = getScaledInputAmount(currentRecipe);
 
-        FluidStack simDrained = inputTank.drain(needIn, IFluidHandler.FluidAction.SIMULATE);
-        if (simDrained.getAmount() < needIn || !simDrained.is(currentRecipe.inputFluid().getFluid())) return;
+        int simDrained = inputTank.extractAntimatter(0, needIn, true);
+        if (simDrained < needIn) return;
 
         if (!output.isEmpty()) {
-            int canFill = fluidTank.fill(output.copy(), IFluidHandler.FluidAction.SIMULATE);
-            if (canFill < output.getAmount()) return;
+            int canFill = fluidTank.insertAntimatter(0, output.type(), output.amount(), true);
+            if (canFill < output.amount()) return;
         }
 
-        inputTank.drain(needIn, IFluidHandler.FluidAction.EXECUTE);
+        inputTank.extractAntimatter(0, needIn, false);
         if (!output.isEmpty()) {
-            fluidTank.fill(output.copy(), IFluidHandler.FluidAction.EXECUTE);
+            fluidTank.insertAntimatter(0, output.type(), output.amount(), false);
         }
 
         progressTicks = 0;
@@ -352,24 +374,24 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
         level.sendBlockUpdated(pos, state, state, 3);
     }
 
-    private FluidStack getInputFluid() {
-        return inputTank.getFluid();
+    private Antimatter getInputAntimatter() {
+        return inputTank.getAntimatterInTank(0);
     }
 
-    private boolean finalOutputCanAccept(FluidStack output) {
+    private boolean finalOutputCanAccept(AntimatterStack output) {
         if (currentRecipe == null) return false;
         if (output.isEmpty()) return true;
-        int canFill = fluidTank.fill(output.copy(), IFluidHandler.FluidAction.SIMULATE);
-        return canFill >= output.getAmount();
+        int canFill = fluidTank.insertAntimatter(0, output.type(), output.amount(), true);
+        return canFill >= output.amount();
     }
 
     private @Nullable AntiprotonCoolingRecipe findRecipe(Level level) {
-        FluidStack inputFluid = getInputFluid();
-        if (inputFluid.isEmpty()) return null;
+        Antimatter inputType = getInputAntimatter();
+        if (inputType == null) return null;
 
         for (RecipeHolder<?> holder : level.getRecipeManager().getRecipes()) {
             if (holder.value() instanceof AntiprotonCoolingRecipe recipe && recipe.getType() == ODRecipeTypes.ELENA_RECIPE.get()) {
-                if (recipe.inputFluid().getFluid() == inputFluid.getFluid()) {
+                if (recipe.inputAntimatter().type().equals(inputType)) {
                     return recipe;
                 }
             }
@@ -607,13 +629,16 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
     public long getEnergyStoredLong() { return energy; }
     public long getMaxEnergyStoredLong() { return MAX_ENERGY_STORED; }
     public int getMaxRate() { return MAX_ENERGY_RATE; }
-    public FluidTank getFluidTank() { return fluidTank; }
+    public AntimatterTank getFluidTank() { return fluidTank; }
 
-    public FluidTank getInputTank() { return inputTank; }
+    public AntimatterTank getInputTank() { return inputTank; }
 
-    public IFluidHandler getFluidHandler() {
-        if (fluidHandler == null) fluidHandler = new InOutFluidHandler(inputTank, fluidTank);
-        return fluidHandler;
+    /** @return the antimatter handler of the controller, the input and the output tank. */
+    public IAntimatterHandler getAntimatterHandler() {
+        if (antimatterHandler == null) {
+            antimatterHandler = new InOutAntimatterHandler(inputTank, fluidTank);
+        }
+        return antimatterHandler;
     }
 
     /** Sucht den Controller in der Nähe (fuer Port-Weiterleitungen ohne eigene BE). */
@@ -670,8 +695,12 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
         tag.putBoolean("active", active);
         tag.putInt("progressTicks", progressTicks);
         tag.putDouble("partialOutput", partialOutput);
-        tag.put("fluid", fluidTank.writeToNBT(registries, new CompoundTag()));
-        tag.put("inputFluid", inputTank.writeToNBT(registries, new CompoundTag()));
+        CompoundTag fluidTag = new CompoundTag();
+        fluidTank.saveToNBT(fluidTag);
+        tag.put("fluid", fluidTag);
+        CompoundTag inputTag = new CompoundTag();
+        inputTank.saveToNBT(inputTag);
+        tag.put("inputFluid", inputTag);
     }
 
     @Override
@@ -685,8 +714,8 @@ public class ELENAControllerEntity extends BlockEntity implements IEnergyStorage
         active = tag.getBoolean("active");
         progressTicks = tag.getInt("progressTicks");
         partialOutput = tag.contains("partialOutput") ? Math.max(0, tag.getDouble("partialOutput")) : 0;
-        if (tag.contains("fluid")) fluidTank.readFromNBT(registries, tag.getCompound("fluid"));
-        if (tag.contains("inputFluid")) inputTank.readFromNBT(registries, tag.getCompound("inputFluid"));
+        if (tag.contains("fluid")) fluidTank.loadFromNBT(tag.getCompound("fluid"));
+        if (tag.contains("inputFluid")) inputTank.loadFromNBT(tag.getCompound("inputFluid"));
     }
 
     @Override

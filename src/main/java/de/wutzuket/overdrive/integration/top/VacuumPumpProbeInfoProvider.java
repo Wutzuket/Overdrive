@@ -62,7 +62,9 @@ public class VacuumPumpProbeInfoProvider implements IProbeInfoProvider {
                     .width(100)
                     .showText(true)
                     .suffix(Component.literal("% Vakuum")));
-            probeInfo.text(Component.literal(String.format("Temp: %.0f C / 3000 C", ann.getCoreTemp())));
+            // Limit aus der Reaktor-Konstante, damit es zum GUI-Wert passt.
+            probeInfo.text(Component.literal(String.format("Temp: %.0f C / %d C", ann.getCoreTemp(),
+                    de.wutzuket.overdrive.block.annihilation.AnnihilationControllerEntity.CORE_TEMP_MAX)));
             probeInfo.text(Component.literal("Energy: " + ODFormat.formatEnergy(ann.getEnergyStored())));
             if(!ann.isValidStructure()){
                 probeInfo.text(Component.literal("Invalid Structure").withStyle(s->s.withColor(0xFF5555)));

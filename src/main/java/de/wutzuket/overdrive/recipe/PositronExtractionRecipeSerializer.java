@@ -44,16 +44,16 @@ public class PositronExtractionRecipeSerializer implements RecipeSerializer<Posi
         int meshDurabilityCost = buffer.readInt();
         int energyCost = buffer.readInt();
         int processTime = buffer.readInt();
-        FluidStack outputFluid = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
+        de.wutzuket.overdrive.antimatter.AntimatterStack outputAntimatter = de.wutzuket.overdrive.antimatter.AntimatterStack.STREAM_CODEC.decode(buffer);
         ItemStack outputCell = ItemStack.OPTIONAL_STREAM_CODEC.decode(buffer);
-        return new PositronExtractionRecipe(meshDurabilityCost, energyCost, processTime, outputFluid, outputCell);
+        return new PositronExtractionRecipe(meshDurabilityCost, energyCost, processTime, outputAntimatter, outputCell);
     }
 
     private static void toNetwork(RegistryFriendlyByteBuf buffer, PositronExtractionRecipe recipe) {
         buffer.writeInt(recipe.meshDurabilityCost());
         buffer.writeInt(recipe.energyCost());
         buffer.writeInt(recipe.processTime());
-        FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, recipe.outputFluid());
+        de.wutzuket.overdrive.antimatter.AntimatterStack.STREAM_CODEC.encode(buffer, recipe.outputAntimatter());
         ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, recipe.outputCell());
     }
 }

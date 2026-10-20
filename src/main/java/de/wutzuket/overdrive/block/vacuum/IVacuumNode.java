@@ -12,6 +12,16 @@ public interface IVacuumNode {
         return true;
     }
 
+    /**
+     * Volumen der Multiblock-Struktur, an der dieser Port haengt (Anzahl der Bloecke).
+     * Die Vakuum-Pumpe zaehlt diese Bloecke in ihr Volumen ein - dadurch wird z.B. der
+     * Beschleuniger-Ring genauso behandelt wie der Reaktor. Ports ohne Struktur
+     * (Pipes, Pumpe selbst) liefern 0.
+     */
+    default int getStructureVolume() {
+        return 0;
+    }
+
     /** Letzter Tick, zu dem dieser Node aktiv von einer Pumpe gespeist wurde. */
     default long getVacuumFedTick() { return 0; }
     default void setVacuumFedTick(long tick) { }

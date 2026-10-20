@@ -26,13 +26,13 @@ public class AnnihilationRecipeCategory extends FluidRecipeCategory<Annihilation
     @Override
     protected FluidIO getFluids(AnnihilationRecipe recipe) {
         List<FluidStack> inputs = new ArrayList<>();
-        if (!recipe.inputAntiproton().isEmpty()) {
-            inputs.add(recipe.inputAntiproton());
-        }
-        if (!recipe.inputPositron().isEmpty()) {
-            inputs.add(recipe.inputPositron());
-        }
+        // Die Antiprotonen und Positronen werden ueber das Antimatter-System bewegt.
         return new FluidIO(inputs, recipe.outputFluid().isEmpty() ? null : recipe.outputFluid());
+    }
+
+    @Override
+    protected AntimatterIO getAntimatters(AnnihilationRecipe recipe) {
+        return new AntimatterIO(List.of(recipe.inputAntiproton(), recipe.inputPositron()), null);
     }
 
     @Override
@@ -42,6 +42,8 @@ public class AnnihilationRecipeCategory extends FluidRecipeCategory<Annihilation
         lines.add(value("jei.overdrive.annihilation.temp", recipe.temperatureThreshold()));
         lines.add(value("jei.overdrive.fluid.time", recipe.processTime(),
                 String.format(java.util.Locale.ROOT, "%.2f", recipe.processTime() / 20.0)));
+        antimatter(recipe.inputAntiproton()).ifPresent(lines::add);
+        antimatter(recipe.inputPositron()).ifPresent(lines::add);
         return lines;
     }
 

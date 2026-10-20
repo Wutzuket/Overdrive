@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/sample_chamber"
+      "model": "overdrive:block/misc/sample_chamber"
     }
   }
 }

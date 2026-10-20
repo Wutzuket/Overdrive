@@ -13,7 +13,7 @@ import net.minecraft.world.level.material.Fluid;
 
 public class AcceleratorControllerMenu extends AbstractContainerMenu {
     private final ParticleAcceleratorControllerEntity blockEntity;
-    private final int[] data = new int[17];
+    private final int[] data = new int[19];
 
     public AcceleratorControllerMenu(int containerId, Inventory inventory, ParticleAcceleratorControllerEntity blockEntity) {
         super(ODMenuTypes.ACCELERATOR_CONTROLLER_MENU.get(), containerId);
@@ -32,9 +32,12 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
         data[11] = blockEntity.getChargeScaled();
         data[12] = blockEntity.getChargeTicksElapsed();
         data[13] = blockEntity.getChargeTicksTotal();
-        data[14] = blockEntity.getOutputFluidForDisplay().getAmount();
-        data[15] = blockEntity.getOutputFluidCapacityForDisplay();
-        data[16] = BuiltInRegistries.FLUID.getId(blockEntity.getOutputFluidForDisplay().getFluid());
+        data[14] = blockEntity.getOutputAntimatterAmountForDisplay();
+        data[15] = blockEntity.getOutputAntimatterCapacityForDisplay();
+        data[16] = blockEntity.getOutputAntimatterForDisplay() == null ? 0 : blockEntity.getOutputAntimatterForDisplay().color();
+        data[17] = typeIndex(blockEntity.getOutputAntimatterForDisplay());
+        // Produktion in mB/t, x100 als Festkomma (Brokerrechnung).
+        data[18] = (int) Math.round(blockEntity.getProductionPerTick() * 100);
         addDataSlots(new ContainerData() {
             @Override
             public int get(int index) {
@@ -53,9 +56,11 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
                     case 11 -> blockEntity.getChargeScaled();
                     case 12 -> blockEntity.getChargeTicksElapsed();
                     case 13 -> blockEntity.getChargeTicksTotal();
-                    case 14 -> blockEntity.getOutputFluidForDisplay().getAmount();
-                    case 15 -> blockEntity.getOutputFluidCapacityForDisplay();
-                    case 16 -> BuiltInRegistries.FLUID.getId(blockEntity.getOutputFluidForDisplay().getFluid());
+                    case 14 -> blockEntity.getOutputAntimatterAmountForDisplay();
+                    case 15 -> blockEntity.getOutputAntimatterCapacityForDisplay();
+                    case 16 -> blockEntity.getOutputAntimatterForDisplay() == null ? 0 : blockEntity.getOutputAntimatterForDisplay().color();
+                    case 17 -> typeIndex(blockEntity.getOutputAntimatterForDisplay());
+                    case 18 -> (int) Math.round(blockEntity.getProductionPerTick() * 100);
                     default -> 0;
                 };
             }
@@ -145,6 +150,11 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
         return Math.max(1, data[13]);
     }
 
+    /** Produktion der Maschine in mB pro Tick (z.B. 20000 -> "20 B/t"). */
+    public double getProductionPerTickSynced() {
+        return data[18] / 100.0;
+    }
+
     public boolean isHologramEnabled() {
         return data[5] == 1;
     }
@@ -169,6 +179,34 @@ public class AcceleratorControllerMenu extends AbstractContainerMenu {
 
     public int getFluidCapacitySynced() {
         return data[15];
+    }
+
+    /** @return die Farbe des Antimatters im Output (0 wenn leer). */
+    /** @return the position of the antimatter type in the list of the types, -1 when there is none. */
+    private static int typeIndex(de.wutzuket.overdrive.antimatter.Antimatter type) {
+        if (type == null) {
+            return -1;
+        }
+        return de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes().indexOf(type);
+    }
+
+    /** @return the antimatter that the accelerator currently outputs. */
+    public de.wutzuket.overdrive.antimatter.Antimatter getOutputAntimatterType() {
+        int index = data[17];
+        var types = de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes();
+        if (index < 0 || index >= types.size()) {
+            return null;
+        }
+        return types.get(index);
+    }
+
+    public int getOutputAntimatterColor() {
+        return data[16];
+    }
+
+    /** @return die Menge des Antimatters im Output. */
+    public int getOutputAmountSynced() {
+        return data[14];
     }
 
     public Fluid getOutputFluid() {

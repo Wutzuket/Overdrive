@@ -23,9 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,43 +59,6 @@ public class ADControllerBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof ADControllerEntity ctrl)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-
-        // Leerer Eimer: 1000 mB aus dem Output-Tank abfuellen.
-        if (stack.is(Items.BUCKET)) {
-            FluidTank out = ctrl.getFluidTank();
-            if (!level.isClientSide) {
-                if (out.getFluidAmount() >= 1000) {
-                    FluidStack drained = out.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-                    if (!drained.isEmpty()) {
-                        ItemStack filledBucket = new ItemStack(drained.getFluid().getBucket());
-                        if (!player.isCreative()) {
-                            stack.shrink(1);
-                        }
-                        if (!player.getInventory().add(filledBucket)) {
-                            player.drop(filledBucket, false);
-                        }
-                    }
-                }
-            }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        }
-
-        // Voller Eimer/Behaelter: 1000 mB in den Input-Tank fuellen.
-        var bucketHandler = stack.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.ITEM);
-        if (bucketHandler != null && !stack.is(Items.BUCKET)) {
-            FluidTank in = ctrl.getInputTank();
-            FluidStack bucketFluid = bucketHandler.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-            if (!bucketFluid.isEmpty() && in.isFluidValid(bucketFluid) && in.fill(bucketFluid, IFluidHandler.FluidAction.SIMULATE) >= 1000) {
-                if (!level.isClientSide) {
-                    bucketHandler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-                    in.fill(bucketFluid, IFluidHandler.FluidAction.EXECUTE);
-                    if (!player.isCreative()) {
-                        player.setItemInHand(hand, new ItemStack(Items.BUCKET));
-                    }
-                }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
         }
 
         // Creative Auto-Build

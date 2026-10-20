@@ -1,0 +1,396 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "shape": "center"
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_center"
+      }
+    },
+    {
+      "when": {
+        "shape": "straight_x"
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_straight_x"
+      }
+    },
+    {
+      "when": {
+        "shape": "straight_z"
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_straight_z"
+      }
+    },
+    {
+      "when": {
+        "shape": "straight_y"
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_straight_y"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "north": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_north"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "north": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_north"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "north": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_north"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "east": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "east": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "east": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "south": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "south": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "south": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "west": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "west": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "west": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "up": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "up": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "up": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "down": "open"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_down"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "down": "pull"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_pull_down"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "down": "push"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_arm_push_down"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "north": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_north"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "east": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_east"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "south": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_south"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "west": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_west"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "up": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_up"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "shape": "center"
+          },
+          {
+            "down": "disabled"
+          }
+        ]
+      },
+      "apply": {
+        "model": "overdrive:block/antimatter/antimatter_pipe_cap_down"
+      }
+    }
+  ]
+}

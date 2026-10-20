@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class AnnihilationControllerMenu extends AbstractContainerMenu {
     private final AnnihilationControllerEntity be;
-    private final int[] data = new int[29];
+    private final int[] data = new int[31];
 
     public AnnihilationControllerMenu(int id, Inventory inv, AnnihilationControllerEntity be){
         super(ODMenuTypes.ANNIHILATION_CONTROLLER_MENU.get(), id);
@@ -39,17 +39,19 @@ public class AnnihilationControllerMenu extends AbstractContainerMenu {
                     case 15 -> be.getLastSteamPorts();
                     case 16 -> be.getLastEnergyPorts();
                     case 17 -> be.getLastHeavy();
-                    case 18 -> be.getFuelAntiprotonStack().getAmount();
-                    case 19 -> be.getFuelPositronStack().getAmount();
+                    case 18 -> be.getFuelAntiprotonStack().amount();
+                    case 19 -> be.getFuelPositronStack().amount();
                     case 20 -> be.getIdleCode();
                     case 21 -> fluidId(be.getCoolantStack());
                     case 22 -> fluidId(be.getSteamStack());
-                    case 23 -> fluidId(be.getFuelAntiprotonStack());
-                    case 24 -> fluidId(be.getFuelPositronStack());
+                    case 23 -> antimatterColor(be.getFuelAntiprotonStack());
+                    case 24 -> antimatterColor(be.getFuelPositronStack());
                     case 25 -> (int)(be.getLastGenerationLong() & 0xFFFFFFFFL);
                     case 26 -> be.getFuelAntiprotonCapacity();
                     case 27 -> be.getFuelPositronCapacity();
                     case 28 -> (int)(be.getLastGenerationLong() >>> 32);
+                    case 29 -> antimatterTypeIndex(be.getFuelAntiprotonStack());
+                    case 30 -> antimatterTypeIndex(be.getFuelPositronStack());
                     default -> 0;
                 };
             }
@@ -92,6 +94,38 @@ public class AnnihilationControllerMenu extends AbstractContainerMenu {
     public int getFuelAntiprotonCap(){ return data[26] > 0 ? data[26] : getFuelCap(); }
     public int getFuelPositronCap(){ return data[27] > 0 ? data[27] : getFuelCap(); }
 
+    /** @return die Farbe des Antimatters (0 wenn leer). */
+    /** @return the position of the type of antimatter in the list of the types, -1 when there is none. */
+    private static int antimatterTypeIndex(de.wutzuket.overdrive.antimatter.AntimatterStack stack) {
+        if (stack == null || stack.type() == null) {
+            return -1;
+        }
+        return de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes().indexOf(stack.type());
+    }
+
+    /** @return the type of antimatter that is shown in the gauge, null when there is none. */
+    private de.wutzuket.overdrive.antimatter.Antimatter antimatterType(int index) {
+        var types = de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes();
+        if (index < 0 || index >= types.size()) {
+            return null;
+        }
+        return types.get(index);
+    }
+
+    /** @return the antimatter in the gauge of the antiprotons. */
+    public de.wutzuket.overdrive.antimatter.Antimatter getFuelAntiprotonType() {
+        return antimatterType(data[29]);
+    }
+
+    /** @return the antimatter in the gauge of the positrons. */
+    public de.wutzuket.overdrive.antimatter.Antimatter getFuelPositronType() {
+        return antimatterType(data[30]);
+    }
+
+    private static int antimatterColor(de.wutzuket.overdrive.antimatter.AntimatterStack stack){
+        return stack == null || stack.type() == null ? 0 : stack.type().color();
+    }
+
     private static int fluidId(net.neoforged.neoforge.fluids.FluidStack stack){
         if(stack.isEmpty()) return -1;
         return net.minecraft.core.registries.BuiltInRegistries.FLUID.getId(stack.getFluid());
@@ -104,8 +138,21 @@ public class AnnihilationControllerMenu extends AbstractContainerMenu {
     }
     public net.neoforged.neoforge.fluids.FluidStack getCoolantFluidStack(){ return stackById(data[21], data[4]); }
     public net.neoforged.neoforge.fluids.FluidStack getSteamFluidStack(){ return stackById(data[22], data[6]); }
-    public net.neoforged.neoforge.fluids.FluidStack getFuelAntiprotonFluidStack(){ return stackById(data[23], data[18]); }
-    public net.neoforged.neoforge.fluids.FluidStack getFuelPositronFluidStack(){ return stackById(data[24], data[19]); }
+    /** @return die Farbe des Antimatters in den Cell-Ports (0 wenn keiner da ist). */
+    public int getFuelAntiprotonColor(){ return data[23]; }
+    public int getFuelPositronColor(){ return data[24]; }
+
+    /** @return der Name des Antimatters in den Cell-Ports (leer, wenn keiner da ist). */
+    public String getFuelAntiprotonName(){ return typeName(data[29]); }
+    public String getFuelPositronName(){ return typeName(data[30]); }
+
+    /** @return the name of the type of antimatter, empty when there is none. */
+    private static String typeName(int index){
+        if(index < 0) return "";
+        var types = de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes();
+        if(index >= types.size()) return "";
+        return types.get(index).displayName().getString();
+    }
     public int getGenerationSynced(){ return data[25]; }
     public static String fluidName(net.neoforged.neoforge.fluids.FluidStack stack, String fallback){
         if(stack.isEmpty()) return fallback;

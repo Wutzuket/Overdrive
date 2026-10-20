@@ -89,7 +89,25 @@ protected static final int PANEL_PAD_BOTTOM = 10;
         }
     }
 
-    private record PlacedSlot(int x, FluidStack fluid, boolean input, int color) {
+    /** Antimatter-Seiten eines Rezepts; leere Stapel werden nicht angezeigt. */
+    public record AntimatterIO(List<de.wutzuket.overdrive.antimatter.AntimatterStack> inputs,
+                               @Nullable de.wutzuket.overdrive.antimatter.AntimatterStack output) {
+        public AntimatterIO {
+            inputs = List.copyOf(inputs);
+        }
+
+        public static AntimatterIO of(@Nullable de.wutzuket.overdrive.antimatter.AntimatterStack input,
+                                      @Nullable de.wutzuket.overdrive.antimatter.AntimatterStack output) {
+            List<de.wutzuket.overdrive.antimatter.AntimatterStack> inputs =
+                    input == null || input.isEmpty() || input.type() == null ? List.of() : List.of(input);
+            return new AntimatterIO(inputs, output);
+        }
+    }
+
+    /** Ein Slot der Rezept-Ansicht: entweder ein Fluid oder ein Antimatter. */
+    private record PlacedSlot(int x, @Nullable FluidStack fluid,
+                              @Nullable de.wutzuket.overdrive.antimatter.AntimatterStack antimatter,
+                              boolean input, int color) {
     }
 
     /** Eine geumbrochene Textzeile im Kennzahlen-Panel. */
@@ -142,6 +160,11 @@ protected static final int PANEL_PAD_BOTTOM = 10;
     /** Fluid-Seiten dieses Rezepts. */
     protected abstract FluidIO getFluids(T recipe);
 
+    /** Antimatter-Seiten dieses Rezepts. */
+    protected AntimatterIO getAntimatters(T recipe) {
+        return new AntimatterIO(List.of(), null);
+    }
+
     /** Kennzahlen-Zeilen fuer das Panel. */
     protected abstract List<InfoLine> getInfoLines(T recipe);
 
@@ -152,10 +175,19 @@ protected static final int PANEL_PAD_BOTTOM = 10;
 
     @Override
     public final void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull T recipe, @NotNull IFocusGroup focuses) {
-        FluidIO io = getFluids(recipe);
-        for (PlacedSlot slot : layout(io)) {
-            builder.addSlot(slot.input() ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT, slot.x(), SLOT_Y)
-                    .addFluidStack(slot.fluid().getFluid(), slot.fluid().getAmount(), DataComponentPatch.EMPTY);
+        for (PlacedSlot slot : layout(getFluids(recipe), getAntimatters(recipe))) {
+            if (slot.fluid() != null) {
+                builder.addSlot(slot.input() ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT, slot.x(), SLOT_Y)
+                        .addFluidStack(slot.fluid().getFluid(), slot.fluid().getAmount(), DataComponentPatch.EMPTY);
+            } else if (slot.antimatter() != null) {
+                builder.addSlot(slot.input() ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT, slot.x(), SLOT_Y)
+                        .addIngredient(AntimatterIngredientType.INSTANCE, slot.antimatter())
+                        .setCustomRenderer(AntimatterIngredientType.INSTANCE, AntimatterIngredientRenderer.INSTANCE)
+                        .addRichTooltipCallback((view, tooltip) -> {
+                            tooltip.add(slot.antimatter().type().displayName());
+                            tooltip.add(Component.literal(ODFormat.formatFluid(slot.antimatter().amount())));
+                        });
+            }
         }
         addExtraSlots(builder, recipe);
         for (ItemLike catalyst : getCatalysts()) {
@@ -197,8 +229,7 @@ protected static final int PANEL_PAD_BOTTOM = 10;
             y += LINE_HEIGHT;
         }
 
-        FluidIO io = getFluids(recipe);
-        List<PlacedSlot> slots = layout(io);
+        List<PlacedSlot> slots = layout(getFluids(recipe), getAntimatters(recipe));
         int firstInput = -1;
         int outputX = -1;
         for (PlacedSlot slot : slots) {
@@ -222,23 +253,38 @@ protected static final int PANEL_PAD_BOTTOM = 10;
                     COL_LABEL, false);
         }
         for (PlacedSlot slot : slots) {
-            graphics.drawString(font, Component.literal(ODFormat.formatFluid(slot.fluid().getAmount())),
+            int amount = slot.fluid() != null ? slot.fluid().getAmount() : slot.antimatter().amount();
+            graphics.drawString(font, Component.literal(ODFormat.formatFluid(amount)),
                     slot.x(), SLOT_Y + SLOT_SIZE + 3, slot.color(), false);
         }
     }
 
-    /** Zentriert die Fluid-Slots: Eingaben links, Ausgabe mit grossem Abstand rechts. */
-    private static List<PlacedSlot> layout(FluidIO io) {
-        List<FluidStack> inputs = new ArrayList<>();
-        for (FluidStack stack : io.inputs()) {
+    /**
+     * Zentriert die Slots: Eingaben (Fluids und Antimatter) links, Ausgaben mit grossem Abstand
+     * rechts. Fluid- und Antimatter-Slots teilen sich dabei dieselbe Reihe.
+     */
+    private static List<PlacedSlot> layout(FluidIO fluids, AntimatterIO antimatters) {
+        List<FluidStack> fluidInputs = new ArrayList<>();
+        for (FluidStack stack : fluids.inputs()) {
             if (stack != null && !stack.isEmpty()) {
-                inputs.add(stack);
+                fluidInputs.add(stack);
             }
         }
-        FluidStack output = io.output() != null && !io.output().isEmpty() ? io.output() : null;
+        FluidStack fluidOutput = fluids.output() != null && !fluids.output().isEmpty() ? fluids.output() : null;
 
-        int count = inputs.size() + (output != null ? 1 : 0);
-        if (count == 0) {
+        List<de.wutzuket.overdrive.antimatter.AntimatterStack> antimatterInputs = new ArrayList<>();
+        for (de.wutzuket.overdrive.antimatter.AntimatterStack stack : antimatters.inputs()) {
+            if (stack != null && !stack.isEmpty() && stack.type() != null) {
+                antimatterInputs.add(stack);
+            }
+        }
+        de.wutzuket.overdrive.antimatter.AntimatterStack antimatterOutput =
+                antimatters.output() != null && !antimatters.output().isEmpty() && antimatters.output().type() != null
+                        ? antimatters.output() : null;
+
+        int inputCount = fluidInputs.size() + antimatterInputs.size();
+        int outputCount = (fluidOutput != null ? 1 : 0) + (antimatterOutput != null ? 1 : 0);
+        if (inputCount + outputCount == 0) {
             return List.of();
         }
 
@@ -246,32 +292,69 @@ protected static final int PANEL_PAD_BOTTOM = 10;
         // Texte unter den Slots ineinander (z.B. zwei 10-mB-Eingaben im Reaktor).
         Font font = Minecraft.getInstance().font;
         int pitch = SLOT_SIZE + SLOT_GAP;
-        for (FluidStack stack : inputs) {
+        for (FluidStack stack : fluidInputs) {
             pitch = Math.max(pitch, font.width(ODFormat.formatFluid(stack.getAmount())) + 6);
         }
-        if (output != null) {
-            pitch = Math.max(pitch, font.width(ODFormat.formatFluid(output.getAmount())) + 6);
+        for (de.wutzuket.overdrive.antimatter.AntimatterStack stack : antimatterInputs) {
+            pitch = Math.max(pitch, font.width(ODFormat.formatFluid(stack.amount())) + 6);
+        }
+        if (fluidOutput != null) {
+            pitch = Math.max(pitch, font.width(ODFormat.formatFluid(fluidOutput.getAmount())) + 6);
+        }
+        if (antimatterOutput != null) {
+            pitch = Math.max(pitch, font.width(ODFormat.formatFluid(antimatterOutput.amount())) + 6);
         }
 
-        int lastInput = inputs.isEmpty() ? 0 : (inputs.size() - 1) * pitch;
+        int lastInput = (inputCount - 1) * pitch;
         int outGap = Math.max(IN_OUT_GAP, pitch);
-        int rowWidth = lastInput + SLOT_SIZE + (output != null ? outGap : 0);
-        int startX = (WIDTH - rowWidth) / 2;
+        int outPitch = SLOT_SIZE + SLOT_GAP;
+        int rowWidth = lastInput + SLOT_SIZE + (outputCount > 0 ? outGap + (outputCount - 1) * outPitch + SLOT_SIZE : 0);
+        int startX = Math.max(0, (WIDTH - rowWidth) / 2);
 
-        List<PlacedSlot> placed = new ArrayList<>(count);
-        for (int i = 0; i < inputs.size(); i++) {
-            placed.add(new PlacedSlot(startX + i * pitch, inputs.get(i), true, COL_CYAN));
+        List<PlacedSlot> placed = new ArrayList<>(inputCount + outputCount);
+        int index = 0;
+        for (FluidStack stack : fluidInputs) {
+            placed.add(new PlacedSlot(startX + index * pitch, stack, null, true, COL_CYAN));
+            index++;
         }
-        if (output != null) {
-            int outX = inputs.isEmpty() ? (WIDTH - SLOT_SIZE) / 2 : startX + lastInput + outGap;
-            placed.add(new PlacedSlot(outX, output, false, COL_GREEN));
+        for (de.wutzuket.overdrive.antimatter.AntimatterStack stack : antimatterInputs) {
+            placed.add(new PlacedSlot(startX + index * pitch, null, stack, true, COL_CYAN));
+            index++;
+        }
+        int outX = inputCount == 0 ? (WIDTH - SLOT_SIZE) / 2 : startX + lastInput + outGap;
+        if (fluidOutput != null) {
+            placed.add(new PlacedSlot(outX, fluidOutput, null, false, COL_GREEN));
+            outX += outPitch;
+        }
+        if (antimatterOutput != null) {
+            placed.add(new PlacedSlot(outX, null, antimatterOutput, false, COL_GREEN));
         }
         return placed;
     }
-
-    /** Zeile "Wert" mit neutraler Farbe. */
-    protected static InfoLine value(String key, Object... args) {
+    /** Zentriert die Fluid-Slots: Eingaben links, Ausgabe mit grossem Abstand rechts. */
+    /** Zeile "Wert" mit neutraler Farbe. */    protected static InfoLine value(String key, Object... args) {
         return InfoLine.value(Component.translatable(key, args));
+    }
+
+    /**
+     * Zeile mit dem Antimatter-Typ, zu dem der Stack gehoert. Die Antiprotonen und Positronen
+     * werden im Spiel ueber das Antimatter-System bewegt, deshalb wird der Typ mit angezeigt.
+     */
+    protected static java.util.Optional<InfoLine> antimatter(de.wutzuket.overdrive.antimatter.AntimatterStack stack) {
+        if (stack == null || stack.isEmpty() || stack.type() == null) {
+            return java.util.Optional.empty();
+        }
+        return java.util.Optional.of(line(Component.translatable("jei.overdrive.antimatter.type",
+                stack.type().displayName(), ODFormat.formatFluid(stack.amount())), COL_CYAN));
+    }
+
+    /**
+     * Zeile mit der Produktion pro Tick (z.B. 20000 mB/t -> "20 B/t").
+     * Wird von allen Kategorien genutzt, die etwas herstellen.
+     */
+    protected static InfoLine production(double mbPerTick) {
+        return InfoLine.value(Component.translatable("jei.overdrive.fluid.production",
+                ODFormat.formatFluidPerTick(mbPerTick)));
     }
 
     /** Zeile fuer Energie-/Kostenangaben. */

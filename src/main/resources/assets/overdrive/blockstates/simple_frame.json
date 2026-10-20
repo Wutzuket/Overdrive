@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "overdrive:block/simple_frame" }
+    "": { "model": "overdrive:block/misc/simple_frame" }
   }
 }

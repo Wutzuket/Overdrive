@@ -149,9 +149,16 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (burnRateField != null && burnRateField.isFocused() && (keyCode == 257 || keyCode == 335)) {
-            submitBurnRate();
-            return true;
+        if (burnRateField != null && burnRateField.isFocused()) {
+            if (keyCode == 257 || keyCode == 335) {
+                submitBurnRate();
+                return true;
+            }
+            // Inventar-Taste (E) schlucken, solange das Textfeld aktiv ist - sonst
+            // schliesst sich der Screen, wenn man die Burn-Rate eintippt.
+            if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -176,6 +183,11 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
         GuiStyle.fluidGauge(g, font, stack, capacity, x, y, GAUGE_W, GAUGE_H, label);
     }
 
+    private void drawAntimatterGauge(GuiGraphics g, de.wutzuket.overdrive.antimatter.Antimatter type,
+                                     int amount, int capacity, int x, int y, String label) {
+        GuiStyle.antimatterGauge(g, font, type, amount, capacity, x, y, GAUGE_W, GAUGE_H, label);
+    }
+
     private void drawMetricGauge(GuiGraphics g, int x, int y, float percent, int color, String label) {
         GuiStyle.metricGauge(g, font, x, y, GAUGE_W, GAUGE_H, percent, color, label);
     }
@@ -187,8 +199,10 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
         drawMekaBg(g, x, y);
 
         int gaugeY = y + 22;
-        drawFluidGauge(g, menu.getFuelPositronFluidStack(), menu.getFuelPositronCap(), x + 10, gaugeY, "P");
-        drawFluidGauge(g, menu.getFuelAntiprotonFluidStack(), menu.getFuelAntiprotonCap(), x + 30, gaugeY, "A");
+        drawAntimatterGauge(g, menu.getFuelPositronType(), menu.getFuelPositronSynced(),
+                menu.getFuelPositronCap(), x + 10, gaugeY, "P");
+        drawAntimatterGauge(g, menu.getFuelAntiprotonType(), menu.getFuelAntiprotonSynced(),
+                menu.getFuelAntiprotonCap(), x + 30, gaugeY, "A");
         drawFluidGauge(g, menu.getCoolantFluidStack(), menu.getCoolantCap(), x + 50, gaugeY, "C");
         drawMetricGauge(g, x + 70, gaugeY, menu.getVacuum() / 100.0f, COL_CYAN, "V");
 
@@ -253,9 +267,9 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
                             dispTemp() > AnnihilationControllerEntity.CORE_TEMP_MAX - 200 ? COL_RED : COL_YELLOW));
         } else if (currentTab == 1) {
             drawRows(g, panelX, panelY,
-                    new Row(AnnihilationControllerMenu.fluidName(menu.getFuelAntiprotonFluidStack(), "Antiproton"),
+                    new Row(menu.getFuelAntiprotonName().isEmpty() ? "Antiproton" : menu.getFuelAntiprotonName(),
                             ODFormat.formatFluidPair(menu.getFuelAntiprotonSynced(), menu.getFuelAntiprotonCap()), COL_TEXT),
-                    new Row(AnnihilationControllerMenu.fluidName(menu.getFuelPositronFluidStack(), "Positron"),
+                    new Row(menu.getFuelPositronName().isEmpty() ? "Positron" : menu.getFuelPositronName(),
                             ODFormat.formatFluidPair(menu.getFuelPositronSynced(), menu.getFuelPositronCap()), COL_TEXT));
             g.drawString(font, "Burn rate", 13, HEIGHT - 69, COL_TEXT_DIM, false);
         } else if (currentTab == 2) {
@@ -327,11 +341,11 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
         int gaugeY = y + 22;
 
         if (in(mouseX, mouseY, x + 10, gaugeY, GAUGE_W, GAUGE_H)) {
-            renderFluidTooltip(g, menu.getFuelPositronFluidStack(), menu.getFuelPositronSynced(), menu.getFuelPositronCap(), "Empty", mouseX, mouseY);
+            renderAntimatterTooltip(g, menu.getFuelPositronName(), menu.getFuelPositronSynced(), menu.getFuelPositronCap(), mouseX, mouseY);
             return;
         }
         if (in(mouseX, mouseY, x + 30, gaugeY, GAUGE_W, GAUGE_H)) {
-            renderFluidTooltip(g, menu.getFuelAntiprotonFluidStack(), menu.getFuelAntiprotonSynced(), menu.getFuelAntiprotonCap(), "Empty", mouseX, mouseY);
+            renderAntimatterTooltip(g, menu.getFuelAntiprotonName(), menu.getFuelAntiprotonSynced(), menu.getFuelAntiprotonCap(), mouseX, mouseY);
             return;
         }
         if (in(mouseX, mouseY, x + 50, gaugeY, GAUGE_W, GAUGE_H)) {
@@ -355,6 +369,11 @@ public class AnnihilationControllerScreen extends AbstractContainerScreen<Annihi
             return;
         }
         super.renderTooltip(g, mouseX, mouseY);
+    }
+
+    private void renderAntimatterTooltip(GuiGraphics g, String name, int amount, int capacity, int mouseX, int mouseY) {
+        Component title = name == null || name.isEmpty() ? Component.literal("Empty") : Component.literal(name);
+        g.renderTooltip(font, List.of(title, Component.literal(ODFormat.formatFluidPair(amount, capacity))), java.util.Optional.empty(), mouseX, mouseY);
     }
 
     private void renderFluidTooltip(GuiGraphics g, FluidStack stack, int amount, int capacity, String fallback, int mouseX, int mouseY) {

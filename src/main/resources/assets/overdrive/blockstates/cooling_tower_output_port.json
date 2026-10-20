@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "overdrive:block/cooling_tower_output_port"
+      "model": "overdrive:block/cooling_tower/cooling_tower_output_port"
     }
   }
 }

@@ -12,12 +12,29 @@ The antimatter systems provide advanced processing for antiprotons, positrons
 and related fluids. The accelerator and supporting extraction systems prepare
 the inputs used by the annihilation generator.
 
+## Antimatter transport and storage
+
+Antimatter itself is transported and stored with a completely custom system
+that is independent from Minecraft's fluids: transparent pipes with a per side
+configuration, a dedicated tank and cells that are filled through the tank gui.
+See [Antimatter Transport and Storage](Antimatter-Transport) for the details.
+
 ## Annihilation generator
 
 The annihilation generator combines antimatter inputs with coolant to produce
 energy and processed fluids. Its burn rate and temperature behavior can be
 configured in the common Overdrive configuration. Provide reliable coolant
 processing and monitor the reactor temperature when increasing the burn rate.
+
+## Vacuum pump
+
+The vacuum pump evacuates a vacuum network of pipes. The volume of the network
+consists of the pump structure, the pipes and the blocks of every multiblock
+that is connected to it (particle accelerator, AD ring, ELENA ring, annihilation
+reactor, tungsten machine). The bigger the volume, the longer the pump needs
+to evacuate it and the more energy it consumes per tick. The consumption can be
+scaled linearly or exponentially in the common configuration, see
+[Configuration](Configuration).
 
 ## Cooling tower
 

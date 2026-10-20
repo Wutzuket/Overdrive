@@ -1,6 +1,0 @@
-{
-  "parent": "overdrive:block/annihilation_heavy_casing",
-  "textures": {
-    "north": "overdrive:block/annihilation_controller"
-  }
-}

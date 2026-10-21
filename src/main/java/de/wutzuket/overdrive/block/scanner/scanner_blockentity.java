@@ -2,6 +2,7 @@ package de.wutzuket.overdrive.block.scanner;
 
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_match;
+import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,7 +67,10 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
             blockEntity.animationTicks++;
             if (blockEntity.animationTicks >= HOLD_DURATION && level instanceof ServerLevel serverLevel) {
                 if (blockEntity.matchedRecipeId != null) {
-                    scanner_recipe_manager.INSTANCE.getRecipe(blockEntity.matchedRecipeId).consume(serverLevel, pos, state, blockEntity.matchedFacing == null ? state.getValue(BlockStateProperties.FACING) : blockEntity.matchedFacing, blockEntity.matchedMirrored);
+                    scanner_recipe recipe = scanner_recipe_manager.getRecipe(level, blockEntity.matchedRecipeId);
+                    if (recipe != null) {
+                        recipe.consume(serverLevel, pos, state, blockEntity.matchedFacing == null ? state.getValue(BlockStateProperties.FACING) : blockEntity.matchedFacing, blockEntity.matchedMirrored);
+                    }
                 }
                 blockEntity.waitingToDrop = false;
                 blockEntity.consumed = true;
@@ -86,8 +90,8 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
             return;
         }
 
-        scanner_match match = scanner_recipe_manager.INSTANCE.findMatch(level, pos, state);
-        ResourceLocation newRecipeId = match == null ? null : match.recipe().id();
+        scanner_match match = scanner_recipe_manager.findMatch(level, pos, state);
+        ResourceLocation newRecipeId = match == null ? null : match.id();
         ResourceLocation newResultId = match == null ? null : match.recipe().resultId();
         int newResultCount = match == null ? 0 : match.recipe().resultCount();
         Direction newFacing = match == null ? null : match.facing();

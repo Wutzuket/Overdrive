@@ -21,7 +21,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -36,7 +35,6 @@ import de.wutzuket.overdrive.block.antimatter.AntimatterPipeRenderer;
 import de.wutzuket.overdrive.block.hologram.HologramBlockRenderer;
 import de.wutzuket.overdrive.block.vacuum.VacuumPumpRenderer;
 import de.wutzuket.overdrive.block.scanner.scanner_renderer;
-import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
 import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.fluid.ODFluidBlocks;
 import de.wutzuket.overdrive.fluid.ODFluidTypes;
@@ -120,8 +118,6 @@ public class Overdrive {
                 }
             }
         });
-        NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) ->
-                event.addListener(scanner_recipe_manager.INSTANCE));
 
         modEventBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
             PayloadRegistrar registrar = event.registrar(MODID);

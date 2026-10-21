@@ -1,31 +1,24 @@
 package de.wutzuket.overdrive.block.scanner.recipe;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mojang.logging.LogUtils;
+import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Collection;
 
-public class scanner_recipe_manager extends SimpleJsonResourceReloadListener {
+/**
+ * Zugriff auf die Scanner-Rezepte. Die Rezepte liegen als normale
+ * Vanilla-Rezepte mit dem Typ {@code overdrive:scanner} in den Datenpacks und
+ * werden dadurch nur passend zum Rezepttyp geladen.
+ */
+public final class scanner_recipe_manager {
     private static final Direction[] HORIZONTAL_FACINGS = new Direction[] {
             Direction.NORTH,
             Direction.EAST,
@@ -33,61 +26,52 @@ public class scanner_recipe_manager extends SimpleJsonResourceReloadListener {
             Direction.WEST
     };
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    private static final Logger LOGGER = LogUtils.getLogger();
-    private static final String FOLDER = "recipe";
-
-    public static final scanner_recipe_manager INSTANCE = new scanner_recipe_manager();
-
-    private Map<ResourceLocation, scanner_recipe> recipes = Map.of();
-
     private scanner_recipe_manager() {
-        super(GSON, FOLDER);
     }
 
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceList, ResourceManager resourceManager, ProfilerFiller profiler) {
-        Map<ResourceLocation, scanner_recipe> loadedRecipes = new LinkedHashMap<>();
-        List<Map.Entry<ResourceLocation, JsonElement>> entries = new ArrayList<>(resourceList.entrySet());
-        entries.sort(Map.Entry.comparingByKey(Comparator.comparing(ResourceLocation::toString)));
-
-        for (Map.Entry<ResourceLocation, JsonElement> entry : entries) {
-            ResourceLocation id = entry.getKey();
-            try {
-                JsonObject json = GsonHelper.convertToJsonObject(entry.getValue(), "scanner recipe");
-                scanner_recipe recipe = scanner_recipe.fromJson(id, json);
-                loadedRecipes.put(id, recipe);
-            } catch (RuntimeException exception) {
-                LOGGER.error("Failed to parse scanner recipe {} from data pack", id, exception);
-            }
+    /**
+     * Alle Scanner-Rezepte der Welt.
+     */
+    public static @NotNull List<scanner_recipe> getRecipes(@NotNull Level level) {
+        List<scanner_recipe> recipes = new ArrayList<>();
+        for (RecipeHolder<scanner_recipe> holder : getRecipeHolders(level)) {
+            recipes.add(holder.value());
         }
-
-        this.recipes = Collections.unmodifiableMap(new LinkedHashMap<>(loadedRecipes));
+        return recipes;
     }
 
-    public scanner_match findMatch(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState) {
-        for (scanner_recipe recipe : recipes.values()) {
-            for (Direction facing : HORIZONTAL_FACINGS) {
-                if (recipe.matches(level, scannerPos, scannerState, facing)) {
-                    return new scanner_match(recipe, facing, false);
-                }
-                if (recipe.acceptMirrored() && recipe.matches(level, scannerPos, scannerState, facing, true)) {
-                    return new scanner_match(recipe, facing, true);
-                }
-            }
-        }
-        return null;
+    /**
+     * Alle Scanner-Rezepte der Welt als Holder.
+     */
+    public static @NotNull List<RecipeHolder<scanner_recipe>> getRecipeHolders(@NotNull Level level) {
+        return level.getRecipeManager().getAllRecipesFor(ODRecipeTypes.SCANNER.get());
     }
 
-    public scanner_recipe getRecipe(@NotNull ResourceLocation id) {
-        scanner_recipe recipe = recipes.get(id);
-        if (recipe == null) {
-            throw new IllegalStateException("Unknown scanner recipe: " + id);
+    /**
+     * Ein Scanner-Rezept anhand seiner ID. Liefert {@code null}, wenn es kein
+     * Scanner-Rezept mit dieser ID gibt.
+     */
+    public static @Nullable scanner_recipe getRecipe(@NotNull Level level, @NotNull ResourceLocation id) {
+        RecipeHolder<?> holder = level.getRecipeManager().byKey(id).orElse(null);
+        if (holder == null || !(holder.value() instanceof scanner_recipe recipe)) {
+            return null;
         }
         return recipe;
     }
 
-    public Collection<scanner_recipe> getRecipes() {
-        return recipes.values();
+    public static @Nullable scanner_match findMatch(@NotNull Level level, @NotNull BlockPos scannerPos,
+                                                    @NotNull BlockState scannerState) {
+        for (RecipeHolder<scanner_recipe> holder : getRecipeHolders(level)) {
+            scanner_recipe recipe = holder.value();
+            for (Direction facing : HORIZONTAL_FACINGS) {
+                if (recipe.matches(level, scannerPos, scannerState, facing, false)) {
+                    return new scanner_match(holder.id(), recipe, facing, false);
+                }
+                if (recipe.acceptMirrored() && recipe.matches(level, scannerPos, scannerState, facing, true)) {
+                    return new scanner_match(holder.id(), recipe, facing, true);
+                }
+            }
+        }
+        return null;
     }
 }

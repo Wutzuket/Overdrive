@@ -1,59 +1,69 @@
 package de.wutzuket.overdrive.block.scanner.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import de.wutzuket.overdrive.recipe.ODRecipeSerializers;
+import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
-public final class scanner_recipe {
-    private final ResourceLocation id;
-    private final ResourceLocation resultId;
-    private final int resultCount;
+/**
+ * Ein Scanner-Rezept. Der Rezepttyp lautet {@code overdrive:scanner}, die Dateien
+ * liegen unter {@code data/overdrive/recipe/scanner/}.
+ */
+public final class scanner_recipe implements Recipe<RecipeInput> {
+    private final scanner_result result;
     private final int energy;
     private final boolean acceptMirrored;
+    private final boolean showNotification;
     private final Map<String, scanner_block_matcher> key;
     private final String[][][] pattern;
 
-    public scanner_recipe(ResourceLocation id, ResourceLocation resultId, int resultCount, int energy, boolean acceptMirrored,
+    public scanner_recipe(scanner_result result, int energy, boolean acceptMirrored, boolean showNotification,
                           Map<String, scanner_block_matcher> key, String[][][] pattern) {
-        this.id = id;
-        this.resultId = resultId;
-        this.resultCount = resultCount;
+        this.result = result;
         this.energy = energy;
         this.acceptMirrored = acceptMirrored;
-        this.key = key;
+        this.showNotification = showNotification;
+        this.key = new TreeMap<>(key);
         this.pattern = pattern;
     }
 
-    public ResourceLocation id() {
-        return id;
+    public scanner_result result() {
+        return result;
     }
 
     public ResourceLocation resultId() {
-        return resultId;
+        return result.id();
     }
 
     public int resultCount() {
-        return resultCount;
+        return result.count();
     }
 
     public int energy() {
@@ -84,14 +94,21 @@ public final class scanner_recipe {
         String symbol = symbolAt(layer, row, col);
         scanner_block_matcher matcher = key.get(symbol);
         if (matcher == null) {
-            throw new IllegalStateException("Unknown scanner recipe symbol '" + symbol + "' in recipe " + id);
+            throw new IllegalStateException("Unknown scanner recipe symbol '" + symbol + "'");
         }
         return matcher;
     }
 
     public ItemStack getResultStack() {
-        return new ItemStack(BuiltInRegistries.ITEM.getOptional(resultId).orElseThrow(() ->
-                new IllegalStateException("Unknown scanner result item: " + resultId)), resultCount);
+        return getResultStack(null);
+    }
+
+    public ItemStack getResultStack(@Nullable HolderLookup.Provider registries) {
+        Item item = resolveResultItem(registries);
+        if (item == null) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(item, result.count());
     }
 
     public List<ItemStack> getPreviewIngredientStacks() {
@@ -159,54 +176,39 @@ public final class scanner_recipe {
         );
     }
 
-    public static scanner_recipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
-        String type = GsonHelper.getAsString(json, "type", "overdrive:scanner");
-        if (!type.equals("overdrive:scanner")) {
-            throw new IllegalArgumentException("Unsupported scanner recipe type: " + type);
-        }
-
-        JsonObject resultObject = GsonHelper.getAsJsonObject(json, "result");
-        ResourceLocation resultId = ResourceLocation.parse(GsonHelper.getAsString(resultObject, "id"));
-        int resultCount = GsonHelper.getAsInt(resultObject, "count", 1);
-        int energy = GsonHelper.getAsInt(json, "energy", 0);
-        boolean acceptMirrored = GsonHelper.getAsBoolean(json, "accept_mirrored", true);
-        Map<String, scanner_block_matcher> key = parseKey(GsonHelper.getAsJsonObject(json, "key"));
-        String[][][] pattern = parsePattern(GsonHelper.getAsJsonArray(json, "pattern"));
-        return new scanner_recipe(id, resultId, resultCount, energy, acceptMirrored, key, pattern);
+    @Override
+    public boolean matches(@NotNull RecipeInput input, @NotNull Level level) {
+        return true;
     }
 
-    private static Map<String, scanner_block_matcher> parseKey(JsonObject keyJson) {
-        Map<String, scanner_block_matcher> key = new HashMap<>();
-        for (String symbol : keyJson.keySet()) {
-            key.put(symbol, scanner_block_matcher.parse(keyJson.get(symbol)));
-        }
-        return key;
+    @Override
+    public @NotNull ItemStack assemble(@NotNull RecipeInput input, @NotNull HolderLookup.Provider registries) {
+        return getResultStack(registries);
     }
 
-    private static String[][][] parsePattern(JsonArray patternJson) {
-        if (patternJson.size() != 3) {
-            throw new IllegalArgumentException("Scanner pattern must contain exactly 3 layers");
-        }
+    @Override
+    public boolean canCraftInDimensions(int width, int height) {
+        return true;
+    }
 
-        String[][][] pattern = new String[3][3][3];
-        for (int layer = 0; layer < 3; layer++) {
-            JsonArray rows = patternJson.get(layer).getAsJsonArray();
-            if (rows.size() != 3) {
-                throw new IllegalArgumentException("Scanner pattern layer " + layer + " must contain exactly 3 rows");
-            }
+    @Override
+    public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider registries) {
+        return getResultStack(registries);
+    }
 
-            for (int row = 0; row < 3; row++) {
-                String rowString = GsonHelper.convertToString(rows.get(row), "pattern[" + layer + "][" + row + "]");
-                if (rowString.length() != 3) {
-                    throw new IllegalArgumentException("Scanner pattern row " + layer + ":" + row + " must be exactly 3 characters long");
-                }
+    @Override
+    public boolean showNotification() {
+        return showNotification;
+    }
 
-                for (int col = 0; col < 3; col++) {
-                    pattern[layer][row][col] = String.valueOf(rowString.charAt(col));
-                }
-            }
-        }
-        return pattern;
+    @Override
+    public @NotNull RecipeSerializer<?> getSerializer() {
+        return ODRecipeSerializers.SCANNER_SERIALIZER.get();
+    }
+
+    @Override
+    public @NotNull RecipeType<?> getType() {
+        return ODRecipeTypes.SCANNER.get();
     }
 
     public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState) {
@@ -237,7 +239,7 @@ public final class scanner_recipe {
                     String symbol = pattern[layer][row][col];
                     scanner_block_matcher matcher = key.get(symbol);
                     if (matcher == null) {
-                        throw new IllegalStateException("Unknown scanner recipe symbol '" + symbol + "' in recipe " + id);
+                        throw new IllegalStateException("Unknown scanner recipe symbol '" + symbol + "'");
                     }
 
                     BlockPos target = getCellPos(scannerPos, scannerState, layer, row, col, mirrored, facing);
@@ -254,11 +256,28 @@ public final class scanner_recipe {
 
     public void consume(@NotNull ServerLevel level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, @NotNull Direction facing, boolean mirrored) {
         ItemStack output = getResultStack();
+        if (output.isEmpty()) {
+            return;
+        }
         Vec3 dropPos = Vec3.atCenterOf(getCenter(scannerPos, scannerState));
         level.addFreshEntity(new ItemEntity(level, dropPos.x, dropPos.y, dropPos.z, output));
     }
 
     public void consume(@NotNull ServerLevel level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, boolean mirrored) {
         consume(level, scannerPos, scannerState, scannerState.getValue(BlockStateProperties.FACING), mirrored);
+    }
+
+    private @Nullable Item resolveResultItem(@Nullable HolderLookup.Provider registries) {
+        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, result.id());
+        if (registries != null) {
+            HolderLookup.RegistryLookup<Item> lookup = registries.lookup(Registries.ITEM).orElse(null);
+            if (lookup != null) {
+                return lookup.get(itemKey).map(Holder::value).orElse(null);
+            }
+        }
+        if (!BuiltInRegistries.ITEM.containsKey(result.id())) {
+            return null;
+        }
+        return BuiltInRegistries.ITEM.get(result.id());
     }
 }

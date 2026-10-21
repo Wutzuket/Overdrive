@@ -1,6 +1,7 @@
 package de.wutzuket.overdrive.recipe;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
@@ -33,6 +34,9 @@ public class ODRecipeTypes {
 
     public static final Supplier<RecipeType<CryoDistillerRecipe>> CRYO_DISTILLER =
             RECIPE_TYPES.register("catalytic_reactor", () -> RecipeType.simple(Overdrive.id("catalytic_reactor")));
+
+    public static final Supplier<RecipeType<scanner_recipe>> SCANNER =
+            RECIPE_TYPES.register("scanner", () -> RecipeType.simple(Overdrive.id("scanner")));
 
     public static void register(IEventBus modEventBus) {
         RECIPE_TYPES.register(modEventBus);

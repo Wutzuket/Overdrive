@@ -1,6 +1,8 @@
 package de.wutzuket.overdrive.recipe;
 
 import de.wutzuket.overdrive.Overdrive;
+import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe;
+import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_serializer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.bus.api.IEventBus;
@@ -32,6 +34,8 @@ public class ODRecipeSerializers {
             RECIPE_SERIALIZERS.register("reactor_cooling", ReactorCoolingRecipeSerializer::new);
     public static final Supplier<RecipeSerializer<CryoDistillerRecipe>> CRYO_DISTILLER_SERIALIZER =
             RECIPE_SERIALIZERS.register("catalytic_reactor", CryoDistillerRecipeSerializer::new);
+    public static final Supplier<RecipeSerializer<scanner_recipe>> SCANNER_SERIALIZER =
+            RECIPE_SERIALIZERS.register("scanner", scanner_recipe_serializer::new);
 
     public static void register(IEventBus modEventBus) {
         RECIPE_SERIALIZERS.register(modEventBus);

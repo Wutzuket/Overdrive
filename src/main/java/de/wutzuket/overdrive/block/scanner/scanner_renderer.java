@@ -54,7 +54,10 @@ public class scanner_renderer implements BlockEntityRenderer<scanner_blockentity
         int y = facingOffset.getY() * 3 + 1;
         int z = facingOffset.getZ() * 3;
         if (blockEntity.isAnimating() && blockEntity.getMatchedRecipeId() != null) {
-            scanner_recipe recipe = scanner_recipe_manager.INSTANCE.getRecipe(blockEntity.getMatchedRecipeId());
+            scanner_recipe recipe = scanner_recipe_manager.getRecipe(blockEntity.getLevel(), blockEntity.getMatchedRecipeId());
+            if (recipe == null) {
+                return;
+            }
             renderAnimation(poseStack, buffer, blockEntity, recipe, x, y, z, patternFacing, facingOffset, partialTick, packedLight, packedOverlay);
         } else {
             boolean matched = blockEntity.getMatchedRecipeId() != null;

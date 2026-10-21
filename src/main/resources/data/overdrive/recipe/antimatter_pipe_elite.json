@@ -8,7 +8,7 @@
   ],
   "key": {
     "I": {
-      "tag": "c:ingots/diamond"
+      "tag": "c:gems/diamond"
     },
     "G": {
       "item": "minecraft:glass"

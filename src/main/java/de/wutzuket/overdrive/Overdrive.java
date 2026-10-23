@@ -59,6 +59,7 @@ import de.wutzuket.overdrive.worldgen.ODBiomeModifiers;
 import de.wutzuket.overdrive.worldgen.ODWorldGen;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.config.ModConfig;
@@ -209,6 +210,14 @@ registrar.playToClient(
         });
 
         modEventBus.addListener(RegisterCapabilitiesEvent.class, event -> {
+            event.registerItem(
+                    ODAntimatterCapability.ANTIMATTER_ITEM_HANDLER,
+                    (stack, context) -> new de.wutzuket.overdrive.item.AntimatterCellItemHandler(stack),
+                    BuiltInRegistries.ITEM.stream()
+                            .filter(item -> item instanceof de.wutzuket.overdrive.item.AntimatterCellItem)
+                            .toArray(net.minecraft.world.level.ItemLike[]::new)
+            );
+
             event.registerBlockEntity(
                     Capabilities.EnergyStorage.BLOCK,
                     ODBlockEntities.CREATIVE_ENERGY_CUBE_BLOCK_ENTITY.get(),

@@ -93,7 +93,7 @@ public class AntimatterTankEntity extends BlockEntity implements IAntimatterHand
         if (amount <= 0) {
             fillCell(cell, input, count, type);
         } else {
-            emptyCell(cell, input, count, type);
+            emptyCell(cell, input, count, amount, type);
         }
         setChanged();
     }
@@ -122,15 +122,16 @@ public class AntimatterTankEntity extends BlockEntity implements IAntimatterHand
     }
 
     /** Empties a full cell into the tank. */
-    private void emptyCell(AntimatterCellItem cell, ItemStack input, int count, @Nullable Antimatter type) {
-        if (type == null) {
+    private void emptyCell(AntimatterCellItem cell, ItemStack input, int count, int amount, @Nullable Antimatter type) {
+        if (type == null || amount <= 0) {
             return;
         }
         Antimatter tankType = tank.getAntimatterInTank(0);
         if (tankType != null && !tankType.equals(type)) {
             return;
         }
-        int total = count;
+        // the amount is the content of the cell, not the number of cells in the stack
+        int total = amount;
         int space = tank.getCapacity(0) - tank.getAmount(0);
         if (space < total) {
             return;

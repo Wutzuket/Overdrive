@@ -172,6 +172,8 @@ public static final java.util.function.Supplier<BlockEntityType<HologramBlockEnt
             BLOCK_ENTITY_TYPES.register("scanner", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.scanner.scanner_blockentity::new, ODBlocks.SCANNER.get()).build(null));
     public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.distiller.CryoDistillerEntity>> CRYO_DISTILLER =
             BLOCK_ENTITY_TYPES.register("cryo_distiller", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.distiller.CryoDistillerEntity::new, ODBlocks.CRYO_DISTILLER.get()).build(null));
+    public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.press.CircuitPressBlockEntity>> CIRCUIT_PRESS =
+            BLOCK_ENTITY_TYPES.register("circuit_press", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.press.CircuitPressBlockEntity::new, ODBlocks.CIRCUIT_PRESS.get()).build(null));
 
     public static final java.util.function.Supplier<BlockEntityType<de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorEntity>> COAL_GENERATOR_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("coal_generator", () -> BlockEntityType.Builder.of(de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorEntity::new, ODBlocks.COAL_GENERATOR.get()).build(null));

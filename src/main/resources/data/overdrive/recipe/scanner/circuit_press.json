@@ -1,0 +1,14 @@
+{
+  "type": "overdrive:scanner",
+  "energy": 5000,
+  "accept_mirrored": true,
+  "key": {
+    "A": { "tag": "c:storage_blocks/aluminum" },
+    "I": { "block": "minecraft:iron_block" },
+    "C": { "block": "overdrive:circuit_board" },
+    "B": { "block": "minecraft:air" }
+  },
+  "pattern": [["BBB", "BAB", "BBB"], ["BIB", "ACA", "BIB"], ["BBB", "BAB", "BBB"]],
+  "result": { "count": 1, "id": "overdrive:circuit_press" },
+  "show_notification": false
+}

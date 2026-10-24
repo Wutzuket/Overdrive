@@ -34,6 +34,8 @@ public class ODRecipeSerializers {
             RECIPE_SERIALIZERS.register("reactor_cooling", ReactorCoolingRecipeSerializer::new);
     public static final Supplier<RecipeSerializer<CryoDistillerRecipe>> CRYO_DISTILLER_SERIALIZER =
             RECIPE_SERIALIZERS.register("catalytic_reactor", CryoDistillerRecipeSerializer::new);
+    public static final Supplier<RecipeSerializer<CircuitPressRecipe>> CIRCUIT_PRESS_SERIALIZER =
+            RECIPE_SERIALIZERS.register("circuit_press", CircuitPressRecipeSerializer::new);
     public static final Supplier<RecipeSerializer<scanner_recipe>> SCANNER_SERIALIZER =
             RECIPE_SERIALIZERS.register("scanner", scanner_recipe_serializer::new);
 

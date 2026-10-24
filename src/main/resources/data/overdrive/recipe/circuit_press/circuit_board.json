@@ -1,0 +1,11 @@
+{
+  "type": "overdrive:circuit_press",
+  "ingredients": [
+    { "item": "minecraft:iron_ingot" },
+    { "item": "minecraft:copper_ingot" },
+    { "item": "minecraft:redstone" }
+  ],
+  "output": { "id": "overdrive:circuit_board", "count": 1 },
+  "energy_per_tick": 100,
+  "process_time": 100
+}

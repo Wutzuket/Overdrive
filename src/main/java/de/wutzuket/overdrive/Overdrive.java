@@ -296,6 +296,9 @@ registrar.playToClient(
             // Cryo Distiller: Strom nur Eingang, Fluid getrennt Input/Output
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.CRYO_DISTILLER.get(), (be, side) -> be);
             event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ODBlockEntities.CRYO_DISTILLER.get(), (be, side) -> ((de.wutzuket.overdrive.block.distiller.CryoDistillerEntity) be).getFluidHandler());
+            event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.CIRCUIT_PRESS.get(), (be, side) -> be);
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ODBlockEntities.CIRCUIT_PRESS.get(),
+                    (be, side) -> ((de.wutzuket.overdrive.block.press.CircuitPressBlockEntity) be).getItems());
 
             // Coal Generator: Energie-Quelle (Ausgang), kann nichts empfangen
             event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ODBlockEntities.COAL_GENERATOR_BLOCK_ENTITY.get(),
@@ -489,6 +492,7 @@ registrar.playToClient(
             event.register(ODMenuTypes.ANNIHILATION_CONTROLLER_MENU.get(), de.wutzuket.overdrive.menu.AnnihilationControllerScreen::new);
             event.register(ODMenuTypes.COOLING_TOWER_MENU.get(), de.wutzuket.overdrive.menu.CoolingTowerScreen::new);
             event.register(ODMenuTypes.CRYO_DISTILLER_MENU.get(), de.wutzuket.overdrive.menu.CryoDistillerScreen::new);
+            event.register(ODMenuTypes.CIRCUIT_PRESS_MENU.get(), de.wutzuket.overdrive.menu.CircuitPressScreen::new);
             event.register(ODMenuTypes.COAL_GENERATOR_MENU.get(), de.wutzuket.overdrive.menu.CoalGeneratorScreen::new);
             event.register(ODMenuTypes.ANTIMATTER_TANK_MENU.get(), de.wutzuket.overdrive.menu.AntimatterTankScreen::new);
         }

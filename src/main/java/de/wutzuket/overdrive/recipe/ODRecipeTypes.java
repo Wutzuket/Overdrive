@@ -34,6 +34,8 @@ public class ODRecipeTypes {
 
     public static final Supplier<RecipeType<CryoDistillerRecipe>> CRYO_DISTILLER =
             RECIPE_TYPES.register("catalytic_reactor", () -> RecipeType.simple(Overdrive.id("catalytic_reactor")));
+    public static final Supplier<RecipeType<CircuitPressRecipe>> CIRCUIT_PRESS =
+            RECIPE_TYPES.register("circuit_press", () -> RecipeType.simple(Overdrive.id("circuit_press")));
 
     public static final Supplier<RecipeType<scanner_recipe>> SCANNER =
             RECIPE_TYPES.register("scanner", () -> RecipeType.simple(Overdrive.id("scanner")));

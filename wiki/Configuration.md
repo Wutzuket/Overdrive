@@ -10,6 +10,8 @@ The common configuration controls values such as:
 - Particle accelerator settings
 - Vacuum pump volume and energy consumption
 - Cooling tower processing
+- Circuit Press energy capacity, energy consumption, processing time and slot
+  capacity
 
 Stop the game before editing a configuration file. After changing values,
 restart the game and verify the result in a test world before using the
@@ -17,6 +19,14 @@ settings in a long-running production setup.
 
 Configuration changes affect gameplay balance and may change the amount of
 energy, coolant or processing time required by a machine.
+
+## Circuit Press
+
+The `circuit_press` section controls the Circuit Press. The default values are
+`maxEnergy = 1000000`, `energyPerTick = 100`, `processTime = 100` and
+`slotCapacity = 64`. Values are measured in FE, FE/t, ticks and items
+respectively. Individual press recipes can override the default energy usage
+and processing time.
 
 ## Vacuum pump
 

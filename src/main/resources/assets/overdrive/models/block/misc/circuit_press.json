@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "overdrive:block/circuit_press_front",
+    "south": "overdrive:block/cryo_distiller_base",
+    "east": "overdrive:block/cryo_distiller_base",
+    "west": "overdrive:block/cryo_distiller_base",
+    "up": "overdrive:block/cryo_distiller_base",
+    "down": "overdrive:block/cryo_distiller_base",
+    "particle": "overdrive:block/cryo_distiller_base"
+  }
+}

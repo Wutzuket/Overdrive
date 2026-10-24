@@ -58,7 +58,8 @@ public class OverdriveJeiPlugin implements IModPlugin {
                 new ReactorCoolingRecipeCategory(guiHelper),
                 new CoolingTowerCategory(guiHelper),
                 new PositronExtractionCategory(guiHelper),
-                new CryoDistillerCategory(guiHelper)
+                new CryoDistillerCategory(guiHelper),
+                new CircuitPressCategory(guiHelper)
         );
     }
 
@@ -90,6 +91,7 @@ public class OverdriveJeiPlugin implements IModPlugin {
         registration.addRecipes(CoolingTowerCategory.TYPE, collect(level, ODRecipeTypes.COOLING_TOWER.get()));
         registration.addRecipes(PositronExtractionCategory.TYPE, collect(level, ODRecipeTypes.POSITRON_EXTRACTION.get()));
         registration.addRecipes(CryoDistillerCategory.TYPE, collect(level, ODRecipeTypes.CRYO_DISTILLER.get()));
+        registration.addRecipes(CircuitPressCategory.TYPE, collect(level, ODRecipeTypes.CIRCUIT_PRESS.get()));
     }
 
     /**
@@ -139,6 +141,7 @@ public class OverdriveJeiPlugin implements IModPlugin {
         catalyst(registration, ODBlocks.POSITRON_VACUUM_OUTPUT_PORT.get(), PositronExtractionCategory.TYPE);
 
         catalyst(registration, ODItems.CRYO_DISTILLER.get(), CryoDistillerCategory.TYPE);
+        catalyst(registration, ODItems.CIRCUIT_PRESS.get(), CircuitPressCategory.TYPE);
     }
 
     private static <T> void catalyst(IRecipeCatalystRegistration registration, ItemLike item, RecipeType<T> type) {

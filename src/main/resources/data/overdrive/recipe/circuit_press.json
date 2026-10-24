@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["III", "CBC", "IRI"],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "C": { "item": "minecraft:copper_ingot" },
+    "B": { "item": "minecraft:iron_block" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "id": "overdrive:circuit_press", "count": 1 }
+}

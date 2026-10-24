@@ -26,6 +26,11 @@ Overdrive is built around progressively more complex technology:
 
 The exact recipes and processing values are available in JEI in-game.
 
+The Circuit Press is an early machine for producing circuit boards and other
+electronic components. It is crafted in a crafting table, requires FE, and can
+use up to four inputs for each processing recipe. See the
+[Circuit Press](Circuit-Press) page for its recipe and configuration options.
+
 ## Multiblock machines
 
 Many advanced systems use multiblock structures. Place the correct casing,

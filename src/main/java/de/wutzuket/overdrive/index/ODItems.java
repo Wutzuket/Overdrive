@@ -204,6 +204,10 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
 
     public static final Supplier<Item> CRYO_DISTILLER = ITEMS.register("cryo_distiller",
             () -> new BlockItem(ODBlocks.CRYO_DISTILLER.get(), new Item.Properties()));
+    public static final Supplier<Item> CIRCUIT_PRESS = ITEMS.register("circuit_press",
+            () -> new BlockItem(ODBlocks.CIRCUIT_PRESS.get(), new Item.Properties()));
+    public static final Supplier<Item> CIRCUIT_BOARD = ITEMS.register("circuit_board",
+            () -> new BlockItem(ODBlocks.CIRCUIT_BOARD.get(), new Item.Properties()));
 
     public static final Supplier<Item> COAL_GENERATOR = ITEMS.register("coal_generator",
             () -> new BlockItem(ODBlocks.COAL_GENERATOR.get(), new Item.Properties()));

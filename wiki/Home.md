@@ -10,6 +10,8 @@ multiblock machines, fluids, scanners and programmable holograms.
 
 - [Getting Started](Getting-Started)
 - [Machines and Systems](Machines-and-Systems)
+- [Circuit Press](Circuit-Press)
+- [Configuration](Configuration)
 - [Antimatter Transport and Storage](Antimatter-Transport)
 - [Holograms](Holograms)
 - [Advanced Hologram Lua Guide](../ADVANCED_HOLOGRAM_LUA.md)

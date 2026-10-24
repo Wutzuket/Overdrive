@@ -54,6 +54,8 @@ public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
             MENUS.register("cooling_tower", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.CoolingTowerMenu::new));
     public static final Supplier<MenuType<de.wutzuket.overdrive.menu.CryoDistillerMenu>> CRYO_DISTILLER_MENU =
             MENUS.register("cryo_distiller", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.CryoDistillerMenu::new));
+    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.CircuitPressMenu>> CIRCUIT_PRESS_MENU =
+            MENUS.register("circuit_press", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.CircuitPressMenu::new));
 
     public static final Supplier<MenuType<de.wutzuket.overdrive.menu.CoalGeneratorMenu>> COAL_GENERATOR_MENU =
             MENUS.register("coal_generator", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.CoalGeneratorMenu::new));

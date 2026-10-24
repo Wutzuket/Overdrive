@@ -11,6 +11,30 @@ public class ODConfig {
                     "Set to false to disable all aluminum ore generation (for modpack compatibility).")
             .define("enableAluminumGeneration", true);
 
+    static {
+        BUILDER.push("circuit_press");
+    }
+
+    public static final ModConfigSpec.IntValue CIRCUIT_PRESS_MAX_ENERGY = BUILDER
+            .comment("Maximum energy storage of the Circuit Press (FE).")
+            .defineInRange("maxEnergy", 1_000_000, 1, 1_000_000_000);
+
+    public static final ModConfigSpec.IntValue CIRCUIT_PRESS_ENERGY_PER_TICK = BUILDER
+            .comment("Energy consumed by the Circuit Press while processing (FE/t).")
+            .defineInRange("energyPerTick", 100, 0, 1_000_000);
+
+    public static final ModConfigSpec.IntValue CIRCUIT_PRESS_PROCESS_TIME = BUILDER
+            .comment("Default processing time used by Circuit Press recipes (ticks).")
+            .defineInRange("processTime", 100, 1, 1_000_000);
+
+    public static final ModConfigSpec.IntValue CIRCUIT_PRESS_ITEM_HANDLER_CAPACITY = BUILDER
+            .comment("Maximum number of items stored in each Circuit Press slot.")
+            .defineInRange("slotCapacity", 64, 1, 64);
+
+    static {
+        BUILDER.pop();
+    }
+
     // --- Annihilation Reactor ---
     static {
         BUILDER.push("annihilation_reactor");

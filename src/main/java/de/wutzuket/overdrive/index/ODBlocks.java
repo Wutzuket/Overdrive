@@ -295,6 +295,12 @@ public static final Supplier<Block> HOLOGRAM_BLOCK = BLOCKS.register("hologram_b
             () -> new de.wutzuket.overdrive.block.distiller.CryoDistillerBlock(BlockBehaviour.Properties.of()
                     .strength(5.5F, 12.0F).sound(SoundType.METAL).lightLevel(s -> 5)));
 
+    public static final Supplier<Block> CIRCUIT_PRESS = BLOCKS.register("circuit_press",
+            () -> new de.wutzuket.overdrive.block.press.CircuitPressBlock(BlockBehaviour.Properties.of()
+                    .strength(5.5F, 12.0F).sound(SoundType.METAL).lightLevel(s -> 5)));
+    public static final Supplier<Block> CIRCUIT_BOARD = BLOCKS.register("circuit_board",
+            () -> new Block(BlockBehaviour.Properties.of().strength(1.0F).sound(SoundType.METAL)));
+
     public static final Supplier<Block> COAL_GENERATOR = BLOCKS.register("coal_generator",
             () -> new de.wutzuket.overdrive.block.coalgenerator.CoalGeneratorBlock(BlockBehaviour.Properties.of()
                     .strength(5.5F, 12.0F).sound(SoundType.METAL).lightLevel(s -> 0)));

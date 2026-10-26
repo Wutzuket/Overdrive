@@ -18,23 +18,27 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
     private final int meshDurabilityCost;
     private final int energyCost;
     private final int processTime;
+    /** Maximal einstellbare FE/t-Rate; 0 = kein Rezept-Limit. */
+    private final int maxEnergyRate;
     private final List<ResultEntry> resultEntries;
     private final AntimatterStack outputAntimatter;
     private final ItemStack outputCell;
 
-    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, AntimatterStack outputAntimatter, ItemStack outputCell) {
+    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, int maxEnergyRate, AntimatterStack outputAntimatter, ItemStack outputCell) {
         this.meshDurabilityCost = meshDurabilityCost;
         this.energyCost = energyCost;
         this.processTime = processTime;
+        this.maxEnergyRate = maxEnergyRate;
         this.outputAntimatter = outputAntimatter;
         this.outputCell = outputCell;
         this.resultEntries = buildResultEntries(outputAntimatter, outputCell);
     }
 
-    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, List<ResultEntry> resultEntries) {
+    public PositronExtractionRecipe(int meshDurabilityCost, int energyCost, int processTime, int maxEnergyRate, List<ResultEntry> resultEntries) {
         this.meshDurabilityCost = meshDurabilityCost;
         this.energyCost = energyCost;
         this.processTime = processTime;
+        this.maxEnergyRate = maxEnergyRate;
         this.resultEntries = resultEntries;
         this.outputAntimatter = extractAntimatter(resultEntries);
         this.outputCell = extractItem(resultEntries);
@@ -108,6 +112,7 @@ public class PositronExtractionRecipe implements Recipe<RecipeInput> {
     public int meshDurabilityCost() { return meshDurabilityCost; }
     public int energyCost() { return energyCost; }
     public int processTime() { return processTime; }
+    public int maxEnergyRate() { return maxEnergyRate; }
     public List<ResultEntry> resultEntries() { return resultEntries; }
     public AntimatterStack outputAntimatter() { return outputAntimatter; }
     public ItemStack outputCell() { return outputCell; }

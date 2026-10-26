@@ -87,6 +87,17 @@ public class ServerPayloadHandler {
             }
         });
     }
+    public static void handleElectronGunEnergyRate(final ElectronGunEnergyRatePayload payload, final IPayloadContext context){
+        context.enqueueWork(() -> {
+            if(context.player() instanceof ServerPlayer sp){
+                Level lvl=sp.level();
+                BlockEntity be=lvl.getBlockEntity(payload.pos());
+                if(be instanceof de.wutzuket.overdrive.block.tungsten.ElectronGunEntity gun){
+                    gun.setEnergyRate(payload.energyRate());
+                }
+            }
+        });
+    }
     public static void handleAnnihilationBurnRate(final AnnihilationBurnRatePayload payload, final IPayloadContext context){
         context.enqueueWork(() -> {
             if(context.player() instanceof ServerPlayer sp){

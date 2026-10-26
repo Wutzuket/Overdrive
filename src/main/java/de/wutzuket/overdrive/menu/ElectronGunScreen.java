@@ -2,25 +2,29 @@ package de.wutzuket.overdrive.menu;
 
 import de.wutzuket.overdrive.client.gui.ButtonHelper;
 import de.wutzuket.overdrive.client.gui.GuiStyle;
+import de.wutzuket.overdrive.network.ElectronGunEnergyRatePayload;
 import de.wutzuket.overdrive.network.ToggleHologramPayload;
 import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> {
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 126;
+    private static final int HEIGHT = 146;
     private static final int BAR_W = 16;
     private static final int BAR_H = 54;
 
     private ButtonHelper hologramButton;
+    private EditBox rateField;
+    private ButtonHelper rateSet;
 
     public ElectronGunScreen(ElectronGunMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -38,14 +42,56 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
                 button -> PacketDistributor.sendToServer(new ToggleHologramPayload(menu.getBlockEntity().getBlockPos())),
                 GuiStyle.COL_CYAN);
         addRenderableWidget(hologramButton);
+
+        rateField = new EditBox(font, x + 48, y + 114, 66, 14, Component.literal("rate"));
+        rateField.setMaxLength(16);
+        rateField.setValue(ODFormat.formatEnergy(menu.getEnergyRateSynced()));
+        addRenderableWidget(rateField);
+        rateSet = new ButtonHelper(x + 116, y + 114, 44, 14, Component.literal("Set"),
+                b -> submitRate(), GuiStyle.COL_CYAN);
+        addRenderableWidget(rateSet);
     }
 
-    private FluidStack getFluidStack() {
-        var be = menu.getBlockEntity();
-        if (be == null) return FluidStack.EMPTY;
-        de.wutzuket.overdrive.antimatter.Antimatter fluid = be.getAntimatterTank().getAntimatterInTank(0);
-        if (fluid == null) return FluidStack.EMPTY;
-        return FluidStack.EMPTY;
+    private void submitRate() {
+        if (rateField == null) return;
+        try {
+            long rate = parseRate(rateField.getValue());
+            rate = Math.max(1, Math.min(menu.getMaxRate(), rate));
+            PacketDistributor.sendToServer(new ElectronGunEnergyRatePayload(menu.getBlockEntity().getBlockPos(), (int) rate));
+            rateField.setValue(ODFormat.formatEnergy(rate));
+        } catch (Exception ignored) {
+            rateField.setValue(ODFormat.formatEnergy(menu.getEnergyRateSynced()));
+        }
+    }
+
+    /** Parst "3K", "3000 FE", "1.2M", "3000" -> FE. */
+    static long parseRate(String raw) {
+        String s = raw.trim().toUpperCase(Locale.ROOT).replace(" ", "");
+        if (s.endsWith("FE")) s = s.substring(0, s.length() - 2);
+        long mult = 1;
+        if (s.endsWith("K")) { mult = 1_000L; s = s.substring(0, s.length() - 1); }
+        else if (s.endsWith("M")) { mult = 1_000_000L; s = s.substring(0, s.length() - 1); }
+        else if (s.endsWith("G")) { mult = 1_000_000_000L; s = s.substring(0, s.length() - 1); }
+        else if (s.endsWith("T")) { mult = 1_000_000_000_000L; s = s.substring(0, s.length() - 1); }
+        double v = Double.parseDouble(s.replace(",", "."));
+        if (!Double.isFinite(v) || v <= 0) throw new IllegalArgumentException("rate");
+        return (long) (v * mult);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (rateField != null && rateField.isFocused()) {
+            if (keyCode == 257 || keyCode == 335) {
+                submitRate();
+                return true;
+            }
+            // Inventar-Taste (E) schlucken, solange das Textfeld aktiv ist - sonst
+            // schliesst sich der Screen, wenn man die FE-Rate eintippt.
+            if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                return true;
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -60,8 +106,8 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
                 GuiStyle.COL_GREEN, null);
         GuiStyle.metricGauge(guiGraphics, font, x + 28, y + 16, BAR_W, BAR_H,
                 menu.getVacuumScaled(BAR_H - 2) / (float) (BAR_H - 2), GuiStyle.COL_CYAN, null);
-        GuiStyle.fluidGauge(guiGraphics, font, getFluidStack(), menu.getFluidCapacity(),
-                x + 48, y + 16, BAR_W, BAR_H, null);
+        GuiStyle.antimatterGauge(guiGraphics, font, menu.getAntimatterType(), menu.getFluidAmount(),
+                menu.getFluidCapacity(), x + 48, y + 16, BAR_W, BAR_H, null);
 
         GuiStyle.hBar(guiGraphics, x + 70, y + 34, 96, 10,
                 menu.getProgressScaled(94) / 94.0, GuiStyle.COL_CYAN);
@@ -85,7 +131,8 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
                 Component.translatable("container.overdrive.electron_gun.vacuum"),
                 (menu.getVacuumLevel() / 10) + "." + (menu.getVacuumLevel() % 10) + " %", 8, 84, GuiStyle.COL_CYAN);
         guiGraphics.drawString(this.font,
-                Component.translatable("container.overdrive.electron_gun.usage", 3000),
+                Component.translatable("container.overdrive.electron_gun.usage",
+                        ODFormat.formatEnergyPerTick(menu.getEnergyRateSynced())),
                 8, 94, GuiStyle.COL_TEXT, false);
         // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
         double production = menu.isActive() ? menu.getProductionPerTickSynced() : 0.0;
@@ -93,6 +140,12 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
                 Component.translatable("container.overdrive.production",
                         ODFormat.formatFluidPerTick(production)),
                 8, 104, production > 0 ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font, Component.literal("Rate:"), 8, 118, GuiStyle.COL_TEXT_DIM, false);
+
+        if (rateField != null && !rateField.isFocused()) {
+            String current = ODFormat.formatEnergy(menu.getEnergyRateSynced());
+            if (!current.equals(rateField.getValue())) rateField.setValue(current);
+        }
     }
 
     @Override
@@ -116,8 +169,10 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else if (mouseX >= x + 48 && mouseX <= x + 64 && mouseY >= y + 16 && mouseY <= y + 70) {
             List<Component> lines = new ArrayList<>();
-            FluidStack fluid = getFluidStack();
-            lines.add(fluid.isEmpty() ? Component.literal("Empty") : fluid.getHoverName());
+            var type = menu.getAntimatterType();
+            lines.add(type == null
+                    ? Component.translatable("container.overdrive.electron_gun.empty")
+                    : type.displayName());
             lines.add(Component.literal(ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity())));
             guiGraphics.renderTooltip(this.font, lines, java.util.Optional.empty(), mouseX, mouseY);
         } else {

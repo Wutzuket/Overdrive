@@ -30,6 +30,13 @@ public class PositronExtractionCategory extends FluidRecipeCategory<PositronExtr
     }
 
     @Override
+    protected AntimatterIO getAntimatters(PositronExtractionRecipe recipe) {
+        // Die Positronen werden ueber das Antimatter-System ausgegeben und muessen
+        // deshalb als eigener Antimatter-Slot angezeigt werden.
+        return AntimatterIO.of(null, recipe.outputAntimatter());
+    }
+
+    @Override
     protected void addExtraSlots(@NotNull IRecipeLayoutBuilder builder, @NotNull PositronExtractionRecipe recipe) {
         builder.addSlot(RecipeIngredientRole.INPUT, extraInputSlotX(), SLOT_Y)
                 .addItemStack(new ItemStack(ODItems.TUNGSTEN_MESH.get()));

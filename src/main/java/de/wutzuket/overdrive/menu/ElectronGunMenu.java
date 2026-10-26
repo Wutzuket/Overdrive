@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ElectronGunMenu extends AbstractContainerMenu {
     private final ElectronGunEntity blockEntity;
-    private final int[] data = new int[10];
+    private final int[] data = new int[13];
 
     public ElectronGunMenu(int containerId, Inventory inventory, ElectronGunEntity blockEntity) {
         super(ODMenuTypes.ELECTRON_GUN_MENU.get(), containerId);
@@ -32,6 +32,12 @@ public class ElectronGunMenu extends AbstractContainerMenu {
                     case 8 -> blockEntity.getCurrentRecipeProcessTime();
                     // Produktion in mB/t, x100 als Festkomma (Brokerrechnung).
                     case 9 -> (int) Math.round(blockEntity.getProductionPerTick() * 100);
+                    // Index des Antimatter-Typs im Tank (fuer die farbige Anzeige).
+                    case 10 -> antimatterTypeIndex();
+                    // Eingestellte FE/t-Rate.
+                    case 11 -> blockEntity.getEnergyRate();
+                    // Vom Rezept erlaubte Maximalrate (max_energy_rate).
+                    case 12 -> blockEntity.getMaxRate();
                     default -> 0;
                 };
             }
@@ -77,6 +83,31 @@ public class ElectronGunMenu extends AbstractContainerMenu {
 
     /** Produktion der Kanone in mB pro Tick (z.B. 4000 -> "4 B/t"). */
     public double getProductionPerTickSynced() { return data[9] / 100.0; }
+
+    public int getEnergyRateSynced() { return data[11]; }
+
+    public int getMaxRate() {
+        return data[12] > 0 ? data[12] : ElectronGunEntity.MAX_ENERGY_RATE;
+    }
+
+    private int antimatterTypeIndex() {
+        de.wutzuket.overdrive.antimatter.Antimatter type =
+                blockEntity.getAntimatterTank().getAntimatterInTank(0);
+        if (type == null) {
+            return -1;
+        }
+        return de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes().indexOf(type);
+    }
+
+    /** @return der Antimatter-Typ im Tank oder {@code null}, wenn der Tank leer ist. */
+    public de.wutzuket.overdrive.antimatter.Antimatter getAntimatterType() {
+        int index = data[10];
+        var types = de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes();
+        if (index < 0 || index >= types.size()) {
+            return null;
+        }
+        return types.get(index);
+    }
 
     public int getEnergyScaled(int max) {
         int maxEnergy = getMaxEnergy();

@@ -6,9 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -33,13 +30,6 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
         this.inventoryLabelY = 72;
     }
 
-    private FluidStack getFluidStack() {
-        Fluid fluid = menu.getFluid();
-        int amount = menu.getFluidAmount();
-        if (fluid == Fluids.EMPTY || amount <= 0) return FluidStack.EMPTY;
-        return new FluidStack(fluid, amount);
-    }
-
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int x = (this.width - this.imageWidth) / 2;
@@ -47,20 +37,20 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
 
         GuiStyle.panel(guiGraphics, x, y, WIDTH, HEIGHT);
         GuiStyle.inset(guiGraphics, x + 6, y + 80, 164, 82);
-        GuiStyle.fluidGauge(guiGraphics, font, getFluidStack(), menu.getFluidCapacity(),
-                x + FLUID_BAR_X, y + FLUID_BAR_Y, FLUID_BAR_W, FLUID_BAR_H, null);
+        GuiStyle.antimatterGauge(guiGraphics, font, menu.getAntimatterType(), menu.getFluidAmount(),
+                menu.getFluidCapacity(), x + FLUID_BAR_X, y + FLUID_BAR_Y, FLUID_BAR_W, FLUID_BAR_H, null);
         GuiStyle.slotFrames(guiGraphics, menu, x, y);
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
-        FluidStack fluidStack = getFluidStack();
-        if (fluidStack.isEmpty()) {
+        var type = menu.getAntimatterType();
+        if (type == null) {
             guiGraphics.drawString(this.font, Component.translatable("container.overdrive.positron_vacuum_output_port.empty"),
                     40, 20, GuiStyle.COL_TEXT_DIM, false);
         } else {
-            guiGraphics.drawString(this.font, fluidStack.getHoverName(), 40, 20, GuiStyle.COL_TEXT, false);
+            guiGraphics.drawString(this.font, type.displayName(), 40, 20, GuiStyle.COL_TEXT, false);
         }
         guiGraphics.drawString(this.font, ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity()),
                 40, 30, GuiStyle.COL_CYAN, false);
@@ -89,9 +79,9 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
         if (mouseX >= x + FLUID_BAR_X && mouseX <= x + FLUID_BAR_X + FLUID_BAR_W &&
                 mouseY >= y + FLUID_BAR_Y && mouseY <= y + FLUID_BAR_Y + FLUID_BAR_H) {
             List<Component> lines = new ArrayList<>();
-            FluidStack fluidStack = getFluidStack();
-            if (!fluidStack.isEmpty()) {
-                lines.add(fluidStack.getHoverName());
+            var type = menu.getAntimatterType();
+            if (type != null) {
+                lines.add(type.displayName());
             } else {
                 lines.add(Component.translatable("container.overdrive.positron_vacuum_output_port.empty"));
             }

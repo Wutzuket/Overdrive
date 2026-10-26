@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,9 +32,13 @@ import org.joml.Vector3f;
 
 public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode {
     private static final int MAX_ENERGY = 500_000;
-    private static final int ENERGY_PER_TICK = 3000;
+    /** Maximale einstellbare FE/t-Rate, begrenzt durch den internen Puffer. */
+    public static final int MAX_ENERGY_RATE = MAX_ENERGY;
+    /** Standardverbrauch = 1x Produktion (energy_cost des Standardrezepts: 50.000 FE/t fuer 4 B/t). */
+    public static final int DEFAULT_ENERGY_RATE = 50_000;
 
     private int energy = 0;
+    private int energyRate = DEFAULT_ENERGY_RATE;
     // Positron-Max-Rate: 14.000 mB/Op
     private final AntimatterTank fluidTank = new AntimatterTank(500_000);
     private boolean active = false;
@@ -43,6 +48,10 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     private long vacuumFedTick = 0;
 
     private @Nullable PositronExtractionRecipe currentRecipe = null;
+    /** Erstes Rezept der Maschine, damit die Produktionsanzeige auch zwischen zwei Ops stimmt. */
+    private @Nullable PositronExtractionRecipe baseRecipe = null;
+    /** RecipeManager, zu dem {@link #baseRecipe} gehoert (wechselt bei /reload). */
+    private @Nullable RecipeManager cachedRecipeManager = null;
     private @Nullable BlockPos targetPos = null;
     private @Nullable BlockPos outputPos = null;
 
@@ -58,9 +67,32 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
 
         ServerLevel serverLevel = (ServerLevel) level;
 
+        // /reload ersetzt den RecipeManager durch ein neues Objekt. Dann muessen die
+        // gecachten Rezepte verworfen werden, sonst gelten weiter die alten Werte
+        // (z.B. mesh_durability_cost), bis der Block neu geladen wird.
+        if (level.getRecipeManager() != cachedRecipeManager) {
+            cachedRecipeManager = level.getRecipeManager();
+            baseRecipe = null;
+            currentRecipe = null;
+        }
+
         if (currentRecipe == null) {
             currentRecipe = findRecipe(level);
+        }
+        // Rezept-Limit anwenden, falls die gespeicherte Rate darueber liegt.
+        int maxRate = getMaxRate();
+        if (energyRate > maxRate) {
+            energyRate = maxRate;
+            setChanged();
+            level.sendBlockUpdated(pos, state, state, 3);
+        }
+        // Target und Ausgang jedes Mal neu suchen, wenn sie fehlen oder inzwischen durch
+        // einen anderen Block ersetzt wurden. Sonst bleibt die Kanone fuer immer im
+        // Leerlauf, wenn die Struktur erst nach dem ersten Tick aufgebaut wurde.
+        if (targetPos == null || !(level.getBlockState(targetPos).getBlock() instanceof TungstenTargetBlock)) {
             targetPos = findTungstenTarget(level, pos, state);
+        }
+        if (outputPos == null || !(level.getBlockState(outputPos).getBlock() instanceof PositronVacuumOutputPortBlock)) {
             outputPos = findOutputPort(level, pos, state);
         }
 
@@ -93,7 +125,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             return;
         }
 
-        if (energy < ENERGY_PER_TICK) {
+        if (energy < energyRate) {
             if (active) {
                 active = false;
                 progressTicks = 0;
@@ -122,7 +154,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             level.sendBlockUpdated(pos, state, state, 3);
         }
 
-        energy -= ENERGY_PER_TICK;
+        energy -= energyRate;
         progressTicks++;
 
         if (progressTicks >= currentRecipe.processTime()) {
@@ -137,7 +169,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     private void completeProcessing(ServerLevel level, BlockPos pos, BlockState state, TungstenTargetEntity target) {
         if (currentRecipe == null) return;
 
-        AntimatterStack output = currentRecipe.outputAntimatter();
+        AntimatterStack output = getScaledOutput(currentRecipe);
         if (!output.isEmpty()) {
             int canFill = fluidTank.insertAntimatter(0, output.type(), output.amount(), true);
             if (canFill < output.amount()) return;
@@ -151,7 +183,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             }
         }
 
-        target.damageMesh(currentRecipe != null ? currentRecipe.meshDurabilityCost() : 1);
+        target.damageMesh(getScaledMeshDurabilityCost(currentRecipe));
         progressTicks = 0;
         currentRecipe = null;
         targetPos = null;
@@ -168,7 +200,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             return false;
         }
         if (currentRecipe == null) return false;
-        AntimatterStack output = currentRecipe.outputAntimatter();
+        AntimatterStack output = getScaledOutput(currentRecipe);
         if (!output.isEmpty()) {
             int canFill = port.getTank().insertAntimatter(0, output.type(), output.amount(), true);
             if (canFill < output.amount()) return false;
@@ -197,8 +229,10 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     }
 
     private @Nullable PositronExtractionRecipe findRecipe(Level level) {
+        if (baseRecipe != null) return baseRecipe;
         for (RecipeHolder<?> holder : level.getRecipeManager().getRecipes()) {
             if (holder.value() instanceof PositronExtractionRecipe recipe && recipe.getType() == ODRecipeTypes.POSITRON_EXTRACTION.get()) {
+                baseRecipe = recipe;
                 return recipe;
             }
         }
@@ -268,12 +302,70 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     public int getMaxEnergy() { return MAX_ENERGY; }
     public boolean isActive() { return active; }
     public AntimatterTank getAntimatterTank() { return fluidTank; }
-    public int getCurrentRecipeProcessTime() { return currentRecipe != null ? currentRecipe.processTime() : 0; }
+
+    public int getEnergyRate() { return energyRate; }
+
+    public void setEnergyRate(int rate) {
+        energyRate = Math.max(1, Math.min(getMaxRate(), rate));
+        setChanged();
+        if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+    }
+
+    /**
+     * Maximal einstellbare Rate. Das Rezept kann sie ueber {@code max_energy_rate} begrenzen;
+     * ohne Angabe (0) gilt das Hardware-Limit des Puffers.
+     */
+    public int getMaxRate() {
+        PositronExtractionRecipe recipe = currentRecipe != null ? currentRecipe : baseRecipe;
+        if (recipe == null && level != null) {
+            recipe = findRecipe(level);
+        }
+        if (recipe != null && recipe.maxEnergyRate() > 0) {
+            return Math.max(1, Math.min(MAX_ENERGY_RATE, recipe.maxEnergyRate()));
+        }
+        return MAX_ENERGY_RATE;
+    }
+
+    /** Faktor aus eingestellter Rate vs. Rezeptkosten: 50.000 FE/t = 1x (4 B/t). */
+    public double getRateFactor(@Nullable PositronExtractionRecipe recipe) {
+        if (recipe == null || recipe.energyCost() <= 0) return 1.0;
+        return energyRate / (double) recipe.energyCost();
+    }
+
+    /** Produktion pro Operation, skaliert mit der eingestellten FE/t-Rate. */
+    public AntimatterStack getScaledOutput(@Nullable PositronExtractionRecipe recipe) {
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return AntimatterStack.EMPTY;
+        long amount = Math.round(recipe.outputAntimatter().amount() * getRateFactor(recipe));
+        // Nie mehr erzeugen, als in den Tank passt (sonst ginge die Operation verloren).
+        amount = Math.min(amount, fluidTank.getCapacity(0));
+        if (amount < 1) amount = 1;
+        if (amount > Integer.MAX_VALUE) amount = Integer.MAX_VALUE;
+        return recipe.outputAntimatter().withAmount((int) amount);
+    }
+
+    /**
+     * Mesh-Verschleiss pro Operation, skaliert mit der FE/t-Rate.
+     * Wird immer aufgerundet, damit auch kleine Raten das Mesh mindestens 1 Punkt kosten.
+     */
+    public int getScaledMeshDurabilityCost(@Nullable PositronExtractionRecipe recipe) {
+        if (recipe == null) return 1;
+        long cost = (long) Math.ceil(recipe.meshDurabilityCost() * getRateFactor(recipe));
+        if (cost < 1) cost = 1;
+        if (cost > Integer.MAX_VALUE) cost = Integer.MAX_VALUE;
+        return (int) cost;
+    }
+
+    public int getCurrentRecipeProcessTime() {
+        PositronExtractionRecipe recipe = currentRecipe != null ? currentRecipe : baseRecipe;
+        return recipe != null ? recipe.processTime() : 0;
+    }
 
     /** Produktion pro Tick in mB (fuer die GUI-Anzeige, z.B. 4000 -> "4 B/t"). */
     public double getProductionPerTick() {
-        if (currentRecipe == null || currentRecipe.outputAntimatter().isEmpty()) return 0;
-        return currentRecipe.outputAntimatter().amount() / (double) Math.max(1, currentRecipe.processTime());
+        PositronExtractionRecipe recipe = currentRecipe != null ? currentRecipe : baseRecipe;
+        if (recipe == null || recipe.outputAntimatter().isEmpty()) return 0;
+        return recipe.outputAntimatter().amount() * getRateFactor(recipe)
+                / (double) Math.max(1, recipe.processTime());
     }
 
     public boolean isHologramEnabled() {
@@ -322,6 +414,7 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("energy", energy);
+        tag.putInt("energyRate", energyRate);
         tag.putBoolean("active", active);
         tag.putBoolean("hologramEnabled", hologramEnabled);
         tag.putInt("progressTicks", progressTicks);
@@ -335,6 +428,8 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         energy = tag.getInt("energy");
+        energyRate = tag.contains("energyRate") ? tag.getInt("energyRate") : DEFAULT_ENERGY_RATE;
+        energyRate = Math.max(1, Math.min(MAX_ENERGY_RATE, energyRate));
         active = tag.getBoolean("active");
         hologramEnabled = tag.getBoolean("hologramEnabled");
         progressTicks = tag.getInt("progressTicks");

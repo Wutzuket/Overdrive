@@ -207,6 +207,11 @@ registrar.playToClient(
                     de.wutzuket.overdrive.network.ELENAEnergyRatePayload.STREAM_CODEC,
                     de.wutzuket.overdrive.network.ServerPayloadHandler::handleELENAEnergyRate
             );
+            registrar.playToServer(
+                    de.wutzuket.overdrive.network.ElectronGunEnergyRatePayload.TYPE,
+                    de.wutzuket.overdrive.network.ElectronGunEnergyRatePayload.STREAM_CODEC,
+                    de.wutzuket.overdrive.network.ServerPayloadHandler::handleElectronGunEnergyRate
+            );
         });
 
         modEventBus.addListener(RegisterCapabilitiesEvent.class, event -> {

@@ -2,7 +2,6 @@ package de.wutzuket.overdrive.menu;
 
 import de.wutzuket.overdrive.block.tungsten.PositronVacuumOutputPortEntity;
 import de.wutzuket.overdrive.index.ODMenuTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,7 +9,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
@@ -44,7 +42,11 @@ public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
                 return switch (index) {
                     case 0 -> blockEntity.getTank().getAmount(0);
                     case 1 -> blockEntity.getTank().getCapacity(0);
-                    case 2 -> blockEntity.getTank().getAntimatterInTank(0) == null ? 0 : blockEntity.getTank().getAntimatterInTank(0).color();
+                    // Index des Antimatter-Typs im Tank (fuer die farbige Anzeige).
+                    case 2 -> {
+                        var type = blockEntity.getTank().getAntimatterInTank(0);
+                        yield type == null ? -1 : de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes().indexOf(type);
+                    }
                     default -> 0;
                 };
             }
@@ -89,5 +91,14 @@ public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
 
     public int getFluidAmount() { return data[0]; }
     public int getFluidCapacity() { return data[1]; }
-    public Fluid getFluid() { return BuiltInRegistries.FLUID.byId(data[2]); }
+
+    /** @return der Antimatter-Typ im Tank oder {@code null}, wenn der Tank leer ist. */
+    public de.wutzuket.overdrive.antimatter.Antimatter getAntimatterType() {
+        int index = data[2];
+        var types = de.wutzuket.overdrive.antimatter.ODAntimatters.getTypes();
+        if (index < 0 || index >= types.size()) {
+            return null;
+        }
+        return types.get(index);
+    }
 }

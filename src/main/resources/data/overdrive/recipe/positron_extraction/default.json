@@ -1,7 +1,8 @@
 {
   "type": "overdrive:positron_extraction",
-  "mesh_durability_cost": 5,
+  "mesh_durability_cost": 100,
   "energy_cost": 50000,
+  "max_energy_rate": 50000,
   "process_time": 1,
   "results": [
     { "id": "overdrive:positrons", "amount": 4000 }

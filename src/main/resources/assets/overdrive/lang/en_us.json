@@ -79,6 +79,8 @@
   "container.overdrive.electron_gun.empty": "Empty",
   "container.overdrive.positron_vacuum_output_port": "Positron Vacuum Output Port",
   "container.overdrive.positron_vacuum_output_port.empty": "Empty",
+  "container.overdrive.positron_vacuum_output_port.cell_hint": "Right-click with a cell",
+  "container.overdrive.positron_vacuum_output_port.cell_hint_action": "to fill or empty",
   "container.overdrive.hologram_block": "Hologram Projector",
   "container.overdrive.hologram_block.files": "Files",
   "container.overdrive.hologram_block.transform": "Transform",
@@ -249,6 +251,6 @@
   "tooltip.overdrive.antimatter_cell.empty": "Empty",
   "jei.overdrive.antimatter.type": "%s: %s",
   "jei.overdrive.antimatter.type.empty": "Empty",
-  "message.overdrive.antimatter.pipe.mode": "Antimatter pipe: %s",
+  "message.overdrive.antimatter.pipe.mode": "Antimatter pipe: ",
   "message.overdrive.antimatter.pipe.no_side": "No connected side to configure"
 }

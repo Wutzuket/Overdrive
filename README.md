@@ -20,7 +20,7 @@ multiblock recipes.
 - An Advanced Hologram Block with Lua scripting, interactive buttons, text,
   animation and a built-in console.
 - JEI integration for Overdrive recipes and machine categories.
-- The One Probe integration and optional Connected Textures Mod support.
+- The One Probe and Jade integration plus optional Connected Textures Mod support.
 - New ores, resources, machines, blocks, fluids and crafting recipes.
 
 ## Requirements
@@ -31,7 +31,7 @@ multiblock recipes.
 - [Just Enough Items (JEI)](https://modrinth.com/mod/jei) is recommended for
   viewing recipes in-game.
 
-The One Probe and Connected Textures Mod are optional integrations. The
+The One Probe, Jade and Connected Textures Mod are optional integrations. The
 development environment also includes Mekanism for testing some of the
 multiblock and resource-processing systems.
 

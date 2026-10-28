@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -176,11 +177,11 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
             fluidTank.insertAntimatter(0, output.type(), output.amount(), false);
         }
 
-        if (!currentRecipe.outputCell().isEmpty() && outputPos != null) {
-            BlockEntity be = level.getBlockEntity(outputPos);
-            if (be instanceof PositronVacuumOutputPortEntity port) {
-                port.insertItem(currentRecipe.outputCell().copy());
-            }
+        // Rezepte koennen zusaetzlich ein Item liefern. Der Ausgang hat keinen Item-Slot
+        // mehr, deshalb wird es am Port ausgegeben statt zu verschwinden.
+        if (!currentRecipe.outputCell().isEmpty()) {
+            BlockPos dropPos = outputPos != null ? outputPos : pos;
+            Block.popResource(level, dropPos, currentRecipe.outputCell().copy());
         }
 
         target.damageMesh(getScaledMeshDurabilityCost(currentRecipe));
@@ -204,9 +205,6 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
         if (!output.isEmpty()) {
             int canFill = port.getTank().insertAntimatter(0, output.type(), output.amount(), true);
             if (canFill < output.amount()) return false;
-        }
-        if (!currentRecipe.outputCell().isEmpty()) {
-            if (!port.canAcceptItem(currentRecipe.outputCell())) return false;
         }
         return true;
     }

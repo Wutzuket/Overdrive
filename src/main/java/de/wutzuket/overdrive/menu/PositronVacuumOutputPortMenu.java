@@ -9,8 +9,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
     private final PositronVacuumOutputPortEntity blockEntity;
@@ -20,10 +18,7 @@ public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
         super(ODMenuTypes.POSITRON_VACUUM_OUTPUT_PORT_MENU.get(), containerId);
         this.blockEntity = blockEntity;
 
-        IItemHandler itemHandler = blockEntity.getItemHandler();
-        // Container Slot (oben rechts)
-        this.addSlot(new SlotItemHandler(itemHandler, 0, 148, 35));
-
+        // Kein eigener Item-Slot: Zellen werden per Rechtsklick am Block befuellt.
         // Spieler-Inventar (3 Reihen x 9 Slots)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
@@ -73,10 +68,11 @@ public class PositronVacuumOutputPortMenu extends AbstractContainerMenu {
         ItemStack stack = slot.getItem();
         ItemStack original = stack.copy();
 
-        if (slotIndex == 0) {
-            if (!moveItemStackTo(stack, 1, slots.size(), true)) return ItemStack.EMPTY;
+        // 0..26 = Spieler-Inventar, 27..35 = Hotbar
+        if (slotIndex < 27) {
+            if (!moveItemStackTo(stack, 27, slots.size(), false)) return ItemStack.EMPTY;
         } else {
-            if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
+            if (!moveItemStackTo(stack, 0, 27, false)) return ItemStack.EMPTY;
         }
 
         if (stack.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);

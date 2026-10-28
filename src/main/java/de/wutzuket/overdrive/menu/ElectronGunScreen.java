@@ -111,7 +111,13 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
 
         GuiStyle.hBar(guiGraphics, x + 70, y + 34, 96, 10,
                 menu.getProgressScaled(94) / 94.0, GuiStyle.COL_CYAN);
+    }
 
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
+        // renderLabels zeichnet relativ zum GUI-Ursprung, renderBg dagegen absolut.
+        // Deshalb gehoert der Status hierher, sonst landet er irgendwo auf dem Bildschirm.
         if (menu.isActive()) {
             guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.running"),
                     70, 50, GuiStyle.COL_GREEN, false);
@@ -119,11 +125,6 @@ public class ElectronGunScreen extends AbstractContainerScreen<ElectronGunMenu> 
             guiGraphics.drawString(this.font, Component.translatable("container.overdrive.electron_gun.idle"),
                     70, 50, GuiStyle.COL_YELLOW, false);
         }
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, 8, 6, GuiStyle.COL_TEXT, false);
         GuiStyle.kv(guiGraphics, font,
                 Component.translatable("container.overdrive.electron_gun.energy"),
                 ODFormat.formatEnergyPair(menu.getEnergy(), menu.getMaxEnergy()), 8, 74, GuiStyle.COL_GREEN);

@@ -36,3 +36,7 @@ crash-reports/
 
 # Env
 .env
+
+# Extracted jar artifacts
+/META-INF/
+/com/

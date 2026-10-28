@@ -91,6 +91,8 @@
   "container.overdrive.electron_gun.empty": "Leer",
   "container.overdrive.positron_vacuum_output_port": "Positronen-Vakuumausgang",
   "container.overdrive.positron_vacuum_output_port.empty": "Leer",
+  "container.overdrive.positron_vacuum_output_port.cell_hint": "Rechtsklick mit Zelle",
+  "container.overdrive.positron_vacuum_output_port.cell_hint_action": "zum Füllen/Leeren",
   "container.overdrive.hologram_block": "Hologramm-Projektor",
   "container.overdrive.hologram_block.files": "Dateien",
   "container.overdrive.hologram_block.transform": "Transformation",
@@ -249,6 +251,6 @@
   "tooltip.overdrive.antimatter_cell.empty": "Leer",
   "jei.overdrive.antimatter.type": "%s: %s",
   "jei.overdrive.antimatter.type.empty": "Leer",
-  "message.overdrive.antimatter.pipe.mode": "Antimatterrohr: %s",
+  "message.overdrive.antimatter.pipe.mode": "Antimatterrohr: ",
   "message.overdrive.antimatter.pipe.no_side": "Keine verbundene Seite zum Konfigurieren"
 }

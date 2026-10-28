@@ -174,6 +174,13 @@ capability anymore.
 Set the side of the machine to **pull** and the side of the tank to **push** to
 move the antimatter of a machine into a tank.
 
+### Positron Vacuum Output Port
+
+The output port buffers the positrons of the Electron Gun and exposes them to
+the pipe network. Right-click it with an **empty cell** to fill the cell from
+the buffer, or with a **full cell** to empty it back into the buffer. The gui
+only shows the tank gauge, there is no extra item slot.
+
 The JEI recipes of the accelerator, the AD ring, the ELENA ring and the
 annihilation reactor show the antimatter type that belongs to the substance of
 the recipe.

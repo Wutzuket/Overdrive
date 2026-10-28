@@ -21,6 +21,10 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 base {
@@ -123,6 +127,9 @@ dependencies {
 
     // The One Probe
     implementation "curse.maven:the-one-probe-245211:7292875"
+
+    // Jade
+    implementation "maven.modrinth:jade:15.10.6+neoforge"
 
     // Connected Textures Mod (CTM)
     runtimeOnly "curse.maven:ctm-267602:5587515"

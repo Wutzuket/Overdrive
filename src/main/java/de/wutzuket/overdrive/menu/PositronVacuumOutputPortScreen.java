@@ -54,6 +54,12 @@ public class PositronVacuumOutputPortScreen extends AbstractContainerScreen<Posi
         }
         guiGraphics.drawString(this.font, ODFormat.formatFluidPair(menu.getFluidAmount(), menu.getFluidCapacity()),
                 40, 30, GuiStyle.COL_CYAN, false);
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.positron_vacuum_output_port.cell_hint"),
+                40, 44, GuiStyle.COL_TEXT_DIM, false);
+        guiGraphics.drawString(this.font,
+                Component.translatable("container.overdrive.positron_vacuum_output_port.cell_hint_action"),
+                40, 54, GuiStyle.COL_TEXT_DIM, false);
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY,
                 GuiStyle.COL_TEXT_DIM, false);
     }

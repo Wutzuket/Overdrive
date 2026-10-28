@@ -1,23 +1,27 @@
 package de.wutzuket.overdrive.block.tungsten;
 
+import de.wutzuket.overdrive.antimatter.Antimatter;
+import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import de.wutzuket.overdrive.block.vacuum.IVacuumNode;
 import de.wutzuket.overdrive.block.vacuum.VacuumStructures;
 import de.wutzuket.overdrive.index.ODBlockEntities;
+import de.wutzuket.overdrive.index.ODItems;
+import de.wutzuket.overdrive.item.AntimatterCellItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import de.wutzuket.overdrive.antimatter.AntimatterTank;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,40 +32,129 @@ public class PositronVacuumOutputPortEntity extends BlockEntity implements IVacu
     private int cachedVolume = -1;
     // Positron-Max-Rate: 14.000 mB/Op
     private final AntimatterTank tank = new AntimatterTank(500_000);
-
-    private final ItemStackHandler itemHandler = new ItemStackHandler(1) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        }
-    };
+    /** Inhalt des frueheren Item-Slots, wird beim ersten Tick ausgegeben. */
+    private ItemStack legacyInventory = ItemStack.EMPTY;
 
     public PositronVacuumOutputPortEntity(BlockPos pos, BlockState state) {
         super(ODBlockEntities.POSITRON_VACUUM_OUTPUT_PORT.get(), pos, state);
+        // Auch Aenderungen durch das Antimatter-Rohrnetz muessen gespeichert und
+        // an die Clients geschickt werden, nicht nur die eigenen Zell-Interaktionen.
+        tank.setOnChanged(() -> {
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        });
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, PositronVacuumOutputPortEntity be) {
         IVacuumNode.propagate(be);
+        // Der fruehere Item-Slot existiert nicht mehr. Damit nichts verloren geht, wird
+        // ein dort gespeicherter Stack beim ersten Tick vor dem Block ausgegeben.
+        if (!level.isClientSide && !be.legacyInventory.isEmpty()) {
+            ItemStack stack = be.legacyInventory;
+            be.legacyInventory = ItemStack.EMPTY;
+            Block.popResource(level, pos, stack);
+            be.setChanged();
+        }
         if (!level.isClientSide) level.sendBlockUpdated(pos, state, state, 2);
     }
 
     public AntimatterTank getTank() { return tank; }
-    public IItemHandler getItemHandler() { return itemHandler; }
 
-    public boolean canAcceptItem(ItemStack stack) {
-        ItemStack existing = itemHandler.getStackInSlot(0);
-        if (existing.isEmpty()) return true;
-        if (!ItemStack.isSameItemSameComponents(existing, stack)) return false;
-        return existing.getCount() + stack.getCount() <= existing.getMaxStackSize();
+    /**
+     * Fills an empty cell from the tank or empties a full cell into it. Cells are handled by
+     * right-clicking the port, so the gui does not need an extra item slot.
+     *
+     * @return true when the held item is a cell and the interaction was handled
+     */
+    public boolean handleCellUse(Player player, InteractionHand hand) {
+        ItemStack held = player.getItemInHand(hand);
+        if (!(held.getItem() instanceof AntimatterCellItem cell)) {
+            return false;
+        }
+        // Auf dem Client wird nur der Rechtsklick quittiert, die eigentliche Aenderung
+        // passiert auf dem Server und wird ueber das Inventar synchronisiert.
+        if (level == null || level.isClientSide) {
+            return true;
+        }
+
+        int amount = cell.getAmount(held);
+        if (amount <= 0) {
+            fillCell(player, hand, held, cell);
+        } else {
+            emptyCell(player, hand, held, cell, amount);
+        }
+        return true;
     }
 
-    public void insertItem(ItemStack stack) {
-        ItemStack existing = itemHandler.getStackInSlot(0);
-        if (existing.isEmpty()) {
-            itemHandler.setStackInSlot(0, stack.copy());
+    /** Fills one empty cell from the tank. */
+    private void fillCell(Player player, InteractionHand hand, ItemStack held, AntimatterCellItem cell) {
+        Antimatter tankType = tank.getAntimatterInTank(0);
+        int tankAmount = tank.getAmount(0);
+        if (tankType == null || tankAmount <= 0) {
+            return;
+        }
+        Antimatter cellType = cell.getType(held);
+        if (cellType != null && !cellType.equals(tankType)) {
+            return;
+        }
+
+        int wanted = Math.min(cell.getCapacity(), tankAmount);
+        if (wanted <= 0) {
+            return;
+        }
+        int extracted = tank.extractAntimatter(0, wanted, false);
+        if (extracted <= 0) {
+            return;
+        }
+
+        ItemStack filled = new ItemStack(ODItems.getCellFor(tankType));
+        cell.setContent(filled, tankType, extracted);
+        replaceOneCell(player, hand, filled);
+    }
+
+    /** Empties one full cell into the tank. */
+    private void emptyCell(Player player, InteractionHand hand, ItemStack held, AntimatterCellItem cell, int amount) {
+        Antimatter cellType = cell.getType(held);
+        if (cellType == null) {
+            return;
+        }
+        Antimatter tankType = tank.getAntimatterInTank(0);
+        if (tankType != null && !tankType.equals(cellType)) {
+            return;
+        }
+        int space = tank.getCapacity(0) - tank.getAmount(0);
+        if (space < amount) {
+            return;
+        }
+        int inserted = tank.insertAntimatter(0, cellType, amount, false);
+        if (inserted < amount) {
+            return;
+        }
+
+        ItemStack empty = new ItemStack(ODItems.EMPTY_ANTIMATTER_CELL.get());
+        replaceOneCell(player, hand, empty);
+    }
+
+    /**
+     * Replaces exactly one cell of the held stack. Empty cells can be stacked, so the rest of the
+     * stack stays in the hand and the resulting cell is added to the inventory.
+     */
+    private void replaceOneCell(Player player, InteractionHand hand, ItemStack result) {
+        ItemStack held = player.getItemInHand(hand);
+        if (held.getCount() > 1) {
+            held.shrink(1);
+            player.setItemInHand(hand, held);
+            if (!player.getInventory().add(result)) {
+                player.drop(result, false);
+            }
         } else {
-            existing.grow(stack.getCount());
+            player.setItemInHand(hand, result);
+        }
+        setChanged();
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     }
 
@@ -100,7 +193,6 @@ public class PositronVacuumOutputPortEntity extends BlockEntity implements IVacu
         CompoundTag tankTag = new CompoundTag();
         tank.saveToNBT(tankTag);
         tag.put("tank", tankTag);
-        tag.put("Inventory", itemHandler.serializeNBT(registries));
     }
 
     @Override
@@ -109,7 +201,11 @@ public class PositronVacuumOutputPortEntity extends BlockEntity implements IVacu
         vacuum = tag.getFloat("vacuum");
         cachedVolume = tag.contains("structVolume") ? tag.getInt("structVolume") : -1;
         if (tag.contains("tank")) tank.loadFromNBT(tag.getCompound("tank"));
-        if (tag.contains("Inventory")) itemHandler.deserializeNBT(registries, tag.getCompound("Inventory"));
+        if (tag.contains("Inventory")) {
+            ItemStackHandler legacy = new ItemStackHandler(1);
+            legacy.deserializeNBT(registries, tag.getCompound("Inventory"));
+            legacyInventory = legacy.getStackInSlot(0);
+        }
     }
 
     @Override

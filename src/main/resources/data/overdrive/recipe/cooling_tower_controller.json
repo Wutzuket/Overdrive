@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "CSC",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "overdrive:cooling_tower_casing" },
+    "C": { "tag": "c:circuits/advanced" },
+    "S": { "item": "overdrive:scanner_panel" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:cooling_tower_controller"
+  }
+}

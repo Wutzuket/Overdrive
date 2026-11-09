@@ -1,0 +1,11 @@
+{
+  "type": "overdrive:circuit_press",
+  "ingredients": [
+    { "item": "overdrive:circuit_board" },
+    { "item": "minecraft:glass_pane" },
+    { "item": "minecraft:redstone" }
+  ],
+  "output": { "id": "overdrive:scanner_panel", "count": 2 },
+  "energy_per_tick": 300,
+  "process_time": 120
+}

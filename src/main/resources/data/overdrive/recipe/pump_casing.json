@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "APA",
+    "PFP",
+    "APA"
+  ],
+  "key": {
+    "A": { "tag": "c:ingots/aluminum" },
+    "P": { "tag": "c:plates/aluminum" },
+    "F": { "item": "overdrive:simple_frame" }
+  },
+  "result": {
+    "count": 4,
+    "id": "overdrive:pump_casing"
+  }
+}

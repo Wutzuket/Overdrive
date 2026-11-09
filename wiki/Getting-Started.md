@@ -31,6 +31,12 @@ electronic components. It is crafted in a crafting table, requires FE, and can
 use up to four inputs for each processing recipe. See the
 [Circuit Press](Circuit-Press) page for its recipe and configuration options.
 
+The early game uses a small microcrafting chain: aluminum plates and copper
+wire are pressed first, then combined into circuit boards, basic circuits and
+the higher circuit tiers. Almost every machine, casing, port and controller in
+the mod uses one of these components, so keep a steady supply of aluminum,
+copper, redstone, gold, diamonds, tungsten and iridium available.
+
 ## Multiblock machines
 
 Many advanced systems use multiblock structures. Place the correct casing,

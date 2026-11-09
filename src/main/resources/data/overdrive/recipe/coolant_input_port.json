@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "CWC",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "overdrive:annihilation_heavy_casing" },
+    "C": { "tag": "c:circuits/elite" },
+    "W": { "tag": "c:wires/copper" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:coolant_input_port"
+  }
+}

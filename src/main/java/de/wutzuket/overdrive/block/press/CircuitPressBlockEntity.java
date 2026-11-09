@@ -129,6 +129,13 @@ public final class CircuitPressBlockEntity extends BlockEntity implements IEnerg
             }
             if (!found) return false;
         }
+        // Only craft when every occupied input slot belongs to the recipe. Otherwise a
+        // single-ingredient recipe could match while unrelated items sit in other slots.
+        for (int slot = 0; slot < 4; slot++) {
+            if (!used[slot] && !items.getStackInSlot(slot).isEmpty()) {
+                return false;
+            }
+        }
         return true;
     }
 

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "GHG",
+    "HEH",
+    "GHG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:glass" },
+    "H": { "item": "overdrive:annihilation_heavy_casing" },
+    "E": { "tag": "c:circuits/elite" }
+  },
+  "result": {
+    "count": 4,
+    "id": "overdrive:core_containment_glass"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "PWP",
+    "PCP"
+  ],
+  "key": {
+    "P": { "item": "overdrive:pump_casing" },
+    "C": { "tag": "c:circuits/basic" },
+    "W": { "tag": "c:wires/copper" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:vacuum_energy_port"
+  }
+}

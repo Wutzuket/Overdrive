@@ -2,16 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "I",
-    "G"
+    " A ",
+    "GCG",
+    " A "
   ],
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "A": { "tag": "c:plates/aluminum" },
+    "G": { "item": "minecraft:glass" },
+    "C": { "tag": "c:circuits/basic" }
   },
   "result": {
     "count": 1,

@@ -3,16 +3,13 @@
   "category": "building",
   "pattern": [
     "III",
-    "IGI",
+    "GCG",
     "III"
   ],
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "I": { "tag": "c:ingots/iron" },
+    "G": { "item": "minecraft:glass" },
+    "C": { "tag": "c:circuits/basic" }
   },
   "result": {
     "count": 6,

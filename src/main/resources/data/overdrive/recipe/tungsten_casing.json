@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "TAT",
+    "AVA",
+    "TAT"
+  ],
+  "key": {
+    "T": { "tag": "c:ingots/tungsten" },
+    "A": { "tag": "c:plates/aluminum" },
+    "V": { "item": "overdrive:vacuum_pipe" }
+  },
+  "result": {
+    "count": 4,
+    "id": "overdrive:tungsten_casing"
+  }
+}

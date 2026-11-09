@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TCT",
+    "CWC",
+    "TCT"
+  ],
+  "key": {
+    "T": { "item": "overdrive:tungsten_casing" },
+    "C": { "tag": "c:circuits/advanced" },
+    "W": { "tag": "c:storage_blocks/tungsten" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:tungsten_target"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "CPC",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "overdrive:ad_casing" },
+    "C": { "tag": "c:circuits/advanced" },
+    "P": { "item": "overdrive:antimatter_pipe_basic" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:ad_input_port"
+  }
+}

@@ -25,6 +25,8 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItems.RAW_ALUMINUM.get());
                 output.accept(ODItems.ALUMINUM_INGOT.get());
                 output.accept(ODItems.ALUMINUM_NUGGET.get());
+                output.accept(ODItems.ALUMINUM_PLATE.get());
+                output.accept(ODItems.COPPER_WIRE.get());
                 output.accept(ODItems.ALUMINUM_BLOCK.get());
                 output.accept(ODItems.CREATIVE_ENERGY_CUBE.get());
                 output.accept(ODItems.IRIDIUM_ORE.get());
@@ -86,9 +88,14 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 output.accept(ODItems.COOLING_TOWER_INPUT_PORT.get());
                 output.accept(ODItems.COOLING_TOWER_OUTPUT_PORT.get());
                 output.accept(ODItems.SCANNER.get());
+                output.accept(ODItems.SCANNER_PANEL.get());
                 output.accept(ODItems.CRYO_DISTILLER.get());
                 output.accept(ODItems.CIRCUIT_PRESS.get());
                 output.accept(ODItems.CIRCUIT_BOARD.get());
+                output.accept(ODItems.BASIC_CIRCUIT.get());
+                output.accept(ODItems.ADVANCED_CIRCUIT.get());
+                output.accept(ODItems.ELITE_CIRCUIT.get());
+                output.accept(ODItems.ULTIMATE_CIRCUIT.get());
                 output.accept(ODItems.COAL_GENERATOR.get());
                 output.accept(ODItems.SIMPLE_FRAME.get());
                 output.accept(ODItems.ANTIMATTER_PIPE_BASIC.get());

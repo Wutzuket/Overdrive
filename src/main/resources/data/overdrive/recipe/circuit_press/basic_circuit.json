@@ -1,0 +1,11 @@
+{
+  "type": "overdrive:circuit_press",
+  "ingredients": [
+    { "item": "overdrive:circuit_board" },
+    { "tag": "c:wires/copper" },
+    { "item": "minecraft:redstone" }
+  ],
+  "output": { "id": "overdrive:basic_circuit", "count": 1 },
+  "energy_per_tick": 200,
+  "process_time": 120
+}

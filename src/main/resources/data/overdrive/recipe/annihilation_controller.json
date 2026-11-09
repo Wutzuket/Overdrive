@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "CSC",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "overdrive:annihilation_heavy_casing" },
+    "C": { "tag": "c:circuits/ultimate" },
+    "S": { "item": "overdrive:scanner_panel" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:annihilation_controller"
+  }
+}

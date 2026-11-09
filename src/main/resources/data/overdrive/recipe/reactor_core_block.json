@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ICI",
+    "CSC",
+    "ICI"
+  ],
+  "key": {
+    "I": { "tag": "c:ingots/iridium" },
+    "C": { "tag": "c:circuits/elite" },
+    "S": { "item": "overdrive:annihilation_heavy_casing" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:reactor_core_block"
+  }
+}

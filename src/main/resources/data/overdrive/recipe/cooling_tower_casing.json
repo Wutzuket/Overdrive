@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "AIA",
+    "ISI",
+    "AIA"
+  ],
+  "key": {
+    "A": { "tag": "c:plates/aluminum" },
+    "I": { "item": "minecraft:packed_ice" },
+    "S": { "item": "overdrive:simple_frame" }
+  },
+  "result": {
+    "count": 4,
+    "id": "overdrive:cooling_tower_casing"
+  }
+}

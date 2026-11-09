@@ -2,17 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "pattern": [
-    "III",
-    "IGI",
-    "III"
+    "GAG",
+    "ACA",
+    "GAG"
   ],
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "G": { "item": "minecraft:glass" },
+    "A": { "tag": "c:plates/aluminum" },
+    "C": { "tag": "c:circuits/advanced" }
   },
   "result": {
     "count": 1,

@@ -33,6 +33,25 @@ vanilla crafting recipes and are shown in the JEI Circuit Press category.
 Recipes may use between one and four ingredients and always have one item
 output.
 
+## Microcrafting chain
+
+The press produces the electronic components used by the rest of the mod:
+
+```text
+Aluminum Ingot -> Aluminum Plate
+Copper Ingot   -> Copper Wire (2)
+Aluminum Plate + Copper Wire + Redstone -> Circuit Board
+Circuit Board + Copper Wire + Redstone -> Basic Circuit
+Basic Circuit + Gold Ingot + Redstone -> Advanced Circuit
+Advanced Circuit + Diamond + Tungsten Ingot -> Elite Circuit
+Elite Circuit + Iridium Ingot + Netherite Ingot -> Ultimate Circuit
+Circuit Board + Glass Pane + Redstone -> Scanner Panel (2)
+```
+
+The circuits and the scanner panel are used in the crafting recipes for
+machines, casings, ports, pipes and controllers. Higher-tier machines require
+higher-tier circuits, so the press remains relevant throughout the progression.
+
 ## Configuration
 
 The common configuration file contains a `circuit_press` section:

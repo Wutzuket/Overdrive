@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "APA",
+    "PSP",
+    "APA"
+  ],
+  "key": {
+    "A": { "tag": "c:plates/aluminum" },
+    "P": { "item": "minecraft:packed_ice" },
+    "S": { "tag": "c:circuits/advanced" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:cryo_distiller"
+  }
+}

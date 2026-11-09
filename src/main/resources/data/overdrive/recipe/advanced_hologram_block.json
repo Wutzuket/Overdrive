@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "CHC",
+    " D "
+  ],
+  "key": {
+    "A": { "tag": "c:plates/aluminum" },
+    "C": { "tag": "c:circuits/advanced" },
+    "H": { "item": "overdrive:hologram_block" },
+    "D": { "tag": "c:gems/diamond" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:advanced_hologram_block"
+  }
+}

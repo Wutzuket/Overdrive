@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TCT",
+    "CEC",
+    "TCT"
+  ],
+  "key": {
+    "T": { "item": "overdrive:tungsten_casing" },
+    "C": { "tag": "c:circuits/advanced" },
+    "E": { "item": "overdrive:tungsten_mesh" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:electron_gun"
+  }
+}

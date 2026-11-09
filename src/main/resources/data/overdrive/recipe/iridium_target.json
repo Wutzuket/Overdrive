@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "CIC",
+    "ACA"
+  ],
+  "key": {
+    "A": { "item": "overdrive:accelerator_casing" },
+    "C": { "tag": "c:circuits/basic" },
+    "I": { "tag": "c:ingots/iridium" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:iridium_target"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "PVP",
+    "PCP"
+  ],
+  "key": {
+    "P": { "item": "overdrive:pump_casing" },
+    "C": { "tag": "c:circuits/basic" },
+    "V": { "item": "overdrive:vacuum_pipe" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:vacuum_output_port"
+  }
+}

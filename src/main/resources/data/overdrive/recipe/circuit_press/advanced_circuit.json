@@ -1,0 +1,11 @@
+{
+  "type": "overdrive:circuit_press",
+  "ingredients": [
+    { "item": "overdrive:basic_circuit" },
+    { "tag": "c:ingots/gold" },
+    { "item": "minecraft:redstone" }
+  ],
+  "output": { "id": "overdrive:advanced_circuit", "count": 1 },
+  "energy_per_tick": 400,
+  "process_time": 160
+}

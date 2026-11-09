@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GAG",
+    "ACA",
+    "GRG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:glass" },
+    "A": { "tag": "c:plates/aluminum" },
+    "C": { "tag": "c:circuits/basic" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:hologram_block"
+  }
+}

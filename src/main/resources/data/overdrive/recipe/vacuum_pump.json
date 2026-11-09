@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "PBP",
+    "PCP"
+  ],
+  "key": {
+    "P": { "item": "overdrive:pump_casing" },
+    "C": { "tag": "c:circuits/basic" },
+    "B": { "item": "minecraft:iron_block" }
+  },
+  "result": {
+    "count": 1,
+    "id": "overdrive:vacuum_pump"
+  }
+}

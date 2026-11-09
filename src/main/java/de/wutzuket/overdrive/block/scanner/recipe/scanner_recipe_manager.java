@@ -4,9 +4,13 @@ import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,13 +65,30 @@ public final class scanner_recipe_manager {
 
     public static @Nullable scanner_match findMatch(@NotNull Level level, @NotNull BlockPos scannerPos,
                                                     @NotNull BlockState scannerState) {
+        return findMatch(level, scannerPos, scannerState, null);
+    }
+
+    /**
+     * Sucht den passenden Aufbau inklusive der Item-Zutaten. Die gedroppten
+     * Items im 3x3x3-Bereich werden einmal eingesammelt und an alle Rezepte
+     * weitergereicht, damit nicht jedes Rezept erneut die Welt absucht.
+     */
+    public static @Nullable scanner_match findMatch(@NotNull Level level, @NotNull BlockPos scannerPos,
+                                                    @NotNull BlockState scannerState,
+                                                    @Nullable ItemStackHandler inventory) {
+        Direction scannerFacing = scannerState.getValue(BlockStateProperties.FACING);
+        BlockPos center = scannerPos.relative(scannerFacing, 3).above(1);
+        AABB area = new AABB(center).inflate(2.0);
+        List<ItemEntity> nearbyItems = level.getEntitiesOfClass(ItemEntity.class, area);
+
         for (RecipeHolder<scanner_recipe> holder : getRecipeHolders(level)) {
             scanner_recipe recipe = holder.value();
             for (Direction facing : HORIZONTAL_FACINGS) {
-                if (recipe.matches(level, scannerPos, scannerState, facing, false)) {
+                if (recipe.matches(level, scannerPos, scannerState, facing, false, inventory, nearbyItems)) {
                     return new scanner_match(holder.id(), recipe, facing, false);
                 }
-                if (recipe.acceptMirrored() && recipe.matches(level, scannerPos, scannerState, facing, true)) {
+                if (recipe.acceptMirrored()
+                        && recipe.matches(level, scannerPos, scannerState, facing, true, inventory, nearbyItems)) {
                     return new scanner_match(holder.id(), recipe, facing, true);
                 }
             }

@@ -3,15 +3,18 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:accelerator_casing" },
-    "V": { "block": "overdrive:simple_frame" },
-    "B": { "block": "minecraft:air" }
+    "A": {"block": "overdrive:accelerator_casing"},
+    "V": {"block": "overdrive:simple_frame"},
+    "B": {"block": "minecraft:air"},
+    "C": {"item_tag": "c:circuits/advanced"},
+    "P": {"item_tag": "c:plates/aluminum"},
+    "W": {"item_tag": "c:wires/copper"}
   },
   "pattern": [
     ["BBB", "BAB", "BBB"],
     ["BAB", "AVA", "BAB"],
-    ["BBB", "BAB", "BBB"]
+    ["BCB", "PAW", "BBB"]
   ],
-  "result": { "count": 6, "id": "overdrive:ad_casing" },
+  "result": {"count": 6, "id": "overdrive:ad_casing"},
   "show_notification": false
 }

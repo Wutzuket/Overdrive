@@ -22,11 +22,14 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +126,51 @@ public final class scanner_recipe implements Recipe<RecipeInput> {
         return stacks;
     }
 
+    /**
+     * Die Item-Zutaten dieses Rezepts, jeweils mit der Anzahl der Zellen, die
+     * diesen Matcher verwenden. Diese Items werden im Aufbau platziert oder in
+     * das Scanner-GUI eingelegt.
+     */
+    public List<ItemStack> getPreviewItemStacks() {
+        Map<Item, Integer> counts = new LinkedHashMap<>();
+        for (int layer = 0; layer < pattern.length; layer++) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (!isActiveCell(layer, row, col)) {
+                        continue;
+                    }
+                    scanner_block_matcher matcher = getMatcher(layer, row, col);
+                    if (!matcher.isItemMatcher()) {
+                        continue;
+                    }
+                    List<ItemStack> stacks = matcher.displayStacks();
+                    if (!stacks.isEmpty()) {
+                        counts.merge(stacks.getFirst().getItem(), 1, Integer::sum);
+                    }
+                }
+            }
+        }
+
+        List<ItemStack> stacks = new ArrayList<>();
+        for (Map.Entry<Item, Integer> entry : counts.entrySet()) {
+            stacks.add(new ItemStack(entry.getKey(), Math.min(entry.getValue(), 64)));
+        }
+        return stacks;
+    }
+
+    public boolean hasItemRequirements() {
+        for (int layer = 0; layer < pattern.length; layer++) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (isActiveCell(layer, row, col) && getMatcher(layer, row, col).isItemMatcher()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public List<ItemStack> getMaterialCosts() {
         Map<Item, Integer> counts = new LinkedHashMap<>();
         for (int layer = 0; layer < pattern.length; layer++) {
@@ -212,23 +260,38 @@ public final class scanner_recipe implements Recipe<RecipeInput> {
     }
 
     public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState) {
-        return matches(level, scannerPos, scannerState, scannerState.getValue(BlockStateProperties.FACING));
+        return matches(level, scannerPos, scannerState, scannerState.getValue(BlockStateProperties.FACING), false, null, null);
     }
 
     public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, @NotNull Direction facing) {
-        return matches(level, scannerPos, scannerState, facing, false)
-                || (acceptMirrored && matches(level, scannerPos, scannerState, facing, true));
+        return matches(level, scannerPos, scannerState, facing, false, null, null)
+                || (acceptMirrored && matches(level, scannerPos, scannerState, facing, true, null, null));
     }
 
     public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, @NotNull Direction facing, boolean mirrored) {
-        return matchesFacing(level, scannerPos, scannerState, facing, mirrored);
+        return matches(level, scannerPos, scannerState, facing, mirrored, null, null);
     }
 
     public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, boolean mirrored) {
-        return matchesFacing(level, scannerPos, scannerState, scannerState.getValue(BlockStateProperties.FACING), mirrored);
+        return matches(level, scannerPos, scannerState, scannerState.getValue(BlockStateProperties.FACING), mirrored, null, null);
     }
 
-    private boolean matchesFacing(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, @NotNull Direction facing, boolean mirrored) {
+    /**
+     * Prueft den Aufbau inklusive der Item-Zutaten. Items koennen als
+     * gedroppte Items in den Zellen des Aufbaus liegen oder im Scanner-Inventar
+     * bereitgestellt werden.
+     */
+    public boolean matches(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState,
+                           @NotNull Direction facing, boolean mirrored,
+                           @Nullable ItemStackHandler inventory, @Nullable List<ItemEntity> nearbyItems) {
+        return matchesFacing(level, scannerPos, scannerState, facing, mirrored, inventory, nearbyItems);
+    }
+
+    private boolean matchesFacing(@NotNull Level level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState,
+                                  @NotNull Direction facing, boolean mirrored,
+                                  @Nullable ItemStackHandler inventory, @Nullable List<ItemEntity> nearbyItems) {
+        List<ItemRequirement> itemRequirements = new ArrayList<>();
+
         for (int layer = 0; layer < 3; layer++) {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
@@ -236,22 +299,162 @@ public final class scanner_recipe implements Recipe<RecipeInput> {
                         continue;
                     }
 
-                    String symbol = pattern[layer][row][col];
-                    scanner_block_matcher matcher = key.get(symbol);
-                    if (matcher == null) {
-                        throw new IllegalStateException("Unknown scanner recipe symbol '" + symbol + "'");
-                    }
-
+                    scanner_block_matcher matcher = getMatcher(layer, row, col);
                     BlockPos target = getCellPos(scannerPos, scannerState, layer, row, col, mirrored, facing);
+                    BlockState state = level.getBlockState(target);
 
-                    if (!matcher.matches(level.getBlockState(target))) {
+                    if (matcher.isItemMatcher()) {
+                        // Item-Zellen muessen leer sein; das Item liegt auf dem
+                        // Block darunter oder kommt aus dem Scanner-Inventar.
+                        if (!state.isAir()) {
+                            return false;
+                        }
+                        itemRequirements.add(new ItemRequirement(target, matcher));
+                    } else if (!matcher.matchesBlock(state)) {
                         return false;
                     }
                 }
             }
         }
 
-        return true;
+        return resolveItemUses(level, itemRequirements, inventory, nearbyItems) != null;
+    }
+
+    private List<ItemRequirement> collectItemRequirements(@NotNull BlockPos scannerPos, @NotNull BlockState scannerState,
+                                                          @NotNull Direction facing, boolean mirrored) {
+        List<ItemRequirement> requirements = new ArrayList<>();
+        for (int layer = 0; layer < 3; layer++) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (!isActiveCell(layer, row, col)) {
+                        continue;
+                    }
+                    scanner_block_matcher matcher = getMatcher(layer, row, col);
+                    if (!matcher.isItemMatcher()) {
+                        continue;
+                    }
+                    requirements.add(new ItemRequirement(
+                            getCellPos(scannerPos, scannerState, layer, row, col, mirrored, facing), matcher));
+                }
+            }
+        }
+        return requirements;
+    }
+
+    private @Nullable List<ItemUse> resolveItemUses(@NotNull Level level, @NotNull List<ItemRequirement> requirements,
+                                                    @Nullable ItemStackHandler inventory,
+                                                    @Nullable List<ItemEntity> nearbyItems) {
+        if (requirements.isEmpty()) {
+            return List.of();
+        }
+
+        Map<ItemEntity, Integer> usedEntities = new HashMap<>();
+        int[] usedSlots = new int[inventory == null ? 0 : inventory.getSlots()];
+        List<ItemUse> uses = new ArrayList<>();
+
+        for (ItemRequirement requirement : requirements) {
+            ItemEntity entity = findItemEntity(level, requirement, nearbyItems, usedEntities);
+            if (entity != null) {
+                usedEntities.merge(entity, 1, Integer::sum);
+                uses.add(new ItemUse(entity, -1));
+                continue;
+            }
+
+            int slot = findInventorySlot(inventory, requirement.matcher(), usedSlots);
+            if (slot < 0) {
+                return null;
+            }
+            usedSlots[slot]++;
+            uses.add(new ItemUse(null, slot));
+        }
+
+        return uses;
+    }
+
+    private @Nullable ItemEntity findItemEntity(@NotNull Level level, @NotNull ItemRequirement requirement,
+                                                @Nullable List<ItemEntity> nearbyItems,
+                                                @NotNull Map<ItemEntity, Integer> usedEntities) {
+        AABB cell = new AABB(requirement.pos());
+
+        if (nearbyItems != null) {
+            for (ItemEntity entity : nearbyItems) {
+                if (!entity.isAlive() || !entity.getBoundingBox().intersects(cell)) {
+                    continue;
+                }
+                if (usedEntities.getOrDefault(entity, 0) >= entity.getItem().getCount()) {
+                    continue;
+                }
+                if (requirement.matcher().matchesItem(entity.getItem())) {
+                    return entity;
+                }
+            }
+            return null;
+        }
+
+        for (ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, cell)) {
+            if (usedEntities.getOrDefault(entity, 0) >= entity.getItem().getCount()) {
+                continue;
+            }
+            if (requirement.matcher().matchesItem(entity.getItem())) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    private int findInventorySlot(@Nullable ItemStackHandler inventory, @NotNull scanner_block_matcher matcher,
+                                  int[] usedSlots) {
+        if (inventory == null) {
+            return -1;
+        }
+        for (int slot = 0; slot < inventory.getSlots(); slot++) {
+            ItemStack stack = inventory.getStackInSlot(slot);
+            if (usedSlots[slot] >= stack.getCount()) {
+                continue;
+            }
+            if (matcher.matchesItem(stack)) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Entfernt die Item-Zutaten des Aufbaus. Wird vor dem Zerstoeren der
+     * Struktur aufgerufen, damit gedroppte Items nicht verloren gehen.
+     */
+    public void consumeItems(@NotNull ServerLevel level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState,
+                             @NotNull Direction facing, boolean mirrored, @Nullable ItemStackHandler inventory) {
+        List<ItemRequirement> requirements = collectItemRequirements(scannerPos, scannerState, facing, mirrored);
+        if (requirements.isEmpty()) {
+            return;
+        }
+
+        List<ItemUse> uses = resolveItemUses(level, requirements, inventory, null);
+        if (uses == null) {
+            return;
+        }
+
+        for (ItemUse use : uses) {
+            if (use.entity() != null) {
+                ItemStack stack = use.entity().getItem();
+                if (stack.isEmpty()) {
+                    continue;
+                }
+                stack.shrink(1);
+                if (stack.isEmpty()) {
+                    use.entity().discard();
+                }
+            } else if (inventory != null && use.inventorySlot() >= 0) {
+                inventory.extractItem(use.inventorySlot(), 1, false);
+            }
+        }
+    }
+
+    private record ItemRequirement(@NotNull BlockPos pos, @NotNull scanner_block_matcher matcher) {
+    }
+
+    private record ItemUse(@Nullable ItemEntity entity, int inventorySlot) {
     }
 
     public void consume(@NotNull ServerLevel level, @NotNull BlockPos scannerPos, @NotNull BlockState scannerState, @NotNull Direction facing, boolean mirrored) {

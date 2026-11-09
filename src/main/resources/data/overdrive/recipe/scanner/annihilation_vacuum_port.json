@@ -3,11 +3,18 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:annihilation_heavy_casing" },
-    "V": { "tag": "c:storage_blocks/lapis" },
-    "B": { "block": "minecraft:air" }
+    "A": {"block": "overdrive:annihilation_heavy_casing"},
+    "V": {"tag": "c:storage_blocks/lapis"},
+    "B": {"block": "minecraft:air"},
+    "C": {"item_tag": "c:circuits/ultimate"},
+    "P": {"item_tag": "c:plates/aluminum"},
+    "W": {"item_tag": "c:wires/copper"}
   },
-  "pattern": [["BBB", "BAB", "BBB"], ["BAB", "AVA", "BAB"], ["BBB", "BAB", "BBB"]],
-  "result": { "count": 1, "id": "overdrive:annihilation_vacuum_port" },
+  "pattern": [
+    ["BBB", "BAB", "BBB"],
+    ["BAB", "AVA", "BAB"],
+    ["BCB", "PAW", "BBB"]
+  ],
+  "result": {"count": 1, "id": "overdrive:annihilation_vacuum_port"},
   "show_notification": false
 }

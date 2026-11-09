@@ -3,15 +3,18 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "block": "overdrive:ad_casing" },
-    "V": { "tag": "c:storage_blocks/gold" },
-    "B": { "block": "minecraft:air" }
+    "A": {"block": "overdrive:ad_casing"},
+    "V": {"tag": "c:storage_blocks/gold"},
+    "B": {"block": "minecraft:air"},
+    "C": {"item_tag": "c:circuits/advanced"},
+    "P": {"item_tag": "c:plates/aluminum"},
+    "W": {"item_tag": "c:wires/copper"}
   },
   "pattern": [
     ["BBB", "BAB", "BBB"],
     ["BAB", "AVA", "BAB"],
-    ["BBB", "BAB", "BBB"]
+    ["BCB", "PAW", "BBB"]
   ],
-  "result": { "count": 1, "id": "overdrive:ad_output_port" },
+  "result": {"count": 1, "id": "overdrive:ad_output_port"},
   "show_notification": false
 }

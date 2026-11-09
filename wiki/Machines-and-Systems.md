@@ -53,6 +53,18 @@ The scanner recognizes supported multiblock components and provides access to
 scanner recipes. It is useful when learning the structure of a new machine or
 checking which blocks belong to a multiblock system.
 
+Scanner recipes are 3x3x3 structures. Build the pattern shown in JEI around
+the scanner, supply Forge Energy and trigger it with a redstone signal. The
+scanner consumes the structure and drops the result.
+
+Some recipes additionally require items, including the high-tier machine
+parts. Provide those items either by dropping them into the matching empty
+cells of the structure (they rest on the block below) or by placing them into
+the scanner's four item slots, which are opened by right-clicking the scanner.
+Items are consumed when the scan starts, and any remaining items are dropped
+when the scanner is broken. JEI shows the required item ingredients beside the
+structure preview.
+
 ## Hologram blocks
 
 The standard Hologram Block can display multiblock structures in-world. The

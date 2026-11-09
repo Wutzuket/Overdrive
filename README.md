@@ -18,6 +18,8 @@ multiblock recipes.
 - A circuit press microcrafting chain with aluminum plates, copper wire,
   circuit boards, scanner panels and four circuit tiers.
 - A scanner that recognizes multiblock components and exposes scanner recipes.
+  High-tier machines are scanner-only and can require dropped items or items
+  placed in the scanner's GUI.
 - Hologram blocks for visualizing multiblock structures.
 - An Advanced Hologram Block with Lua scripting, interactive buttons, text,
   animation and a built-in console.

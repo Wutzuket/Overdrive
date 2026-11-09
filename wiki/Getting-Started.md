@@ -33,16 +33,21 @@ use up to four inputs for each processing recipe. See the
 
 The early game uses a small microcrafting chain: aluminum plates and copper
 wire are pressed first, then combined into circuit boards, basic circuits and
-the higher circuit tiers. Almost every machine, casing, port and controller in
-the mod uses one of these components, so keep a steady supply of aluminum,
-copper, redstone, gold, diamonds, tungsten and iridium available.
+the higher circuit tiers. The high-tier machines (particle accelerator, AD,
+ELENA and annihilation reactor) are built only with the Scanner and require
+the matching circuit tier plus aluminum plates and copper wire. Keep a steady
+supply of aluminum, copper, redstone, gold, diamonds, tungsten and iridium
+available.
 
 ## Multiblock machines
 
 Many advanced systems use multiblock structures. Place the correct casing,
 controller, ports and internal components according to the relevant recipe.
 Use the Overdrive scanner to inspect supported components and structure
-recipes. A wrench can be used with blocks that are marked as wrenchable.
+recipes. Scanner recipes may also need items: drop them into the empty cells
+of the structure or put them into the scanner's item slots, then power the
+scanner with redstone and FE. A wrench can be used with blocks that are
+marked as wrenchable.
 
 ## Fluids and safety
 

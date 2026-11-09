@@ -3,12 +3,19 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "tag": "c:storage_blocks/iridium" },
-    "F": { "block": "overdrive:simple_frame" },
-    "V": { "tag": "c:storage_blocks/iridium" },
-    "B": { "tag": "c:storage_blocks/iridium" }
+    "A": {"tag": "c:storage_blocks/iridium"},
+    "F": {"block": "overdrive:simple_frame"},
+    "V": {"tag": "c:storage_blocks/iridium"},
+    "B": {"tag": "c:storage_blocks/iridium"},
+    "C": {"item_tag": "c:circuits/ultimate"},
+    "P": {"item_tag": "c:plates/aluminum"},
+    "W": {"item_tag": "c:wires/copper"}
   },
-  "pattern": [["AAA", "AAA", "AAA"], ["VVV", "VFV", "VVV"], ["BBB", "BBB", "BBB"]],
-  "result": { "count": 12, "id": "overdrive:annihilation_heavy_casing" },
+  "pattern": [
+    ["AAA", "AAA", "AAA"],
+    ["VVV", "VFV", "VVV"],
+    ["CPW", "BBB", "BBB"]
+  ],
+  "result": {"count": 12, "id": "overdrive:annihilation_heavy_casing"},
   "show_notification": false
 }

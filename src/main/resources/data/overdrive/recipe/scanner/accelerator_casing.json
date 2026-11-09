@@ -3,16 +3,19 @@
   "energy": 5000,
   "accept_mirrored": true,
   "key": {
-    "A": { "tag": "c:storage_blocks/aluminum" },
-    "F": { "block": "overdrive:simple_frame" },
-    "V": { "tag": "c:storage_blocks/aluminum" },
-    "B": { "block": "minecraft:air" }
+    "A": {"tag": "c:storage_blocks/aluminum"},
+    "F": {"block": "overdrive:simple_frame"},
+    "V": {"tag": "c:storage_blocks/aluminum"},
+    "B": {"block": "minecraft:air"},
+    "C": {"item_tag": "c:circuits/basic"},
+    "P": {"item_tag": "c:plates/aluminum"},
+    "W": {"item_tag": "c:wires/copper"}
   },
   "pattern": [
     ["AAA", "AAA", "AAA"],
     ["VVV", "VFV", "VVV"],
-    ["BBB", "BBB", "BBB"]
+    ["CPW", "BBB", "BBB"]
   ],
-  "result": { "count": 12, "id": "overdrive:accelerator_casing" },
+  "result": {"count": 12, "id": "overdrive:accelerator_casing"},
   "show_notification": false
 }

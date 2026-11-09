@@ -63,6 +63,9 @@ public static final Supplier<MenuType<HologramMenu>> HOLOGRAM_MENU =
     public static final Supplier<MenuType<de.wutzuket.overdrive.menu.AntimatterTankMenu>> ANTIMATTER_TANK_MENU =
             MENUS.register("antimatter_tank", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.AntimatterTankMenu::new));
 
+    public static final Supplier<MenuType<de.wutzuket.overdrive.menu.scanner_menu>> SCANNER_MENU =
+            MENUS.register("scanner", () -> IMenuTypeExtension.create(de.wutzuket.overdrive.menu.scanner_menu::new));
+
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);
     }

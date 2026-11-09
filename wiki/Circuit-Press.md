@@ -48,9 +48,12 @@ Elite Circuit + Iridium Ingot + Netherite Ingot -> Ultimate Circuit
 Circuit Board + Glass Pane + Redstone -> Scanner Panel (2)
 ```
 
-The circuits and the scanner panel are used in the crafting recipes for
-machines, casings, ports, pipes and controllers. Higher-tier machines require
-higher-tier circuits, so the press remains relevant throughout the progression.
+The circuits, plates and wires are used by both crafting-table recipes and
+scanner recipes. Basic components such as the vacuum pump, cooling tower,
+targets, pipes and the scanner itself are still crafted at a crafting table.
+The high-tier machines - the particle accelerator, AD, ELENA and the
+annihilation reactor parts - are built only with the Scanner and require the
+matching circuit tier plus aluminum plates and copper wire.
 
 ## Configuration
 
@@ -72,3 +75,8 @@ restart it after making changes.
 The Overdrive scanner includes a Circuit Press recipe for discovering the
 machine. JEI lists the machine's crafting recipe, its processing recipes and
 the required energy and processing time.
+
+Scanner recipes can also require items. Place the required items either as
+dropped items in the 3x3x3 structure (on top of a solid block) or inside the
+scanner's item slots, then trigger the scanner with redstone and FE. JEI shows
+the item ingredients next to the structure preview.

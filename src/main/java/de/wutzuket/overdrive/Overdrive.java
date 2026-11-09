@@ -500,6 +500,7 @@ registrar.playToClient(
             event.register(ODMenuTypes.CIRCUIT_PRESS_MENU.get(), de.wutzuket.overdrive.menu.CircuitPressScreen::new);
             event.register(ODMenuTypes.COAL_GENERATOR_MENU.get(), de.wutzuket.overdrive.menu.CoalGeneratorScreen::new);
             event.register(ODMenuTypes.ANTIMATTER_TANK_MENU.get(), de.wutzuket.overdrive.menu.AntimatterTankScreen::new);
+            event.register(ODMenuTypes.SCANNER_MENU.get(), de.wutzuket.overdrive.menu.scanner_screen::new);
         }
         @SubscribeEvent
         public static void registerFluidTypeExtensions(RegisterClientExtensionsEvent event) {

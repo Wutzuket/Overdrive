@@ -31,6 +31,10 @@ public class scanner_recipe_widget implements IRecipeWidget, IJeiGuiEventListene
     private static final int PANEL_TOP = 10;
     static final int RESULT_X = 118;
     static final int RESULT_Y = 48;
+    private static final int ITEM_GRID_X = 118;
+    private static final int ITEM_GRID_Y = 84;
+    private static final int ITEM_COLUMNS = 3;
+    private static final int ITEM_SPACING = 18;
     private static final float STRUCTURE_CENTER_X = GRID_X + (SLOT_SPACING * 1.5F);
     private static final float STRUCTURE_CENTER_Y = GRID_Y + (SLOT_SPACING * 1.5F) + 2.0F;
     private static final float ALL_LAYERS_SCALE = 7.5F;
@@ -77,6 +81,7 @@ public class scanner_recipe_widget implements IRecipeWidget, IJeiGuiEventListene
         }
 
         drawResult(guiGraphics, minecraft);
+        drawItemIngredients(guiGraphics, minecraft);
     }
 
     @Override
@@ -87,6 +92,12 @@ public class scanner_recipe_widget implements IRecipeWidget, IJeiGuiEventListene
         }
         if (isInside(mouseX, mouseY, NEXT_X, BUTTON_Y, BUTTON_SIZE, BUTTON_SIZE)) {
             tooltip.add(Component.translatable("jei.overdrive.scanner.next_layer"));
+            return;
+        }
+
+        ItemStack itemIngredient = getItemIngredientAt(mouseX, mouseY);
+        if (itemIngredient != null) {
+            tooltip.addAll(Screen.getTooltipFromItem(Minecraft.getInstance(), itemIngredient));
             return;
         }
 
@@ -109,6 +120,17 @@ public class scanner_recipe_widget implements IRecipeWidget, IJeiGuiEventListene
         }
         if (isInside(mouseX, mouseY, NEXT_X, BUTTON_Y, BUTTON_SIZE, BUTTON_SIZE)) {
             changeView(1);
+            return true;
+        }
+
+        ItemStack itemIngredient = getItemIngredientAt(mouseX, mouseY);
+        if (itemIngredient != null && !itemIngredient.isEmpty()) {
+            IJeiRuntime runtime = scanner_jei_plugin.getRuntime();
+            if (runtime != null) {
+                var focus = runtime.getJeiHelpers().getFocusFactory()
+                        .createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM_STACK, itemIngredient);
+                runtime.getRecipesGui().show(focus);
+            }
             return true;
         }
 
@@ -169,6 +191,37 @@ public class scanner_recipe_widget implements IRecipeWidget, IJeiGuiEventListene
         guiGraphics.renderItem(result, RESULT_X + 1, RESULT_Y + 1);
         guiGraphics.renderItemDecorations(minecraft.font, result, RESULT_X + 1, RESULT_Y + 1);
         guiGraphics.drawString(minecraft.font, Component.translatable("jei.overdrive.scanner.result"), RESULT_X - 2, RESULT_Y - 12, 0x404040, false);
+    }
+
+    private void drawItemIngredients(GuiGraphics guiGraphics, Minecraft minecraft) {
+        java.util.List<ItemStack> items = recipe.getPreviewItemStacks();
+        if (items.isEmpty()) {
+            return;
+        }
+
+        guiGraphics.drawString(minecraft.font, Component.translatable("jei.overdrive.scanner.items"),
+                ITEM_GRID_X - 2, ITEM_GRID_Y - 12, 0x404040, false);
+
+        for (int i = 0; i < items.size(); i++) {
+            int x = ITEM_GRID_X + (i % ITEM_COLUMNS) * ITEM_SPACING;
+            int y = ITEM_GRID_Y + (i / ITEM_COLUMNS) * ITEM_SPACING;
+            ItemStack stack = items.get(i);
+            drawSlot(guiGraphics, x, y);
+            guiGraphics.renderItem(stack, x + 1, y + 1);
+            guiGraphics.renderItemDecorations(minecraft.font, stack, x + 1, y + 1);
+        }
+    }
+
+    private @Nullable ItemStack getItemIngredientAt(double mouseX, double mouseY) {
+        java.util.List<ItemStack> items = recipe.getPreviewItemStacks();
+        for (int i = 0; i < items.size(); i++) {
+            int x = ITEM_GRID_X + (i % ITEM_COLUMNS) * ITEM_SPACING;
+            int y = ITEM_GRID_Y + (i / ITEM_COLUMNS) * ITEM_SPACING;
+            if (isInside(mouseX, mouseY, x, y, 18, 18)) {
+                return items.get(i);
+            }
+        }
+        return null;
     }
 
     private void drawSlot(GuiGraphics guiGraphics, int x, int y) {

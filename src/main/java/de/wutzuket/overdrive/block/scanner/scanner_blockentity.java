@@ -4,33 +4,52 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_match;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe;
 import de.wutzuket.overdrive.block.scanner.recipe.scanner_recipe_manager;
+import de.wutzuket.overdrive.menu.scanner_menu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
+public class scanner_blockentity extends BlockEntity implements IEnergyStorage, MenuProvider {
     private static final int MAX_ENERGY = 100_000;
+    private static final int ITEM_SLOTS = 4;
     private static final String TAG_ENERGY = "energy";
     private static final int ANIMATION_DURATION = 40;
     private static final int HOLD_DURATION = 10;
 
     private int energy = 0;
+    private final ItemStackHandler items = new ItemStackHandler(ITEM_SLOTS) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if (level != null) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
 
     private @Nullable ResourceLocation matchedRecipeId;
     private @Nullable ResourceLocation matchedResultId;
@@ -90,7 +109,7 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
             return;
         }
 
-        scanner_match match = scanner_recipe_manager.findMatch(level, pos, state);
+        scanner_match match = scanner_recipe_manager.findMatch(level, pos, state, blockEntity.items);
         ResourceLocation newRecipeId = match == null ? null : match.id();
         ResourceLocation newResultId = match == null ? null : match.recipe().resultId();
         int newResultCount = match == null ? 0 : match.recipe().resultCount();
@@ -131,6 +150,9 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
 
     private void beginAnimation(ServerLevel level, BlockPos pos, BlockState state, scanner_match match) {
         animationSnapshot.clear();
+        if (match.recipe().hasItemRequirements()) {
+            match.recipe().consumeItems(level, pos, state, match.facing(), match.mirrored(), items);
+        }
         for (int layer = 0; layer < 3; layer++) {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
@@ -194,6 +216,32 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
         return animationSnapshot;
     }
 
+    public ItemStackHandler getItems() {
+        return items;
+    }
+
+    /**
+     * Vorschau auf das Ergebnis des aktuell erkannten Rezepts.
+     */
+    public ItemStack getMatchedResultStack() {
+        if (matchedResultId == null || matchedResultCount <= 0
+                || !BuiltInRegistries.ITEM.containsKey(matchedResultId)) {
+            return ItemStack.EMPTY;
+        }
+        Item item = BuiltInRegistries.ITEM.get(matchedResultId);
+        return new ItemStack(item, matchedResultCount);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("container.overdrive.scanner");
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return new scanner_menu(id, inventory, this);
+    }
+
     public int getEnergy() {
         return energy;
     }
@@ -252,6 +300,7 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
         tag.putBoolean("WaitingToDrop", waitingToDrop);
         tag.putInt("AnimationTicks", animationTicks);
         tag.putBoolean("Consumed", consumed);
+        tag.put("items", items.serializeNBT(registries));
 
         ListTag snapshot = new ListTag();
         for (CompoundTag cellTag : animationSnapshot) {
@@ -273,6 +322,7 @@ public class scanner_blockentity extends BlockEntity implements IEnergyStorage {
         waitingToDrop = tag.contains("WaitingToDrop") && tag.getBoolean("WaitingToDrop");
         animationTicks = tag.contains("AnimationTicks") ? tag.getInt("AnimationTicks") : 0;
         consumed = tag.contains("Consumed") && tag.getBoolean("Consumed");
+        items.deserializeNBT(registries, tag.getCompound("items"));
         animationSnapshot.clear();
         if (tag.contains("AnimationSnapshot")) {
             ListTag snapshot = tag.getList("AnimationSnapshot", 10);

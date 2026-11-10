@@ -57,6 +57,14 @@ public interface scanner_block_matcher {
     }
 
     default @NotNull BlockState displayState() {
+        if (isItemMatcher()) {
+            // An item is not a part of the structure. It is dropped into the build or put
+            // into the item slots of the scanner, so it has no block in the preview. Items
+            // that have a block form (a redstone block for example) would be drawn as a
+            // block otherwise, although they are only an item requirement.
+            return Blocks.AIR.defaultBlockState();
+        }
+
         List<ItemStack> stacks = displayStacks();
         if (stacks.isEmpty()) {
             return Blocks.AIR.defaultBlockState();

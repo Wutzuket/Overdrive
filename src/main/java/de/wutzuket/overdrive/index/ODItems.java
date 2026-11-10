@@ -45,24 +45,6 @@ public static final Supplier<Item> HOLOGRAM_BLOCK = ITEMS.register("hologram_blo
     public static final Supplier<Item> ALUMINUM_NUGGET = ITEMS.register("aluminum_nugget",
             () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> ALUMINUM_PLATE = ITEMS.register("aluminum_plate",
-            () -> new Item(new Item.Properties()));
-
-    public static final Supplier<Item> COPPER_WIRE = ITEMS.register("copper_wire",
-            () -> new Item(new Item.Properties()));
-
-    public static final Supplier<Item> BASIC_CIRCUIT = ITEMS.register("basic_circuit",
-            () -> new Item(new Item.Properties()));
-
-    public static final Supplier<Item> ADVANCED_CIRCUIT = ITEMS.register("advanced_circuit",
-            () -> new Item(new Item.Properties()));
-
-    public static final Supplier<Item> ELITE_CIRCUIT = ITEMS.register("elite_circuit",
-            () -> new Item(new Item.Properties()));
-
-    public static final Supplier<Item> ULTIMATE_CIRCUIT = ITEMS.register("ultimate_circuit",
-            () -> new Item(new Item.Properties()));
-
     public static final Supplier<Item> SCANNER_PANEL = ITEMS.register("scanner_panel",
             () -> new Item(new Item.Properties()));
 

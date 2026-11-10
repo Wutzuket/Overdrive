@@ -1,8 +1,8 @@
 {
   "type": "overdrive:circuit_press",
   "ingredients": [
-    { "tag": "c:plates/aluminum" },
-    { "tag": "c:wires/copper" },
+    { "item": "overdrive:aluminum_ingot" },
+    { "item": "minecraft:copper_ingot" },
     { "item": "minecraft:redstone" }
   ],
   "output": { "id": "overdrive:circuit_board", "count": 1 },

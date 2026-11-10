@@ -8,7 +8,7 @@
   ],
   "key": {
     "A": { "item": "overdrive:annihilation_heavy_casing" },
-    "C": { "tag": "c:circuits/elite" },
+    "C": { "item": "minecraft:redstone_block" },
     "W": { "item": "minecraft:iron_bars" }
   },
   "result": {

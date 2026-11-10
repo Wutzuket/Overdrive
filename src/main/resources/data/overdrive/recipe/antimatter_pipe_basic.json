@@ -9,7 +9,7 @@
   "key": {
     "I": { "tag": "c:ingots/iron" },
     "G": { "item": "minecraft:glass" },
-    "C": { "tag": "c:circuits/basic" }
+    "C": { "item": "minecraft:redstone" }
   },
   "result": {
     "count": 6,

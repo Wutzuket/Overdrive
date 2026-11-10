@@ -6,9 +6,9 @@
     "A": {"block": "overdrive:annihilation_heavy_casing"},
     "V": {"tag": "c:storage_blocks/diamond"},
     "B": {"block": "minecraft:air"},
-    "C": {"item_tag": "c:circuits/ultimate"},
-    "P": {"item_tag": "c:plates/aluminum"},
-    "W": {"item_tag": "c:wires/copper"}
+    "C": {"item": "minecraft:beacon"},
+    "P": {"item": "overdrive:aluminum_ingot"},
+    "W": {"item": "minecraft:copper_ingot"}
   },
   "pattern": [
     ["BBB", "BAB", "BBB"],

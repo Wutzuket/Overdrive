@@ -9,7 +9,7 @@
     { "item": "overdrive:antimatter_pipe_basic" },
     { "item": "overdrive:antimatter_pipe_basic" },
     { "tag": "c:ingots/gold" },
-    { "tag": "c:circuits/advanced" }
+    { "item": "minecraft:comparator" }
   ],
   "result": {
     "count": 6,

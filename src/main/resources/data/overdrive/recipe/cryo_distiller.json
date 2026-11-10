@@ -7,9 +7,9 @@
     "APA"
   ],
   "key": {
-    "A": { "tag": "c:plates/aluminum" },
+    "A": { "item": "overdrive:aluminum_ingot" },
     "P": { "item": "minecraft:packed_ice" },
-    "S": { "tag": "c:circuits/advanced" }
+    "S": { "item": "minecraft:comparator" }
   },
   "result": {
     "count": 1,

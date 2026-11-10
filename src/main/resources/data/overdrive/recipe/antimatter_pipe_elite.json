@@ -9,7 +9,7 @@
     { "item": "overdrive:antimatter_pipe_advanced" },
     { "item": "overdrive:antimatter_pipe_advanced" },
     { "tag": "c:gems/diamond" },
-    { "tag": "c:circuits/elite" }
+    { "item": "minecraft:redstone_block" }
   ],
   "result": {
     "count": 6,

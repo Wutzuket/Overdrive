@@ -7,8 +7,8 @@
     " D "
   ],
   "key": {
-    "A": { "tag": "c:plates/aluminum" },
-    "C": { "tag": "c:circuits/advanced" },
+    "A": { "item": "overdrive:aluminum_ingot" },
+    "C": { "item": "minecraft:comparator" },
     "H": { "item": "overdrive:hologram_block" },
     "D": { "tag": "c:gems/diamond" }
   },

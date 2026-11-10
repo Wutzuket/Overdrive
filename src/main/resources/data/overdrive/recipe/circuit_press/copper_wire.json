@@ -1,9 +1,0 @@
-{
-  "type": "overdrive:circuit_press",
-  "ingredients": [
-    { "tag": "c:ingots/copper" }
-  ],
-  "output": { "id": "overdrive:copper_wire", "count": 2 },
-  "energy_per_tick": 40,
-  "process_time": 40
-}

@@ -8,8 +8,8 @@
   ],
   "key": {
     "G": { "item": "minecraft:glass" },
-    "A": { "tag": "c:plates/aluminum" },
-    "C": { "tag": "c:circuits/basic" },
+    "A": { "item": "overdrive:aluminum_ingot" },
+    "C": { "item": "minecraft:redstone" },
     "R": { "item": "minecraft:redstone" }
   },
   "result": {

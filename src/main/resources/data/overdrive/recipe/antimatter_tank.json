@@ -8,8 +8,8 @@
   ],
   "key": {
     "G": { "item": "minecraft:glass" },
-    "A": { "tag": "c:plates/aluminum" },
-    "C": { "tag": "c:circuits/advanced" }
+    "A": { "item": "overdrive:aluminum_ingot" },
+    "C": { "item": "minecraft:comparator" }
   },
   "result": {
     "count": 1,

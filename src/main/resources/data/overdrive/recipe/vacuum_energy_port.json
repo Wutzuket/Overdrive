@@ -8,8 +8,8 @@
   ],
   "key": {
     "P": { "item": "overdrive:pump_casing" },
-    "C": { "tag": "c:circuits/basic" },
-    "W": { "tag": "c:wires/copper" }
+    "C": { "item": "minecraft:redstone" },
+    "W": { "item": "minecraft:copper_ingot" }
   },
   "result": {
     "count": 1,

@@ -9,7 +9,7 @@
     { "item": "overdrive:antimatter_pipe_elite" },
     { "item": "overdrive:antimatter_pipe_elite" },
     { "item": "minecraft:netherite_ingot" },
-    { "tag": "c:circuits/ultimate" }
+    { "item": "minecraft:beacon" }
   ],
   "result": {
     "count": 6,

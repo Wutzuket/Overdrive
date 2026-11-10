@@ -35,25 +35,29 @@ output.
 
 ## Microcrafting chain
 
-The press produces the electronic components used by the rest of the mod:
+The press produces the circuit board and the scanner panel:
 
 ```text
-Aluminum Ingot -> Aluminum Plate
-Copper Ingot   -> Copper Wire (2)
-Aluminum Plate + Copper Wire + Redstone -> Circuit Board
-Circuit Board + Copper Wire + Redstone -> Basic Circuit
-Basic Circuit + Gold Ingot + Redstone -> Advanced Circuit
-Advanced Circuit + Diamond + Tungsten Ingot -> Elite Circuit
-Elite Circuit + Iridium Ingot + Netherite Ingot -> Ultimate Circuit
+Aluminum Ingot + Copper Ingot + Redstone -> Circuit Board
 Circuit Board + Glass Pane + Redstone -> Scanner Panel (2)
 ```
 
-The circuits, plates and wires are used by both crafting-table recipes and
-scanner recipes. Basic components such as the vacuum pump, cooling tower,
-targets, pipes and the scanner itself are still crafted at a crafting table.
-The high-tier machines - the particle accelerator, AD, ELENA and the
-annihilation reactor parts - are built only with the Scanner and require the
-matching circuit tier plus aluminum plates and copper wire.
+The electronic components of the rest of the mod are crafted from vanilla
+materials. Every machine needs the redstone tier that belongs to it, an
+aluminum ingot and often a copper ingot:
+
+| Tier | Component |
+| --- | --- |
+| Basic | Redstone |
+| Advanced | Comparator |
+| Elite | Redstone Block |
+| Ultimate | Beacon |
+
+Basic components such as the vacuum pump, cooling tower, targets, pipes and
+the scanner itself are still crafted at a crafting table. The high-tier
+machines - the particle accelerator, AD, ELENA and the annihilation reactor
+parts - are built only with the Scanner and require the matching redstone tier
+plus aluminum ingots and copper ingots.
 
 ## Configuration
 

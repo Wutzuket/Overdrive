@@ -47,8 +47,8 @@ public interface scanner_block_matcher {
      * Rohwert des Matchers, wie er in der Rezeptdatei stehen kann. Ein Block
      * wird ohne Praefix geschrieben ({@code minecraft:stone}), ein Block-Tag mit
      * fuehrender Raute ({@code #minecraft:logs}), ein Item mit
-     * {@code item:overdrive:basic_circuit}, ein Item-Tag mit
-     * {@code item_tag:c:circuits/basic} und der Platzhalter mit {@code *}.
+     * {@code item:minecraft:redstone}, ein Item-Tag mit
+     * {@code item_tag:c:ingots/iron} und der Platzhalter mit {@code *}.
      */
     @NotNull String rawValue();
 
@@ -105,14 +105,14 @@ public interface scanner_block_matcher {
     ).apply(inst, id -> new scanner_ref(id, Kind.BLOCK_TAG)));
 
     /**
-     * Objektform eines Matchers: {@code {"item": "overdrive:basic_circuit"}}.
+     * Objektform eines Matchers: {@code {"item": "minecraft:redstone"}}.
      */
     Codec<scanner_ref> ITEM_REF_CODEC = RecordCodecBuilder.create(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("item").forGetter(scanner_ref::id)
     ).apply(inst, id -> new scanner_ref(id, Kind.ITEM)));
 
     /**
-     * Objektform eines Matchers: {@code {"item_tag": "c:circuits/basic"}}.
+     * Objektform eines Matchers: {@code {"item_tag": "c:ingots/iron"}}.
      */
     Codec<scanner_ref> ITEM_TAG_REF_CODEC = RecordCodecBuilder.create(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("item_tag").forGetter(scanner_ref::id)

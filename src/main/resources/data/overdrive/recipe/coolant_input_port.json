@@ -8,8 +8,8 @@
   ],
   "key": {
     "A": { "item": "overdrive:annihilation_heavy_casing" },
-    "C": { "tag": "c:circuits/elite" },
-    "W": { "tag": "c:wires/copper" }
+    "C": { "item": "minecraft:redstone_block" },
+    "W": { "item": "minecraft:copper_ingot" }
   },
   "result": {
     "count": 1,

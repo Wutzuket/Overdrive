@@ -8,7 +8,7 @@
   ],
   "key": {
     "T": { "tag": "c:ingots/tungsten" },
-    "A": { "tag": "c:plates/aluminum" },
+    "A": { "item": "overdrive:aluminum_ingot" },
     "V": { "item": "overdrive:vacuum_pipe" }
   },
   "result": {

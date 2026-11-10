@@ -1,9 +1,0 @@
-{
-  "type": "overdrive:circuit_press",
-  "ingredients": [
-    { "tag": "c:ingots/aluminum" }
-  ],
-  "output": { "id": "overdrive:aluminum_plate", "count": 1 },
-  "energy_per_tick": 40,
-  "process_time": 40
-}

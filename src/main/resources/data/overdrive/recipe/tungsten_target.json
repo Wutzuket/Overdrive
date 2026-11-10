@@ -8,7 +8,7 @@
   ],
   "key": {
     "T": { "item": "overdrive:tungsten_casing" },
-    "C": { "tag": "c:circuits/advanced" },
+    "C": { "item": "minecraft:comparator" },
     "W": { "tag": "c:storage_blocks/tungsten" }
   },
   "result": {

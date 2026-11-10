@@ -26,18 +26,17 @@ Overdrive is built around progressively more complex technology:
 
 The exact recipes and processing values are available in JEI in-game.
 
-The Circuit Press is an early machine for producing circuit boards and other
-electronic components. It is crafted in a crafting table, requires FE, and can
-use up to four inputs for each processing recipe. See the
+The Circuit Press is an early machine for producing circuit boards and the
+scanner panel. It is crafted in a crafting table, requires FE, and can use up to
+four inputs for each processing recipe. See the
 [Circuit Press](Circuit-Press) page for its recipe and configuration options.
 
-The early game uses a small microcrafting chain: aluminum plates and copper
-wire are pressed first, then combined into circuit boards, basic circuits and
-the higher circuit tiers. The high-tier machines (particle accelerator, AD,
-ELENA and annihilation reactor) are built only with the Scanner and require
-the matching circuit tier plus aluminum plates and copper wire. Keep a steady
-supply of aluminum, copper, redstone, gold, diamonds, tungsten and iridium
-available.
+The basic components of the mod are crafted from vanilla materials: redstone
+for the electronics, aluminum and copper for the metal parts. The high-tier
+machines (particle accelerator, AD, ELENA and annihilation reactor) are built
+only with the Scanner and need redstone components of the matching tier plus
+aluminum ingots and copper ingots. Keep a steady supply of aluminum, copper,
+redstone, gold, diamonds, tungsten and iridium available.
 
 ## Multiblock machines
 

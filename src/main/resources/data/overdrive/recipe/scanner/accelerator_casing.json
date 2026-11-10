@@ -7,9 +7,9 @@
     "F": {"block": "overdrive:simple_frame"},
     "V": {"tag": "c:storage_blocks/aluminum"},
     "B": {"block": "minecraft:air"},
-    "C": {"item_tag": "c:circuits/basic"},
-    "P": {"item_tag": "c:plates/aluminum"},
-    "W": {"item_tag": "c:wires/copper"}
+    "C": {"item": "minecraft:redstone"},
+    "P": {"item": "overdrive:aluminum_ingot"},
+    "W": {"item": "minecraft:copper_ingot"}
   },
   "pattern": [
     ["AAA", "AAA", "AAA"],

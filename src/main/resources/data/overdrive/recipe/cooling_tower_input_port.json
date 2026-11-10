@@ -8,8 +8,8 @@
   ],
   "key": {
     "A": { "item": "overdrive:cooling_tower_casing" },
-    "C": { "tag": "c:circuits/advanced" },
-    "W": { "tag": "c:wires/copper" }
+    "C": { "item": "minecraft:comparator" },
+    "W": { "item": "minecraft:copper_ingot" }
   },
   "result": {
     "count": 1,

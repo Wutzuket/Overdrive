@@ -8,7 +8,7 @@
   ],
   "key": {
     "A": { "item": "overdrive:cooling_tower_casing" },
-    "C": { "tag": "c:circuits/advanced" },
+    "C": { "item": "minecraft:comparator" },
     "S": { "item": "overdrive:scanner_panel" }
   },
   "result": {

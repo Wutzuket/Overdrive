@@ -8,8 +8,8 @@
   ],
   "key": {
     "P": { "item": "overdrive:scanner_panel" },
-    "C": { "tag": "c:circuits/advanced" },
-    "A": { "tag": "c:plates/aluminum" }
+    "C": { "item": "minecraft:comparator" },
+    "A": { "item": "overdrive:aluminum_ingot" }
   },
   "result": {
     "count": 1,

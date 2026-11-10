@@ -7,7 +7,7 @@
     "AIA"
   ],
   "key": {
-    "A": { "tag": "c:plates/aluminum" },
+    "A": { "item": "overdrive:aluminum_ingot" },
     "I": { "item": "minecraft:packed_ice" },
     "S": { "item": "overdrive:simple_frame" }
   },

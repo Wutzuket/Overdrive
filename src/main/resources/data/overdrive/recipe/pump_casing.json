@@ -8,7 +8,7 @@
   ],
   "key": {
     "A": { "tag": "c:ingots/aluminum" },
-    "P": { "tag": "c:plates/aluminum" },
+    "P": { "item": "overdrive:aluminum_ingot" },
     "F": { "item": "overdrive:simple_frame" }
   },
   "result": {

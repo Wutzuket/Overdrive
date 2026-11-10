@@ -6,9 +6,9 @@
     "A": {"block": "overdrive:elena_casing"},
     "V": {"tag": "c:storage_blocks/lapis"},
     "B": {"block": "minecraft:air"},
-    "C": {"item_tag": "c:circuits/elite"},
-    "P": {"item_tag": "c:plates/aluminum"},
-    "W": {"item_tag": "c:wires/copper"}
+    "C": {"item": "minecraft:redstone_block"},
+    "P": {"item": "overdrive:aluminum_ingot"},
+    "W": {"item": "minecraft:copper_ingot"}
   },
   "pattern": [
     ["BBB", "BAB", "BBB"],

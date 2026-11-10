@@ -253,6 +253,8 @@
   "item.overdrive.antimatter_pipe_ultimate": "Ultimate Antimatter Pipe",
   "item.overdrive.empty_antimatter_cell": "Empty Antimatter Cell",
   "item.overdrive.antimatter_cell.filled": "%s Cell",
+  "config.jade.plugin_overdrive.vacuum": "Show Vacuum Information",
+  "config.jade.plugin_overdrive.antimatter": "Show Antimatter Information",
   "pipe_mode.overdrive.normal": "Normal",
   "pipe_mode.overdrive.push": "Push",
   "pipe_mode.overdrive.pull": "Pull",

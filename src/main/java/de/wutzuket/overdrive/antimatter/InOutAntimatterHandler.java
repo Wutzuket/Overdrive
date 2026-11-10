@@ -64,4 +64,16 @@ public class InOutAntimatterHandler implements IAntimatterHandler {
         }
         return outputTank.extractAntimatter(0, amount, simulate);
     }
+
+    /** Only the input tank takes antimatter, the output tank is for the result. */
+    @Override
+    public int getInsertTank(@Nullable Antimatter type) {
+        return 0;
+    }
+
+    /** Only the output tank gives antimatter, the input tank is filled by the pipes. */
+    @Override
+    public int getExtractTank(@Nullable Antimatter type) {
+        return 1;
+    }
 }

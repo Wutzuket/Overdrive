@@ -24,6 +24,11 @@ to be connected to the pipe network have to implement the
 `IAntimatterHandler` interface, which is exposed through the
 `overdrive:antimatter_handler` block capability.
 
+A machine can expose **several tanks**. The pipe network does not know the
+machine, it asks the handler which tank belongs to the type that is
+transported, so a single pipe network can supply every tank of a machine that
+keeps one tank per type. See [Machines with several tanks](#machines-with-several-tanks).
+
 The antiprotons and the positrons are **no fluids**. There are no fluid blocks
 and no buckets for them, they are only moved with the antimatter pipe network
 and the antimatter cells. The recipes of the machines work with the antimatter
@@ -67,6 +72,12 @@ a tank, set the side at the machine to **pull** and the side at the tank to
 A pulling side always takes the antimatter out of the machine. When there is no
 pushing side that can accept it, the antimatter waits in the pipes until it can
 be delivered. The pipes are the buffer of the network.
+
+> **Fixed in 1.21.1_2.0.8:** a pulling side did not take anything out of the AD
+> ring and the ELENA ring before, because the network always used the first tank
+> of the machine. Those machines keep their output in the second tank, so the
+> pull stayed without effect. The network asks the machine for the tank now, so
+> a pull takes the antimatter out of the output tank.
 
 When the transfer is done the source is empty, the target holds the whole amount
 and no antimatter is left over in the pipes.
@@ -184,6 +195,54 @@ only shows the tank gauge, there is no extra item slot.
 The JEI recipes of the accelerator, the AD ring, the ELENA ring and the
 annihilation reactor show the antimatter type that belongs to the substance of
 the recipe.
+
+## Machines with several tanks
+
+A machine can expose more than one tank through the `IAntimatterHandler`
+interface. The pipe network never picks a tank on its own, it asks the handler
+which tank belongs to the antimatter type that is transported. A machine that
+keeps one tank per type can therefore be supplied by a single pipe network, and
+the antimatter never changes its type on the way.
+
+```java
+@Override
+public int getInsertTank(@Nullable Antimatter type) {
+    // the tank the given type has to be inserted into, -1 when it fits nowhere
+}
+
+@Override
+public int getExtractTank(@Nullable Antimatter type) {
+    // the tank the given type has to be taken from, -1 when it is not stored
+}
+```
+
+Both methods are `default` methods of the interface, so an existing handler
+keeps compiling and keeps its behaviour. The default implementation uses the
+first tank that is compatible with the type, which is the right answer for a
+handler with a single tank. A handler with an input and an output tank has to
+override both methods, so the pipes fill the input tank and take the antimatter
+out of the output tank:
+
+```java
+@Override
+public int getInsertTank(@Nullable Antimatter type) {
+    return 0; // the input tank
+}
+
+@Override
+public int getExtractTank(@Nullable Antimatter type) {
+    return 1; // the output tank
+}
+```
+
+The mod ships `MultiTankAntimatterHandler`, it keeps one tank per antimatter
+type and routes the transport by the type:
+
+```java
+MultiTankAntimatterHandler handler = new MultiTankAntimatterHandler()
+        .addTank(Antimatter.POSITRONS, 32000)
+        .addTank(Antimatter.ANTIPROTONS, 32000);
+```
 
 ## Recipes
 

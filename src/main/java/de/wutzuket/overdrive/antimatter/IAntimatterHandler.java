@@ -75,4 +75,43 @@ public interface IAntimatterHandler {
         Antimatter stored = getAntimatterInTank(tank);
         return stored == null || stored.equals(type);
     }
+
+    /**
+     * Finds the tank the given antimatter type should be inserted into.
+     *
+     * <p>The default implementation returns the first tank that is compatible with the type.
+     * That keeps single tank machines (which only have tank 0) working exactly like before.
+     * Machines that keep a different type in every tank should override this method and
+     * return the tank that matches the type.</p>
+     *
+     * @param type the antimatter that should be inserted, may be null
+     * @return the index of the tank, or -1 when the type cannot be stored at all
+     */
+    default int getInsertTank(@Nullable Antimatter type) {
+        for (int tank = 0; tank < getTanks(); tank++) {
+            if (isCompatible(tank, type)) {
+                return tank;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Finds the tank the antimatter should be taken from.
+     *
+     * <p>The default implementation returns the first tank that actually holds antimatter and
+     * that matches the given type (a null type matches every type).</p>
+     *
+     * @param type the antimatter that is wanted, may be null to accept any type
+     * @return the index of the tank, or -1 when no tank holds the wanted antimatter
+     */
+    default int getExtractTank(@Nullable Antimatter type) {
+        for (int tank = 0; tank < getTanks(); tank++) {
+            Antimatter stored = getAntimatterInTank(tank);
+            if (stored != null && getAmount(tank) > 0 && (type == null || stored.equals(type))) {
+                return tank;
+            }
+        }
+        return -1;
+    }
 }

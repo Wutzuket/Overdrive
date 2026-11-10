@@ -483,19 +483,26 @@ public class AntimatterNetwork {
             if (!handler.canInsert()) {
                 return;
             }
-            Antimatter machineType = handler.getAntimatterInTank(0);
-            if (machineType == null || handler.getAmount(0) <= 0) {
+            // The machine decides which tank the antimatter is taken from, so machines with
+            // more than one tank can offer every type they store.
+            Antimatter wanted = pipe.getLocalType();
+            int tank = handler.getExtractTank(wanted);
+            if (tank < 0) {
                 return;
             }
-            if (pipe.getLocalType() != null && !pipe.getLocalType().equals(machineType)) {
+            Antimatter machineType = handler.getAntimatterInTank(tank);
+            if (machineType == null || handler.getAmount(tank) <= 0) {
+                return;
+            }
+            if (wanted != null && !wanted.equals(machineType)) {
                 // the pipe already holds a different type of antimatter
                 return;
             }
-            int wanted = Math.min(rate, pipe.getBufferCapacity() - pipe.getLocalAmount());
-            if (wanted <= 0) {
+            int amount = Math.min(rate, pipe.getBufferCapacity() - pipe.getLocalAmount());
+            if (amount <= 0) {
                 return;
             }
-            int extracted = handler.extractAntimatter(0, wanted, false);
+            int extracted = handler.extractAntimatter(tank, amount, false);
             if (extracted > 0) {
                 if (pipe.getLocalType() == null) {
                     pipe.setLocalType(machineType);
@@ -512,7 +519,14 @@ public class AntimatterNetwork {
             if (pushType == null) {
                 return;
             }
-            int space = handler.getCapacity(0) - handler.getAmount(0);
+            // The machine decides which tank the antimatter belongs into, so a machine with
+            // one tank per type can be filled from a single pipe network.
+            int tank = handler.getInsertTank(pushType);
+            if (tank < 0) {
+                // the machine cannot take this type of antimatter, it stays in the pipes
+                return;
+            }
+            int space = handler.getCapacity(tank) - handler.getAmount(tank);
             if (space <= 0) {
                 return;
             }
@@ -526,9 +540,12 @@ public class AntimatterNetwork {
             if (available <= 0) {
                 return;
             }
-            int accepted = handler.insertAntimatter(0, pushType, available, false);
+            int accepted = handler.insertAntimatter(tank, pushType, available, false);
             if (accepted < available) {
                 // the machine did not take everything, put the rest back
+                if (pipe.getLocalType() == null) {
+                    pipe.setLocalType(pushType);
+                }
                 pipe.insertLocal(available - accepted);
             }
         }

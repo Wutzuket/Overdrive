@@ -6,7 +6,6 @@ import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,12 +23,9 @@ public final class scanner_screen extends AbstractContainerScreen<scanner_menu> 
     private static final int ITEMS_LABEL_X = 26;
     private static final int ITEMS_LABEL_Y = 10;
     private static final int STATUS_X = 80;
-    private static final int STATUS_Y = 20;
+    private static final int STATUS_Y = 52;
     private static final int RESULT_X = 140;
     private static final int RESULT_Y = 30;
-    private static final int HINT_X = 80;
-    private static final int HINT_Y = 50;
-    private static final int HINT_WIDTH = 88;
 
     public scanner_screen(scanner_menu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -74,12 +70,6 @@ public final class scanner_screen extends AbstractContainerScreen<scanner_menu> 
                 ? GuiStyle.COL_YELLOW
                 : scanner.getMatchedRecipeId() != null ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM;
         g.drawString(font, status, STATUS_X, STATUS_Y, statusColor, false);
-
-        List<FormattedCharSequence> hintLines = font.split(
-                Component.translatable("container.overdrive.scanner.hint"), HINT_WIDTH);
-        for (int i = 0; i < hintLines.size(); i++) {
-            g.drawString(font, hintLines.get(i), HINT_X, HINT_Y + i * 10, GuiStyle.COL_TEXT_DIM, false);
-        }
 
         g.drawString(font, playerInventoryTitle, 8, inventoryLabelY, GuiStyle.COL_TEXT_DIM, false);
     }

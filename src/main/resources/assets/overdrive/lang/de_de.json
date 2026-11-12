@@ -1,5 +1,8 @@
 {
   "itemGroup.overdrive": "Overdrive",
+  "item.overdrive.guide": "Overdrive-Handbuch",
+  "tooltip.overdrive.guide.hint": "Öffnet das In-Game-Handbuch von Overdrive.",
+  "tooltip.overdrive.guide.hotkey": "Halte G auf einem Gegenstand, um die passende Seite zu öffnen.",
   "block.overdrive.scanner": "Scanner",
   "block.overdrive.simple_frame": "Einfacher Rahmen",
   "block.overdrive.hologram_block": "Hologramm-Projektor",
@@ -264,5 +267,6 @@
   "jei.overdrive.antimatter.type": "%s: %s",
   "jei.overdrive.antimatter.type.empty": "Leer",
   "message.overdrive.antimatter.pipe.mode": "Antimatterrohr: ",
-  "message.overdrive.antimatter.pipe.no_side": "Keine verbundene Seite zum Konfigurieren"
+  "message.overdrive.antimatter.pipe.no_side": "Keine verbundene Seite zum Konfigurieren",
+  "guide.overdrive.can_be_replaced_with": "%s - Kann ersetzt werden durch: %s"
 }

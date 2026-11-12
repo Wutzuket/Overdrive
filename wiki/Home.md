@@ -10,6 +10,7 @@ multiblock machines, fluids, scanners and programmable holograms.
 
 - [Getting Started](Getting-Started)
 - [Machines and Systems](Machines-and-Systems)
+- [In-Game Handbook](Handbook)
 - [Circuit Press](Circuit-Press)
 - [Configuration](Configuration)
 - [Antimatter Transport and Storage](Antimatter-Transport)

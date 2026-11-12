@@ -1,0 +1,17 @@
+{
+  DataVersion: 3955,
+  size: [1, 1, 4],
+  palette: [
+    "overdrive:positron_vacuum_output_port",
+    "overdrive:tungsten_target{facing:south}",
+    "overdrive:electron_gun{facing:north}",
+    "overdrive:vacuum_pipe{north:true}"
+  ],
+  data: [
+    {pos: [0, 0, 0], state: "overdrive:positron_vacuum_output_port"},
+    {pos: [0, 0, 1], state: "overdrive:tungsten_target{facing:south}"},
+    {pos: [0, 0, 2], state: "overdrive:electron_gun{facing:north}"},
+    {pos: [0, 0, 3], state: "overdrive:vacuum_pipe{north:true}"}
+  ],
+  entities: []
+}

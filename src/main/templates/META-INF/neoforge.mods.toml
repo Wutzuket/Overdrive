@@ -85,6 +85,12 @@ side = "BOTH"
     side = "BOTH"
 
 [[dependencies."${mod_id}"]]
+    modId = "guideme"
+    type = "optional"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[dependencies."${mod_id}"]]
     modId = "ctm"
     type = "optional"
     ordering = "AFTER"

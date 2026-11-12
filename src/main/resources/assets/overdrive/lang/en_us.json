@@ -1,5 +1,8 @@
 {
   "itemGroup.overdrive": "Overdrive: Antimatter",
+  "item.overdrive.guide": "Overdrive Handbook",
+  "tooltip.overdrive.guide.hint": "Opens the in-game handbook of Overdrive.",
+  "tooltip.overdrive.guide.hotkey": "Hold G on an item to open the page that describes it.",
   "block.overdrive.scanner": "Scanner",
   "block.overdrive.hologram_block": "Hologram Projector",
   "block.overdrive.advanced_hologram_block": "Advanced Hologram Block",
@@ -264,5 +267,6 @@
   "jei.overdrive.antimatter.type": "%s: %s",
   "jei.overdrive.antimatter.type.empty": "Empty",
   "message.overdrive.antimatter.pipe.mode": "Antimatter pipe: ",
-  "message.overdrive.antimatter.pipe.no_side": "No connected side to configure"
+  "message.overdrive.antimatter.pipe.no_side": "No connected side to configure",
+  "guide.overdrive.can_be_replaced_with": "%s - Can be replaced with: %s"
 }

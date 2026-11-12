@@ -2,6 +2,8 @@ package de.wutzuket.overdrive.index;
 
 import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.fluid.ODItemsFluid;
+import de.wutzuket.overdrive.integration.guideme.GuideMeCompat;
+import de.wutzuket.overdrive.integration.guideme.GuideMeGuide;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -105,6 +107,10 @@ public static final Supplier<CreativeModeTab> OVERDRIVE_TAB = CREATIVE_TABS.regi
                 // Fuer jeden Antimatter-Typ gibt es auch einen kreativen Tank
                 for (Item creativeTank : ODItems.getCreativeAntimatterTanks()) {
                     output.accept(creativeTank);
+                }
+                // Handbuch (optionale GuideME-Integration)
+                if (GuideMeCompat.isLoaded()) {
+                    output.accept(GuideMeGuide.createGuideItem());
                 }
             })
             .build());

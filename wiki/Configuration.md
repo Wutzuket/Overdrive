@@ -33,7 +33,7 @@ and processing time.
 The `vacuum` section controls the vacuum pump. The pump measures the volume of
 everything that is connected to its vacuum network: its own structure, the
 vacuum pipes and the blocks of the connected multiblocks (particle accelerator,
-AD ring, ELENA ring, annihilation reactor, tungsten machine). The volume
+AD ring, ELENA ring, annihilation reactor, electron gun). The volume
 determines how long the evacuation takes and how much energy the pump needs.
 
 | Option | Meaning |

@@ -20,6 +20,8 @@ multiblock recipes.
 - A scanner that recognizes multiblock components and exposes scanner recipes.
   High-tier machines are scanner-only and can require dropped items or items
   placed in the scanner's GUI.
+- An in-game handbook (GuideME integration) with a 3D scene, component list and
+  annotations for every machine and multiblock of the mod.
 - Hologram blocks for visualizing multiblock structures.
 - An Advanced Hologram Block with Lua scripting, interactive buttons, text,
   animation and a built-in console.
@@ -38,6 +40,11 @@ multiblock recipes.
 The One Probe, Jade and Connected Textures Mod are optional integrations. The
 development environment also includes Mekanism for testing some of the
 multiblock and resource-processing systems.
+
+[GuideME](https://modrinth.com/mod/guideme) is an optional integration as well.
+With it installed, Overdrive adds a handbook that shows the exact structure of
+every machine and multiblock, including interactive 3D scenes. See
+[Handbook](wiki/Handbook.md) for the details.
 
 ## Building from source
 

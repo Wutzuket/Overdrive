@@ -91,6 +91,14 @@ public class Overdrive {
         ODDataComponents.register(modEventBus);
         ODAntimatters.register(modEventBus);
 
+        // GuideME ist eine optionale Abhaengigkeit. Das Handbuch wird nur
+        // registriert, wenn GuideME installiert ist - und nur auf der
+        // Client-Seite, weil GuideME ausschliesslich dort laeuft.
+        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()
+                && de.wutzuket.overdrive.integration.guideme.GuideMeCompat.isLoaded()) {
+            de.wutzuket.overdrive.integration.guideme.GuideMeGuide.registerGuide();
+        }
+
         // Die Antimatter-Typen und ihre Cells werden vollstaendig automatisch registriert:
         // fuer jeden Typ in ODAntimatters gibt es ein Cell-Item, eine prozedurale Textur und
         // einen Eintrag im Creative-Tab.

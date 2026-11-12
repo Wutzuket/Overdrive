@@ -1,5 +1,8 @@
 # Machines and Systems
 
+Every machine of this page is also documented in the in-game handbook with an
+interactive 3D scene of its structure. See [In-Game Handbook](Handbook).
+
 ## Particle accelerator
 
 The particle accelerator processes high-energy inputs and is used in the
@@ -31,7 +34,7 @@ processing and monitor the reactor temperature when increasing the burn rate.
 The vacuum pump evacuates a vacuum network of pipes. The volume of the network
 consists of the pump structure, the pipes and the blocks of every multiblock
 that is connected to it (particle accelerator, AD ring, ELENA ring, annihilation
-reactor, tungsten machine). The bigger the volume, the longer the pump needs
+reactor, electron gun). The bigger the volume, the longer the pump needs
 to evacuate it and the more energy it consumes per tick. The consumption can be
 scaled linearly or exponentially in the common configuration, see
 [Configuration](Configuration).

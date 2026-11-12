@@ -52,22 +52,22 @@ is 12 blocks in front of it.
   <BlockAnnotation x="12" y="4" z="12" color="#ff5555">
     **Reactor Core**<br />5x5x5: 27 core blocks inside, containment glass around it.
   </BlockAnnotation>
-  <BlockAnnotation x="24" y="4" z="12" color="#55ff55">
+  <BlockAnnotation x="12" y="8" z="20" color="#55ff55">
     **Cell Docking Port**<br />Loads antiprotons or positrons. Two of them are required. Can be replaced with: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="12" y="4" z="24" color="#55ff55">
+  <BlockAnnotation x="13" y="8" z="20" color="#55ff55">
     **Cell Docking Port**<br />The second cell docking port. Can be replaced with: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="20" y="4" z="20" color="#55ff55">
+  <BlockAnnotation x="14" y="8" z="20" color="#55ff55">
     **Annihilation Vacuum Port**<br />Needs 90 % vacuum from the pump network. Can be replaced with: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="3" y="4" z="21" color="#55ff55">
+  <BlockAnnotation x="15" y="8" z="20" color="#55ff55">
     **Coolant Input Port**<br />Water or cryofluid for the cooling circuit. Can be replaced with: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="3" y="4" z="3" color="#55ff55">
+  <BlockAnnotation x="16" y="8" z="20" color="#55ff55">
     **Steam Output Port**<br />Collects the heated coolant. Can be replaced with: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="20" y="4" z="4" color="#55ff55">
+  <BlockAnnotation x="17" y="8" z="20" color="#55ff55">
     **Annihilation Energy Output**<br />Pushes the generated energy to all neighbours. Can be replaced with: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" /> or <ItemLink id="overdrive:steam_output_port" />.
   </BlockAnnotation>
 </GameScene>

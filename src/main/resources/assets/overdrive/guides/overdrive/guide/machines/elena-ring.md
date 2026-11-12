@@ -44,16 +44,16 @@ The complete ring consists of **72 blocks**.
   <BlockAnnotation x="2" y="1" z="4" color="#ffaa00">
     **Controller**<br />Sits on the outer wall and looks at the ring centre.
   </BlockAnnotation>
-  <BlockAnnotation x="4" y="1" z="2" color="#55ff55">
+  <BlockAnnotation x="3" y="1" z="4" color="#55ff55">
     **ELENA Energy Input Port**<br />Supplies the ring with Forge Energy. Can be replaced with: <ItemLink id="overdrive:elena_vacuum_port" />, <ItemLink id="overdrive:elena_input_port" /> or <ItemLink id="overdrive:elena_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="0" y="1" z="2" color="#55ff55">
+  <BlockAnnotation x="4" y="1" z="4" color="#55ff55">
     **ELENA Vacuum Port**<br />Brings the vacuum level of the pump into the ring. Can be replaced with: <ItemLink id="overdrive:elena_energy_input_port" />, <ItemLink id="overdrive:elena_input_port" /> or <ItemLink id="overdrive:elena_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="2" y="1" z="0" color="#55ff55">
+  <BlockAnnotation x="1" y="1" z="4" color="#55ff55">
     **ELENA Input Port**<br />Antimatter pipes end here and fill the controller tank. Can be replaced with: <ItemLink id="overdrive:elena_energy_input_port" />, <ItemLink id="overdrive:elena_vacuum_port" /> or <ItemLink id="overdrive:elena_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="2" y="1" z="3" color="#55ff55">
+  <BlockAnnotation x="0" y="1" z="4" color="#55ff55">
     **ELENA Output Port**<br />Pipes pull the cooled antiprotons out of the controller tank. Can be replaced with: <ItemLink id="overdrive:elena_energy_input_port" />, <ItemLink id="overdrive:elena_vacuum_port" /> or <ItemLink id="overdrive:elena_input_port" />.
   </BlockAnnotation>
 </GameScene>

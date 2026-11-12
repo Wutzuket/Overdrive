@@ -52,22 +52,22 @@ also 12 Blöcke vor ihm.
   <BlockAnnotation x="12" y="4" z="12" color="#ff5555">
     **Reaktorkern**<br />5x5x5: 27 Kernblöcke innen, Containment-Glas darum.
   </BlockAnnotation>
-  <BlockAnnotation x="24" y="4" z="12" color="#55ff55">
+  <BlockAnnotation x="12" y="8" z="20" color="#55ff55">
     **Zellen-Andock-Port**<br />Nimmt Antiprotonen oder Positronen auf. Zwei davon sind Pflicht. Kann ersetzt werden durch: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="12" y="4" z="24" color="#55ff55">
+  <BlockAnnotation x="13" y="8" z="20" color="#55ff55">
     **Zellen-Andock-Port**<br />Der zweite Zellen-Andock-Port. Kann ersetzt werden durch: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="20" y="4" z="20" color="#55ff55">
+  <BlockAnnotation x="14" y="8" z="20" color="#55ff55">
     **Vakuum-Port**<br />Braucht 90 % Vakuum aus dem Pumpennetz. Kann ersetzt werden durch: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="3" y="4" z="21" color="#55ff55">
+  <BlockAnnotation x="15" y="8" z="20" color="#55ff55">
     **Kühlmittel-Eingang**<br />Wasser oder Kryofluid für den Kühlkreislauf. Kann ersetzt werden durch: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="3" y="4" z="3" color="#55ff55">
+  <BlockAnnotation x="16" y="8" z="20" color="#55ff55">
     **Dampf-Ausgang**<br />Sammelt das aufgeheizte Kühlmittel. Kann ersetzt werden durch: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="20" y="4" z="4" color="#55ff55">
+  <BlockAnnotation x="17" y="8" z="20" color="#55ff55">
     **Energie-Ausgang**<br />Schiebt die erzeugte Energie zu allen Nachbarn. Kann ersetzt werden durch: <ItemLink id="overdrive:cell_docking_port" />, <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" /> oder <ItemLink id="overdrive:steam_output_port" />.
   </BlockAnnotation>
 </GameScene>

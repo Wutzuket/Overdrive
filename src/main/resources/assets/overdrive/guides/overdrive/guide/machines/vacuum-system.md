@@ -49,13 +49,13 @@ invalid.
   <BlockAnnotation x="1" y="1" z="0" color="#ffaa00">
     **Vacuum Pump**<br />Faces away from the structure.
   </BlockAnnotation>
-  <BlockAnnotation x="0" y="1" z="0" color="#55ff55">
+  <BlockAnnotation x="0" y="1" z="1" color="#55ff55">
     **Vacuum Energy Port**<br />Feeds the pump with Forge Energy. Can be replaced with: <ItemLink id="overdrive:vacuum_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="2" y="1" z="2" color="#55ff55">
+  <BlockAnnotation x="0" y="1" z="2" color="#55ff55">
     **Vacuum Output Port**<br />Leads into the vacuum network. Can be replaced with: <ItemLink id="overdrive:vacuum_energy_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="2" y="1" z="3" color="#5599ff">
+  <BlockAnnotation x="0" y="1" z="3" color="#5599ff">
     **Vacuum Pipe**<br />Needs a pipe or a machine port next to the output port, otherwise the pump reports a leak.
   </BlockAnnotation>
 </GameScene>

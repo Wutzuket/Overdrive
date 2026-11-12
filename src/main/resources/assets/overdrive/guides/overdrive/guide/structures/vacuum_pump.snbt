@@ -4,17 +4,18 @@
   palette: [
     "overdrive:pump_casing",
     "overdrive:vacuum_energy_port",
-    "overdrive:vacuum_pump{facing:north}",
     "overdrive:vacuum_output_port",
-    "overdrive:vacuum_pipe{north:true}"
+    "overdrive:vacuum_pipe{north:true}",
+    "overdrive:vacuum_pump{facing:north}"
   ],
   data: [
     {pos: [0, 0, 0], state: "overdrive:pump_casing"},
     {pos: [0, 0, 1], state: "overdrive:pump_casing"},
     {pos: [0, 0, 2], state: "overdrive:pump_casing"},
-    {pos: [0, 1, 0], state: "overdrive:vacuum_energy_port"},
-    {pos: [0, 1, 1], state: "overdrive:pump_casing"},
-    {pos: [0, 1, 2], state: "overdrive:pump_casing"},
+    {pos: [0, 1, 0], state: "overdrive:pump_casing"},
+    {pos: [0, 1, 1], state: "overdrive:vacuum_energy_port"},
+    {pos: [0, 1, 2], state: "overdrive:vacuum_output_port"},
+    {pos: [0, 1, 3], state: "overdrive:vacuum_pipe{north:true}"},
     {pos: [0, 2, 0], state: "overdrive:pump_casing"},
     {pos: [0, 2, 1], state: "overdrive:pump_casing"},
     {pos: [0, 2, 2], state: "overdrive:pump_casing"},
@@ -32,8 +33,7 @@
     {pos: [2, 0, 2], state: "overdrive:pump_casing"},
     {pos: [2, 1, 0], state: "overdrive:pump_casing"},
     {pos: [2, 1, 1], state: "overdrive:pump_casing"},
-    {pos: [2, 1, 2], state: "overdrive:vacuum_output_port"},
-    {pos: [2, 1, 3], state: "overdrive:vacuum_pipe{north:true}"},
+    {pos: [2, 1, 2], state: "overdrive:pump_casing"},
     {pos: [2, 2, 0], state: "overdrive:pump_casing"},
     {pos: [2, 2, 1], state: "overdrive:pump_casing"},
     {pos: [2, 2, 2], state: "overdrive:pump_casing"}

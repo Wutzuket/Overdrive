@@ -46,13 +46,13 @@ Das Ringband reicht von 21,5 bis 25,5 Blöcken um das Zentrum.
   <BlockAnnotation x="25" y="1" z="3" color="#ff5555">
     **Iridium-Target**<br />Fasst 100.000 mB flüssiges Iridium und muss gefüllt sein, bevor die Maschine läuft. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> oder <ItemLink id="overdrive:accelerator_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="40" y="1" z="9" color="#55ff55">
+  <BlockAnnotation x="26" y="1" z="3" color="#55ff55">
     **Beschleuniger-Ausgang**<br />Sammelt die Antiprotonen und speist sie ins Antimatter-Rohrnetz. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="5" y="1" z="40" color="#55ff55">
+  <BlockAnnotation x="27" y="1" z="3" color="#55ff55">
     **Energie-Eingang**<br />Versorgt den Beschleuniger mit Forge Energy. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_vacuum_input_port" />, <ItemLink id="overdrive:accelerator_output" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="45" y="1" z="10" color="#55ff55">
+  <BlockAnnotation x="28" y="1" z="3" color="#55ff55">
     **Vakuum-Eingang**<br />Bringt den Vakuumpegel der Pumpe in den Ring. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_output" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
 </GameScene>

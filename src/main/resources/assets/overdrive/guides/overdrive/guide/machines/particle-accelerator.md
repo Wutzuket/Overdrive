@@ -46,13 +46,13 @@ The ring band is everything between 21.5 and 25.5 blocks from the centre.
   <BlockAnnotation x="25" y="1" z="3" color="#ff5555">
     **Iridium Target**<br />Holds 100,000 mB of liquid iridium and must be filled before the machine runs. Can be replaced with: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> or <ItemLink id="overdrive:accelerator_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="40" y="1" z="9" color="#55ff55">
+  <BlockAnnotation x="26" y="1" z="3" color="#55ff55">
     **Accelerator Output**<br />Collects the antiprotons and feeds them into the antimatter pipe network. Can be replaced with: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="5" y="1" z="40" color="#55ff55">
+  <BlockAnnotation x="27" y="1" z="3" color="#55ff55">
     **Accelerator Energy Input Port**<br />Supplies the accelerator with Forge Energy. Can be replaced with: <ItemLink id="overdrive:accelerator_vacuum_input_port" />, <ItemLink id="overdrive:accelerator_output" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="45" y="1" z="10" color="#55ff55">
+  <BlockAnnotation x="28" y="1" z="3" color="#55ff55">
     **Accelerator Vacuum Input Port**<br />Brings the vacuum level of the pump into the ring. Can be replaced with: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_output" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
 </GameScene>

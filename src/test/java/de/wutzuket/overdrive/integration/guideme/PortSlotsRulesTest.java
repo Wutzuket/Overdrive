@@ -54,21 +54,22 @@ class PortSlotsRulesTest {
     @Test
     void theTooltipNamesTheCasingAndThePorts() {
         var rule = PortSlotsRules.byCasing("overdrive:ad_casing");
-        var tooltip = PortSlotsRules.tooltip(rule);
+        var lines = PortSlotsRules.tooltipLines(rule);
+        assertEquals(rule.ports().size() + 1, lines.size(), "der Tooltip braucht eine Zeile je Port");
 
-        // Ohne geladene Sprachdatei bleibt der Translation-Key stehen, geprueft werden
-        // deshalb die Argumente des Tooltips.
-        assertEquals("guide.overdrive.can_be_replaced_with", tooltip.getString());
-
-        assertTrue(tooltip.getContents() instanceof TranslatableContents, "der Tooltip ist translatable");
-        var args = ((TranslatableContents) tooltip.getContents()).getArgs();
-        assertEquals(2, args.length, "der Tooltip nennt das Gehaeuse und die Ports");
+        // Ohne geladene Sprachdatei bleibt der Translation-Key stehen.
+        var header = lines.getFirst();
+        assertEquals("guide.overdrive.can_be_replaced_with", header.getString());
+        assertTrue(header.getContents() instanceof TranslatableContents, "der Tooltip ist translatable");
+        var args = ((TranslatableContents) header.getContents()).getArgs();
+        assertEquals(1, args.length);
         assertTrue(args[0].toString().contains("ad_casing"),
                 "der Tooltip muss das Gehaeuse nennen: " + args[0]);
-        assertTrue(args[1].toString().contains("ad_energy_input_port"),
-                "der Tooltip muss die Ports nennen: " + args[1]);
-        assertTrue(args[1].toString().contains("ad_output_port"),
-                "der Tooltip muss alle Ports nennen: " + args[1]);
+
+        assertTrue(lines.get(1).getString().contains("ad_energy_input_port"),
+                "der Tooltip muss die Ports nennen: " + lines.get(1).getString());
+        assertTrue(lines.get(2).getString().contains("ad_vacuum_port"),
+                "der Tooltip muss alle Ports nennen: " + lines.get(2).getString());
     }
 
     @Test

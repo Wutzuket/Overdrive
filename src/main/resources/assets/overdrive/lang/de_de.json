@@ -268,5 +268,5 @@
   "jei.overdrive.antimatter.type.empty": "Leer",
   "message.overdrive.antimatter.pipe.mode": "Antimatterrohr: ",
   "message.overdrive.antimatter.pipe.no_side": "Keine verbundene Seite zum Konfigurieren",
-  "guide.overdrive.can_be_replaced_with": "%s - Kann ersetzt werden durch: %s"
+  "guide.overdrive.can_be_replaced_with": "%s - Kann ersetzt werden durch:"
 }

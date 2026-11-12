@@ -268,5 +268,5 @@
   "jei.overdrive.antimatter.type.empty": "Empty",
   "message.overdrive.antimatter.pipe.mode": "Antimatter pipe: ",
   "message.overdrive.antimatter.pipe.no_side": "No connected side to configure",
-  "guide.overdrive.can_be_replaced_with": "%s - Can be replaced with: %s"
+  "guide.overdrive.can_be_replaced_with": "%s - Can be replaced with:"
 }

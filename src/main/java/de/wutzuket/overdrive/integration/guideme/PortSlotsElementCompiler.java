@@ -1,12 +1,9 @@
 package de.wutzuket.overdrive.integration.guideme;
 
-import guideme.color.SymbolicColor;
 import guideme.compiler.PageCompiler;
 import guideme.document.LytErrorSink;
-import guideme.document.interaction.TextTooltip;
 import guideme.libs.mdast.mdx.model.MdxJsxElementFields;
 import guideme.scene.GuidebookScene;
-import guideme.scene.annotation.InWorldBoxAnnotation;
 import guideme.scene.element.SceneElementTagCompiler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,12 +13,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Markiert in einer 3D-Szene alle Positionen, an denen ein Port stehen kann.
+ * Prueft, ob die Szene zu der Maschine passt, und merkt sich die Lage des
+ * Controllers.
  *
- * <p>Der Tag ist das GegenstÃ¼ck zu den Annotationen der einzelnen Ports: Er
- * markiert die Gehaeuse-Bloecke, die durch einen Port ersetzt werden
- * koennen, mit einem gruenen Kasten und dem Hinweis
- * "Can be replaced with: ...".
+ * <p>Die Positionen, an denen ein Port stehen kann, werden erst beim Hovern
+ * ueber den Block angezeigt: {@link PortSlotsAnnotationStrategy} zeichnet
+ * dann einen gruenen Kasten und nennt die Ports, die dort hinpassen. Ohne den
+ * Hovern wuerde die Szene dauerhaft gruen markiert.
  *
  * <p>Aufruf in einer Handbuchseite:
  *
@@ -78,22 +76,9 @@ public class PortSlotsElementCompiler implements SceneElementTagCompiler {
             return;
         }
 
-        var tooltip = PortSlotsRules.tooltip(rule);
-
-        for (var pos : filledBlocks(scene)) {
-            if (!isBlock(level.getBlockState(pos), rule.casing())) {
-                continue;
-            }
-            if (rule.middleLayerOnly() && pos.getY() != controllerY) {
-                // Boden und Dach der Ringe und des Beschleunigers sind reine
-                // Gehaeuse - dort passt kein Port.
-                continue;
-            }
-
-            var annotation = InWorldBoxAnnotation.forBlock(pos, SymbolicColor.GREEN);
-            annotation.setTooltip(new TextTooltip(tooltip));
-            scene.addAnnotation(annotation);
-        }
+        // Die gruenen Kaesten der Port-Plaetze wuerden die Szene dauerhaft markieren.
+        // Sie werden nur beim Hovern ueber den Block gezeigt, die Anzeige uebernimmt
+        // PortSlotsAnnotationStrategy.
     }
 
     /**

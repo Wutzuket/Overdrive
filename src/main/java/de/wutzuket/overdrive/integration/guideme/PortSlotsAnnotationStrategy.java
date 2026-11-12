@@ -1,7 +1,6 @@
 package de.wutzuket.overdrive.integration.guideme;
 
 import guideme.color.SymbolicColor;
-import guideme.document.interaction.TextTooltip;
 import guideme.scene.ImplicitAnnotationStrategy;
 import guideme.scene.annotation.InWorldBoxAnnotation;
 import guideme.scene.annotation.SceneAnnotation;
@@ -52,7 +51,7 @@ public class PortSlotsAnnotationStrategy implements ImplicitAnnotationStrategy {
         }
 
         var annotation = InWorldBoxAnnotation.forBlock(pos, SymbolicColor.GREEN);
-        annotation.setTooltip(new TextTooltip(PortSlotsRules.tooltip(rule)));
+        annotation.setTooltip(PortSlotsRules.tooltip(rule));
         return annotation;
     }
 

@@ -1,5 +1,6 @@
 package de.wutzuket.overdrive.integration.guideme;
 
+import guideme.document.interaction.TextTooltip;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 
@@ -69,14 +70,25 @@ final class PortSlotsRules {
         return BY_CASING.get(blockId);
     }
 
-    /** Baut den Tooltip "AD Casing - Can be replaced with: ...". */
-    static Component tooltip(Rule rule) {
-        var names = new ArrayList<String>(rule.ports().size());
+    /**
+     * Baut den Tooltip "AD Casing - Can be replaced with: ...".
+     *
+     * <p>Die Ports stehen untereinander, damit der Tooltip nicht zu breit wird.</p>
+     */
+    static TextTooltip tooltip(Rule rule) {
+        return new TextTooltip(tooltipLines(rule));
+    }
+
+    /**
+     * Die Zeilen des Tooltips: eine Zeile mit dem Gehaeuse und eine Zeile je Port.
+     */
+    static List<Component> tooltipLines(Rule rule) {
+        var lines = new ArrayList<Component>();
+        lines.add(Component.translatable("guide.overdrive.can_be_replaced_with", blockName(rule.casing())));
         for (var port : rule.ports()) {
-            names.add(blockName(port));
+            lines.add(Component.literal(blockName(port)));
         }
-        return Component.translatable("guide.overdrive.can_be_replaced_with",
-                blockName(rule.casing()), String.join(", ", names));
+        return lines;
     }
 
     /** Uebersetzter Name eines Blocks, zum Beispiel "AD Casing". */

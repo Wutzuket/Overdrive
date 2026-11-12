@@ -50,28 +50,40 @@ class PortGroupingTest {
             assertTrue(ports.size() >= rule.ports().size(),
                     entry.getKey() + ": nicht alle Ports sind in der Struktur");
 
-            // Die Ports liegen alle in einer Reihe: gleiche Hoehe und entweder gleiche
-            // Tiefe oder gleiche Spalte.
-            int y = ports.getFirst().getY();
-            for (var port : ports) {
-                assertEquals(y, port.getY(),
-                        entry.getKey() + ": die Ports liegen nicht in einer Reihe: " + port);
-            }
-            boolean sameColumn = ports.stream().allMatch(p -> p.getX() == ports.getFirst().getX());
-            boolean sameRow = ports.stream().allMatch(p -> p.getZ() == ports.getFirst().getZ());
-            assertTrue(sameColumn || sameRow,
-                    entry.getKey() + ": die Ports liegen nicht in einer Reihe");
+            var controller = controllerPosition(entry.getKey(), entry.getValue());
 
-            // Und die Reihe ist eng: zwischen dem ersten und dem letzten Port
-            // liegen hoechstens so viele Luecken, wie es Ports gibt.
-            int span = sameColumn
-                    ? ports.stream().mapToInt(p -> p.getZ()).max().getAsInt()
-                            - ports.stream().mapToInt(p -> p.getZ()).min().getAsInt()
-                    : ports.stream().mapToInt(p -> p.getX()).max().getAsInt()
-                            - ports.stream().mapToInt(p -> p.getX()).min().getAsInt();
-            assertTrue(span <= ports.size(),
-                    entry.getKey() + ": die Ports stehen zu weit auseinander (" + span + ")");
+            // Jeder Port steht nah an einem anderen Port oder direkt am
+            // Controller. So liegen die Ports zusammen und moeglichst nah an
+            // dem Block, den sie versorgen.
+            for (var port : ports) {
+                int nearest = distance(port, controller);
+                for (var other : ports) {
+                    if (!other.equals(port)) {
+                        nearest = Math.min(nearest, distance(port, other));
+                    }
+                }
+                assertTrue(nearest <= 2,
+                        entry.getKey() + ": der Port " + port + " steht zu weit weg ("
+                                + nearest + " Bloecke)");
+            }
         }
+    }
+
+    /** Der Abstand zwischen zwei Positionen, gemessen in Blockkanten. */
+    private int distance(BlockPos a, BlockPos b) {
+        return Math.max(Math.abs(a.getX() - b.getX()),
+                Math.max(Math.abs(a.getY() - b.getY()), Math.abs(a.getZ() - b.getZ())));
+    }
+
+    /** Die Position des Controllers in einer Struktur. */
+    private BlockPos controllerPosition(String structure, String controllerId) throws Exception {
+        var blocks = readStructure(structure);
+        for (var entry : blocks.entrySet()) {
+            if (entry.getValue().equals(controllerId)) {
+                return entry.getKey();
+            }
+        }
+        throw new AssertionError(structure + ": der Controller " + controllerId + " fehlt");
     }
 
     @Test

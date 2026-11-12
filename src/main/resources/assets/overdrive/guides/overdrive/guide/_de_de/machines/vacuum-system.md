@@ -48,13 +48,13 @@ Alle übrigen Blöcke sind <ItemLink id="overdrive:pump_casing" /> oder
   <BlockAnnotation x="1" y="1" z="0" color="#ffaa00">
     **Vakuumpumpe**<br />Blickt von der Struktur weg.
   </BlockAnnotation>
-  <BlockAnnotation x="0" y="1" z="1" color="#55ff55">
+  <BlockAnnotation x="2" y="1" z="1" color="#55ff55">
     **Energie-Port**<br />Versorgt die Pumpe mit Forge Energy. Kann ersetzt werden durch: <ItemLink id="overdrive:vacuum_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="0" y="1" z="2" color="#55ff55">
+  <BlockAnnotation x="1" y="1" z="2" color="#55ff55">
     **Vakuum-Ausgang**<br />Führt ins Vakuumnetz. Kann ersetzt werden durch: <ItemLink id="overdrive:vacuum_energy_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="0" y="1" z="3" color="#5599ff">
+  <BlockAnnotation x="1" y="1" z="3" color="#5599ff">
     **Vakuumrohr**<br />Braucht ein Rohr oder einen Maschinen-Port neben dem Ausgang, sonst meldet die Pumpe ein Leck.
   </BlockAnnotation>
 </GameScene>

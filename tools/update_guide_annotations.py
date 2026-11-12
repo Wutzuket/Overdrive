@@ -23,32 +23,29 @@ GUIDE = os.path.join(
 # Datei -> { alte Position: neue Position }
 MOVES = {
     "machines/ad-ring.md": {
-        (3, 1, 8): (7, 1, 8),     # AD Input Port
-        (2, 1, 8): (8, 1, 8),     # AD Output Port
+        (7, 1, 8): (6, 1, 8),     # AD Input Port
+        (6, 1, 8): (3, 1, 8),     # AD Vacuum Port
     },
     "machines/elena-ring.md": {
-        (4, 1, 2): (3, 1, 4),     # ELENA Energy Input Port
-        (0, 1, 2): (4, 1, 4),     # ELENA Vacuum Port
-        (2, 1, 0): (1, 1, 4),     # ELENA Input Port
-        (2, 1, 3): (0, 1, 4),     # ELENA Output Port
+        (1, 1, 4): (4, 1, 4),     # ELENA Input Port
+        (4, 1, 4): (1, 1, 4),     # ELENA Vacuum Port
     },
     "machines/annihilation-reactor.md": {
-        (24, 4, 12): (12, 8, 20),  # Cell Docking Port
-        (12, 4, 24): (13, 8, 20),  # Cell Docking Port (zweites)
-        (20, 4, 20): (14, 8, 20),  # Annihilation Vacuum Port
-        (3, 4, 21): (15, 8, 20),   # Coolant Input Port
-        (3, 4, 3): (16, 8, 20),    # Steam Output Port
-        (20, 4, 4): (17, 8, 20),   # Annihilation Energy Output
+        (12, 8, 20): (12, 8, 4),  # Cell Docking Port
+        (13, 8, 20): (11, 8, 4),  # Cell Docking Port (zweites)
+        (14, 8, 20): (10, 8, 4),  # Annihilation Vacuum Port
+        (15, 8, 20): (9, 8, 4),   # Coolant Input Port
+        (16, 8, 20): (8, 8, 4),   # Steam Output Port
+        (17, 8, 20): (7, 8, 4),   # Annihilation Energy Output
     },
     "machines/particle-accelerator.md": {
-        (40, 1, 9): (26, 1, 3),    # Accelerator Output
-        (5, 1, 40): (27, 1, 3),   # Accelerator Energy Input Port
-        (45, 1, 10): (28, 1, 3),  # Accelerator Vacuum Input Port
+        (27, 1, 3): (26, 1, 50),  # Accelerator Energy Input Port
+        (28, 1, 3): (24, 1, 50),  # Accelerator Vacuum Input Port
     },
     "machines/vacuum-system.md": {
-        (0, 1, 0): (0, 1, 1),      # Vacuum Energy Port
-        (2, 1, 2): (0, 1, 2),      # Vacuum Output Port
-        (2, 1, 3): (0, 1, 3),      # Vacuum Pipe
+        (0, 1, 1): (2, 1, 1),      # Vacuum Energy Port
+        (0, 1, 2): (1, 1, 2),      # Vacuum Output Port
+        (0, 1, 3): (1, 1, 3),      # Vacuum Pipe
     },
 }
 

@@ -189,14 +189,15 @@ def build_vacuum_pump() -> Tuple[Dict[Pos, Block], Dict[str, Pos]]:
 
     put((0, 0, 0), ("overdrive:vacuum_pump", {"facing": "north"}))
     notes["pumpe"] = (0, 0, 0)
-    put((-1, 0, 1), ("overdrive:vacuum_energy_port", None))
-    notes["energie-port"] = (-1, 0, 1)
-    # Der Ausgangsport sitzt direkt neben dem Energie-Port.
-    put((-1, 0, 2), ("overdrive:vacuum_output_port", None))
-    notes["vakuum-port"] = (-1, 0, 2)
-    # Das Rohr steckt hinter dem Ausgangsport und fuehrt ins Netz
-    put((-1, 0, 3), ("overdrive:vacuum_pipe", {"north": "true"}))
-    notes["rohr"] = (-1, 0, 3)
+    # Beide Ports stehen dicht neben der Pumpe, damit man sie auf einen Blick
+    # sieht. Der Ausgangsport sitzt am Rand des Wuerfels, dahinter steckt das
+    # Rohr, das ins Netz fuehrt.
+    put((1, 0, 1), ("overdrive:vacuum_energy_port", None))
+    notes["energie-port"] = (1, 0, 1)
+    put((0, 0, 2), ("overdrive:vacuum_output_port", None))
+    notes["vakuum-port"] = (0, 0, 2)
+    put((0, 0, 3), ("overdrive:vacuum_pipe", {"north": "true"}))
+    notes["rohr"] = (0, 0, 3)
 
     for x in range(-1, 2):
         for y in range(-1, 2):
@@ -229,18 +230,20 @@ def build_particle_accelerator() -> Tuple[Dict[Pos, Block], Dict[str, Pos]]:
     # Controller sitzt auf der aeusseren Wand, zeigt zum Ringzentrum (0,0,0).
     blocks[(0, 0, 25)] = ("overdrive:particle_accelerator_controller", {"facing": "north"})
     notes["controller"] = (0, 0, 25)
-    # Die Ports und das Target stehen nebeneinander auf der inneren Wand, damit
-    # man auf einen Blick sieht, wo sie hinpassen. Das Target muss auf der
-    # inneren Wand liegen, sonst steht es nicht im Strahlweg.
+    # Target und Output muessen auf der inneren Wand liegen, dort trifft sie der
+    # Strahl. Die beiden Versorgungsports stehen direkt neben dem Controller auf
+    # der aeusseren Wand. So stehen die Ports nah bei dem, was sie versorgen.
     inner_wall = [(dx, 0, dz) for (dx, dz) in band if dx * dx + dz * dz <= 506]
     ports = [
         ("target", (0, 0, -22), "overdrive:iridium_target"),
         ("ausgang", (1, 0, -22), "overdrive:accelerator_output"),
-        ("energie-port", (2, 0, -22), "overdrive:accelerator_energy_input_port"),
-        ("vakuum-port", (3, 0, -22), "overdrive:accelerator_vacuum_input_port"),
+        ("energie-port", (1, 0, 25), "overdrive:accelerator_energy_input_port"),
+        ("vakuum-port", (-1, 0, 25), "overdrive:accelerator_vacuum_input_port"),
     ]
     for name, pos, block in ports:
-        if pos not in inner_wall:
+        if (pos[0], pos[2]) not in band:
+            raise ValueError("Beschleuniger: %s liegt nicht im Ring" % (pos,))
+        if name in ("target", "ausgang") and pos not in inner_wall:
             raise ValueError("Beschleuniger: %s liegt nicht auf der inneren Wand" % (pos,))
         blocks[pos] = (block, None)
         notes[name] = pos
@@ -261,16 +264,14 @@ def build_square_ring(radius: int, inner: int, casing: str, controller: str,
     controller_pos = (0, 0, radius)
     blocks[controller_pos] = ("overdrive:" + controller, {"facing": "north"})
     notes["controller"] = controller_pos
-    # Die Ports stehen nebeneinander auf der Kante neben dem Controller, damit
-    # man auf einen Blick sieht, wo ein Port hinpasst. Sie liegen alle auf der
-    # mittleren Lage, dort koennen die Ports der Ringe stehen. Wenn die Kante
-    # nicht breit genug ist, kommen die restlichen Ports von der anderen Seite.
+    # Die Ports stehen dicht neben dem Controller auf der Kante, damit man auf
+    # einen Blick sieht, wo ein Port hinpasst. Sie liegen alle auf der
+    # mittleren Lage, dort koennen die Ports der Ringe stehen.
     slots: List[Pos] = []
     for offset in range(1, radius + 1):
         if len(slots) >= 4:
             break
         slots.append((offset, 0, radius))
-    for offset in range(1, radius + 1):
         if len(slots) >= 4:
             break
         slots.append((-offset, 0, radius))
@@ -326,9 +327,9 @@ def build_annihilation_reactor() -> Tuple[Dict[Pos, Block], Dict[str, Pos]]:
     notes: Dict[str, Pos] = {}
 
     wall = torus_wall_cells(12, 8, 4)
-    # Die Ports liegen auf der oberen Lage des Torus, dicht nebeneinander in
-    # einer Linie. Die Zellen (x, 4, 8) liegen alle auf der Toruswand.
-    top_row = [(x, 4, 8) for x in range(0, 6)]
+    # Die Ports liegen auf der oberen Lage des Torus, dicht nebeneinander und
+    # moeglichst nah am Controller, der bei (0,0,-12) auf dem Aequator steht.
+    top_row = [(-x, 4, -8) for x in range(0, 6)]
 
     blocks[(0, 0, -12)] = ("overdrive:annihilation_controller", {"facing": "south"})
     notes["controller"] = (0, 0, -12)
@@ -512,11 +513,11 @@ def validate_vacuum_pump(blocks: Dict[Pos, str]) -> None:
     ports = [p for p, s in blocks.items() if s.startswith("overdrive:vacuum_output_port")]
     if len(ports) != 1:
         raise ValueError("Vakuumpumpe: %d Ausgangsports statt 1" % len(ports))
-    # Der Wuerfel reicht von z=0 bis z=2 (0-basiert). Der Port sitzt in der
-    # hinteren Ebene, direkt neben dem Energie-Port.
+    # Der Wuerfel reicht von z=0 bis z=2 (0-basiert). Der Port sitzt am Rand
+    # des Wuerfels, dahinter steckt das Rohr.
     port = ports[0]
     if port[2] != 2:
-        raise ValueError("Vakuumpumpe: Ausgangsport %s liegt nicht in der hinteren Ebene" % (port,))
+        raise ValueError("Vakuumpumpe: Ausgangsport %s liegt nicht am Rand des Wuerfels" % (port,))
     energy = [p for p, s in blocks.items() if s.startswith("overdrive:vacuum_energy_port")]
     if len(energy) != 1:
         raise ValueError("Vakuumpumpe: %d Energieports statt 1" % len(energy))

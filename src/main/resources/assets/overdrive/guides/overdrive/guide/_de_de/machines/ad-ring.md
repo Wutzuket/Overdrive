@@ -48,10 +48,10 @@ Der komplette Ring besteht aus **168 Blöcken**.
   <BlockAnnotation x="5" y="1" z="8" color="#55ff55">
     **AD-Energie-Eingang**<br />Versorgt den Ring mit Forge Energy. Kann ersetzt werden durch: <ItemLink id="overdrive:ad_vacuum_port" />, <ItemLink id="overdrive:ad_input_port" /> oder <ItemLink id="overdrive:ad_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="6" y="1" z="8" color="#55ff55">
+  <BlockAnnotation x="3" y="1" z="8" color="#55ff55">
     **AD-Vakuum-Port**<br />Bringt den Vakuumpegel der Pumpe in den Ring. Kann ersetzt werden durch: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_input_port" /> oder <ItemLink id="overdrive:ad_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="7" y="1" z="8" color="#55ff55">
+  <BlockAnnotation x="6" y="1" z="8" color="#55ff55">
     **AD-Eingangs-Port**<br />Antimatter-Rohre enden hier und füllen den Tank im Controller. Kann ersetzt werden durch: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_vacuum_port" /> oder <ItemLink id="overdrive:ad_output_port" />.
   </BlockAnnotation>
   <BlockAnnotation x="8" y="1" z="8" color="#55ff55">

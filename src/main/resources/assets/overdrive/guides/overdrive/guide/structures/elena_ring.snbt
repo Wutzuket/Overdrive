@@ -4,10 +4,10 @@
   palette: [
     "overdrive:elena_casing",
     "overdrive:elena_output_port",
-    "overdrive:elena_input_port",
+    "overdrive:elena_vacuum_port",
     "overdrive:elena_controller{facing:north}",
     "overdrive:elena_energy_input_port",
-    "overdrive:elena_vacuum_port"
+    "overdrive:elena_input_port"
   ],
   data: [
     {pos: [0, 0, 0], state: "overdrive:elena_casing"},
@@ -34,7 +34,7 @@
     {pos: [1, 1, 1], state: "overdrive:elena_casing"},
     {pos: [1, 1, 2], state: "overdrive:elena_casing"},
     {pos: [1, 1, 3], state: "overdrive:elena_casing"},
-    {pos: [1, 1, 4], state: "overdrive:elena_input_port"},
+    {pos: [1, 1, 4], state: "overdrive:elena_vacuum_port"},
     {pos: [1, 2, 0], state: "overdrive:elena_casing"},
     {pos: [1, 2, 1], state: "overdrive:elena_casing"},
     {pos: [1, 2, 2], state: "overdrive:elena_casing"},
@@ -76,7 +76,7 @@
     {pos: [4, 1, 1], state: "overdrive:elena_casing"},
     {pos: [4, 1, 2], state: "overdrive:elena_casing"},
     {pos: [4, 1, 3], state: "overdrive:elena_casing"},
-    {pos: [4, 1, 4], state: "overdrive:elena_vacuum_port"},
+    {pos: [4, 1, 4], state: "overdrive:elena_input_port"},
     {pos: [4, 2, 0], state: "overdrive:elena_casing"},
     {pos: [4, 2, 1], state: "overdrive:elena_casing"},
     {pos: [4, 2, 2], state: "overdrive:elena_casing"},

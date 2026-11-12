@@ -121,9 +121,11 @@ class GuideStructureSnbtTest {
         var port = ports.getFirst();
 
         // Der Wuerfel reicht von z=0 bis z=2 (0-basierte SNBT-Koordinaten).
-        assertEquals(2, port.getZ(), "Der Vakuum-Ausgang muss in der hinteren Ebene liegen");
-        assertFalse(port.getX() == 1 && port.getY() == 1,
-                "Der Vakuum-Ausgang darf nicht genau in der Mitte stehen - die Position ist frei");
+        // Der Ausgang sitzt am Rand des Wuerfels, dahinter steckt das Rohr.
+        assertEquals(2, port.getZ(), "Der Vakuum-Ausgang muss am Rand des Wuerfels liegen");
+        var pipe = blocks.get(port.offset(0, 0, 1));
+        assertTrue(pipe != null && pipe.startsWith("overdrive:vacuum_pipe"),
+                "hinter dem Vakuum-Ausgang muss das Rohr in das Netz fuehren");
 
         // Genau ein Energie-Port.
         long energy = blocks.entrySet().stream()

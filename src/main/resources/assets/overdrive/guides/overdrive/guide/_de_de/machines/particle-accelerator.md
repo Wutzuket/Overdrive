@@ -49,10 +49,10 @@ Das Ringband reicht von 21,5 bis 25,5 Blöcken um das Zentrum.
   <BlockAnnotation x="26" y="1" z="3" color="#55ff55">
     **Beschleuniger-Ausgang**<br />Sammelt die Antiprotonen und speist sie ins Antimatter-Rohrnetz. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="27" y="1" z="3" color="#55ff55">
+  <BlockAnnotation x="26" y="1" z="50" color="#55ff55">
     **Energie-Eingang**<br />Versorgt den Beschleuniger mit Forge Energy. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_vacuum_input_port" />, <ItemLink id="overdrive:accelerator_output" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="28" y="1" z="3" color="#55ff55">
+  <BlockAnnotation x="24" y="1" z="50" color="#55ff55">
     **Vakuum-Eingang**<br />Bringt den Vakuumpegel der Pumpe in den Ring. Kann ersetzt werden durch: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_output" /> oder <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
 </GameScene>

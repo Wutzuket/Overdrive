@@ -49,10 +49,10 @@ The ring band is everything between 21.5 and 25.5 blocks from the centre.
   <BlockAnnotation x="26" y="1" z="3" color="#55ff55">
     **Accelerator Output**<br />Collects the antiprotons and feeds them into the antimatter pipe network. Can be replaced with: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_vacuum_input_port" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="27" y="1" z="3" color="#55ff55">
+  <BlockAnnotation x="26" y="1" z="50" color="#55ff55">
     **Accelerator Energy Input Port**<br />Supplies the accelerator with Forge Energy. Can be replaced with: <ItemLink id="overdrive:accelerator_vacuum_input_port" />, <ItemLink id="overdrive:accelerator_output" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
-  <BlockAnnotation x="28" y="1" z="3" color="#55ff55">
+  <BlockAnnotation x="24" y="1" z="50" color="#55ff55">
     **Accelerator Vacuum Input Port**<br />Brings the vacuum level of the pump into the ring. Can be replaced with: <ItemLink id="overdrive:accelerator_energy_input_port" />, <ItemLink id="overdrive:accelerator_output" /> or <ItemLink id="overdrive:iridium_target" />.
   </BlockAnnotation>
 </GameScene>

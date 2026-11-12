@@ -10,13 +10,9 @@ import guideme.scene.annotation.InWorldBoxAnnotation;
 import guideme.scene.element.SceneElementTagCompiler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,37 +42,6 @@ import java.util.Set;
  */
 public class PortSlotsElementCompiler implements SceneElementTagCompiler {
 
-    /** Regel je Controller: Gehaeuse, moegliche Ports und ob nur die mittlere Lage gilt. */
-    private static final Map<String, PortRule> RULES = new LinkedHashMap<>();
-
-    static {
-        RULES.put("overdrive:vacuum_pump", new PortRule(
-                "overdrive:pump_casing",
-                List.of("overdrive:vacuum_energy_port", "overdrive:vacuum_output_port"),
-                false));
-        RULES.put("overdrive:ad_controller", new PortRule(
-                "overdrive:ad_casing",
-                List.of("overdrive:ad_energy_input_port", "overdrive:ad_vacuum_port",
-                        "overdrive:ad_input_port", "overdrive:ad_output_port"),
-                true));
-        RULES.put("overdrive:elena_controller", new PortRule(
-                "overdrive:elena_casing",
-                List.of("overdrive:elena_energy_input_port", "overdrive:elena_vacuum_port",
-                        "overdrive:elena_input_port", "overdrive:elena_output_port"),
-                true));
-        RULES.put("overdrive:particle_accelerator_controller", new PortRule(
-                "overdrive:accelerator_casing",
-                List.of("overdrive:accelerator_energy_input_port", "overdrive:accelerator_vacuum_input_port",
-                        "overdrive:iridium_target", "overdrive:accelerator_output"),
-                true));
-        RULES.put("overdrive:annihilation_controller", new PortRule(
-                "overdrive:annihilation_heavy_casing",
-                List.of("overdrive:cell_docking_port", "overdrive:annihilation_vacuum_port",
-                        "overdrive:coolant_input_port", "overdrive:steam_output_port",
-                        "overdrive:annihilation_energy_output"),
-                false));
-    }
-
     @Override
     public Set<String> getTagNames() {
         return Set.of("PortSlots");
@@ -90,7 +55,7 @@ public class PortSlotsElementCompiler implements SceneElementTagCompiler {
             return;
         }
 
-        var rule = RULES.get(controllerId);
+        var rule = PortSlotsRules.BY_CONTROLLER.get(controllerId);
         if (rule == null) {
             errorSink.appendError(compiler, "Unknown controller: " + controllerId, el);
             return;
@@ -113,7 +78,7 @@ public class PortSlotsElementCompiler implements SceneElementTagCompiler {
             return;
         }
 
-        var tooltip = buildTooltip(rule.casing(), rule.ports());
+        var tooltip = PortSlotsRules.tooltip(rule);
 
         for (var pos : filledBlocks(scene)) {
             if (!isBlock(level.getBlockState(pos), rule.casing())) {
@@ -151,25 +116,8 @@ public class PortSlotsElementCompiler implements SceneElementTagCompiler {
         return positions.map(BlockPos::immutable).toList();
     }
 
-    /** Baut den Tooltip "AD Casing - Can be replaced with: A, B, C". */
-    private static Component buildTooltip(String casing, List<String> ports) {
-        var names = new ArrayList<String>(ports.size());
-        for (var port : ports) {
-            names.add(blockName(port));
-        }
-        return Component.translatable("guide.overdrive.can_be_replaced_with",
-                blockName(casing), String.join(", ", names));
-    }
-
-    /** Uebersetzter Name eines Blocks, z.B. "AD Casing". */
-    private static String blockName(String id) {
-        return Component.translatable("block." + id.replace(':', '.')).getString();
-    }
-
     private static boolean isBlock(BlockState state, String id) {
-        return BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString().equals(id);
-    }
-
-    private record PortRule(String casing, List<String> ports, boolean middleLayerOnly) {
+        var key = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+        return key != null && key.toString().equals(id);
     }
 }

@@ -3,6 +3,7 @@ package de.wutzuket.overdrive.integration.guideme;
 import guideme.Guide;
 import guideme.GuideItemSettings;
 import guideme.Guides;
+import guideme.scene.ImplicitAnnotationStrategy;
 import guideme.scene.element.SceneElementTagCompiler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -53,6 +54,7 @@ public final class GuideMeGuide {
                                         .withStyle(ChatFormatting.DARK_GRAY)),
                         Optional.of(ResourceLocation.fromNamespaceAndPath("overdrive", "item/guide"))))
                 .extension(SceneElementTagCompiler.EXTENSION_POINT, new PortSlotsElementCompiler())
+                .extension(ImplicitAnnotationStrategy.EXTENSION_POINT, new PortSlotsAnnotationStrategy())
                 .build();
     }
 

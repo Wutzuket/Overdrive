@@ -17,7 +17,7 @@ public class ODConfig {
 
     public static final ModConfigSpec.IntValue CIRCUIT_PRESS_MAX_ENERGY = BUILDER
             .comment("Maximum energy storage of the Circuit Press (FE).")
-            .defineInRange("maxEnergy", 1_000_000, 1, 1_000_000_000);
+            .defineInRange("maxEnergy", 10_000, 1, 1_000_000_000);
 
     public static final ModConfigSpec.IntValue CIRCUIT_PRESS_ENERGY_PER_TICK = BUILDER
             .comment("Energy consumed by the Circuit Press while processing (FE/t).")
@@ -156,11 +156,11 @@ public class ODConfig {
 
     public static final ModConfigSpec.IntValue COAL_GENERATOR_MAX_ENERGY = BUILDER
             .comment("Maximum energy the Coal Generator can store (FE).")
-            .defineInRange("maxEnergy", 400_000, 1, 100_000_000);
+            .defineInRange("maxEnergy", 40_000, 1, 100_000_000);
 
     public static final ModConfigSpec.IntValue COAL_GENERATOR_FE_PER_TICK = BUILDER
             .comment("Energy output per tick while burning fuel (FE/t).")
-            .defineInRange("fePerTick", 20, 1, 100_000);
+            .defineInRange("fePerTick", 200, 1, 100_000);
 
     public static final ModConfigSpec.BooleanValue COAL_GENERATOR_AUTO_PUSH = BUILDER
             .comment(
@@ -280,6 +280,36 @@ public class ODConfig {
     public static final ModConfigSpec.BooleanValue COOLING_TOWER_EXPLODE_ON_FAILURE = BUILDER
             .comment("If true, cooling tower explodes on failure.")
             .define("explodeOnFailure", false);
+
+    static {
+        BUILDER.pop();
+    }
+
+    // --- Sounds ---
+    static {
+        BUILDER.push("sounds");
+    }
+
+    public static final ModConfigSpec.BooleanValue ENABLE_MACHINE_SOUNDS = BUILDER
+            .comment(
+                    "If true, the machines play a sound while they are running.",
+                    "The Circuit Press plays its sound at the end of every craft cycle.",
+                    "The other machines play a looping sound for as long as they work.")
+            .define("enableMachineSounds", true);
+
+    public static final ModConfigSpec.DoubleValue MACHINE_SOUND_VOLUME = BUILDER
+            .comment(
+                    "Volume of the running sounds of the machines.",
+                    "1.0 is the normal level, 0 is silent and higher values are louder.",
+                    "A multiblock spreads its sound over the whole structure, every place",
+                    "carries only a part of the volume.")
+            .defineInRange("machineSoundVolume", 1.0, 0.0, 2.0);
+
+    public static final ModConfigSpec.DoubleValue MACHINE_SOUND_RANGE = BUILDER
+            .comment(
+                    "Maximum distance in blocks in which a running machine is still audible.",
+                    "Machines outside of this range are not played at all.")
+            .defineInRange("machineSoundRange", 32.0, 8.0, 128.0);
 
     static {
         BUILDER.pop();

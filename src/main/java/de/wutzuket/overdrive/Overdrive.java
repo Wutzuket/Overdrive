@@ -55,6 +55,7 @@ import de.wutzuket.overdrive.menu.VacuumPumpScreen;
 import de.wutzuket.overdrive.menu.TungstenTargetScreen;
 import de.wutzuket.overdrive.recipe.ODRecipeSerializers;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
+import de.wutzuket.overdrive.sound.ODSounds;
 import de.wutzuket.overdrive.worldgen.ODBiomeModifiers;
 import de.wutzuket.overdrive.worldgen.ODWorldGen;
 
@@ -90,6 +91,7 @@ public class Overdrive {
         ODBiomeModifiers.register(modEventBus);
         ODDataComponents.register(modEventBus);
         ODAntimatters.register(modEventBus);
+        ODSounds.register(modEventBus);
 
         // GuideME ist eine optionale Abhaengigkeit. Das Handbuch wird nur
         // registriert, wenn GuideME installiert ist - und nur auf der

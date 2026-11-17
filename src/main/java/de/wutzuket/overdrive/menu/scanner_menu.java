@@ -6,6 +6,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -13,7 +14,16 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 public final class scanner_menu extends AbstractContainerMenu {
     private static final int ITEM_SLOTS = 4;
 
+    /** Indizes der synchronisierten Werte. */
+    private static final int ENERGY = 0;
+    private static final int MAX_ENERGY = 1;
+
     private final scanner_blockentity scanner;
+    /**
+     * Die Werte, die der Server schickt. Nur der Client liest daraus, damit
+     * das GUI jeden Tick aktuell ist.
+     */
+    private final int[] data = new int[2];
 
     public scanner_menu(int id, Inventory inventory, scanner_blockentity scanner) {
         super(ODMenuTypes.SCANNER_MENU.get(), id);
@@ -33,6 +43,32 @@ public final class scanner_menu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) {
             addSlot(new Slot(inventory, col, 8 + col * 18, 142));
         }
+
+        data[ENERGY] = scanner.getEnergyStored();
+        data[MAX_ENERGY] = scanner.getMaxEnergyStored();
+
+        addDataSlots(new ContainerData() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case ENERGY -> scanner.getEnergyStored();
+                    case MAX_ENERGY -> scanner.getMaxEnergyStored();
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+                if (index >= 0 && index < data.length) {
+                    data[index] = value;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return data.length;
+            }
+        });
     }
 
     public scanner_menu(int id, Inventory inventory, RegistryFriendlyByteBuf buf) {
@@ -72,4 +108,7 @@ public final class scanner_menu extends AbstractContainerMenu {
     public scanner_blockentity getBlockEntity() {
         return scanner;
     }
+
+    public int getEnergy() { return data[ENERGY]; }
+    public int getMaxEnergy() { return data[MAX_ENERGY]; }
 }

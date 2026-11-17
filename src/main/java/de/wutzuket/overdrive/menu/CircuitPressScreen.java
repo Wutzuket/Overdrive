@@ -1,6 +1,5 @@
 package de.wutzuket.overdrive.menu;
 
-import de.wutzuket.overdrive.block.press.CircuitPressBlockEntity;
 import de.wutzuket.overdrive.client.gui.GuiStyle;
 import de.wutzuket.overdrive.util.ODFormat;
 import net.minecraft.client.gui.GuiGraphics;
@@ -37,20 +36,21 @@ public final class CircuitPressScreen extends AbstractContainerScreen<CircuitPre
     protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int x = leftPos;
         int y = topPos;
-        CircuitPressBlockEntity press = menu.getBlockEntity();
+        CircuitPressMenu menu = this.menu;
         GuiStyle.panel(g, x, y, WIDTH, HEIGHT);
         GuiStyle.metricGauge(g, font, x + ENERGY_X, y + ENERGY_Y, ENERGY_W, ENERGY_H,
-                press.getEnergyStored() / (float) press.getMaxEnergyStored(), GuiStyle.COL_GREEN, null);
-        drawArrow(g, x + ARROW_X, y + ARROW_Y, press);
+                menu.getMaxEnergy() > 0 ? menu.getEnergy() / (float) menu.getMaxEnergy() : 0.0F,
+                GuiStyle.COL_GREEN, null);
+        drawArrow(g, x + ARROW_X, y + ARROW_Y, menu);
         GuiStyle.slotFrames(g, menu, x, y);
     }
 
-    private void drawArrow(GuiGraphics g, int x, int y, CircuitPressBlockEntity press) {
+    private void drawArrow(GuiGraphics g, int x, int y, CircuitPressMenu menu) {
         GuiStyle.inset(g, x, y, ARROW_W, ARROW_H);
-        double fraction = Math.min(1.0, press.getProgress()
-                / (double) Math.max(1, press.getMaxProgress()));
+        double fraction = Math.min(1.0, menu.getProgress()
+                / (double) Math.max(1, menu.getMaxProgress()));
         int fill = (int) (fraction * (ARROW_W - 4));
-        int color = press.isActive() ? GuiStyle.COL_CYAN : GuiStyle.COL_TEXT_DIM;
+        int color = menu.isActive() ? GuiStyle.COL_CYAN : GuiStyle.COL_TEXT_DIM;
         if (fill > 0) {
             g.fill(x + 2, y + 5, x + 2 + Math.min(fill, 14), y + 12, color);
             if (fill > 9) g.fill(x + 16, y + 4, x + 18, y + 13, color);
@@ -63,9 +63,9 @@ public final class CircuitPressScreen extends AbstractContainerScreen<CircuitPre
 
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
-        CircuitPressBlockEntity press = menu.getBlockEntity();
+        CircuitPressMenu menu = this.menu;
         g.drawString(font, title, 8, 4, GuiStyle.COL_TEXT, false);
-        g.drawString(font, "Status: " + (press.isActive() ? "§aRunning" : "§eIdle"),
+        g.drawString(font, "Status: " + (menu.isActive() ? "§aRunning" : "§eIdle"),
                 STATUS_X, STATUS_Y, GuiStyle.COL_TEXT, false);
         g.drawString(font, "Inputs", 28, 25, GuiStyle.COL_TEXT_DIM, false);
         g.drawString(font, "Output", 136, 35, GuiStyle.COL_TEXT_DIM, false);
@@ -78,12 +78,12 @@ public final class CircuitPressScreen extends AbstractContainerScreen<CircuitPre
         int energyY = topPos + ENERGY_Y;
         if (mouseX >= energyX && mouseX <= energyX + ENERGY_W
                 && mouseY >= energyY && mouseY <= energyY + ENERGY_H) {
-            CircuitPressBlockEntity press = menu.getBlockEntity();
+            CircuitPressMenu menu = this.menu;
             List<Component> lines = new ArrayList<>();
             lines.add(Component.literal("Energy"));
             lines.add(Component.literal(ODFormat.formatEnergyPair(
-                    press.getEnergyStored(), press.getMaxEnergyStored())));
-            lines.add(Component.literal("Usage: " + ODFormat.formatEnergyPerTick(press.getEnergyPerTick())));
+                    menu.getEnergy(), menu.getMaxEnergy())));
+            lines.add(Component.literal("Usage: " + ODFormat.formatEnergyPerTick(menu.getEnergyPerTick())));
             g.renderTooltip(font, lines, java.util.Optional.empty(), mouseX, mouseY);
             return;
         }
@@ -91,13 +91,13 @@ public final class CircuitPressScreen extends AbstractContainerScreen<CircuitPre
         int x = leftPos + ARROW_X;
         int y = topPos + ARROW_Y;
         if (mouseX >= x && mouseX <= x + ARROW_W && mouseY >= y && mouseY <= y + ARROW_H) {
-            CircuitPressBlockEntity press = menu.getBlockEntity();
+            CircuitPressMenu menu = this.menu;
             List<Component> lines = new ArrayList<>();
-            lines.add(Component.literal("Progress: " + press.getProgress() + " / "
-                    + press.getMaxProgress() + " t"));
-            lines.add(Component.literal("Usage: " + ODFormat.formatEnergyPerTick(press.getEnergyPerTick())));
+            lines.add(Component.literal("Progress: " + menu.getProgress() + " / "
+                    + menu.getMaxProgress() + " t"));
+            lines.add(Component.literal("Usage: " + ODFormat.formatEnergyPerTick(menu.getEnergyPerTick())));
             lines.add(Component.literal("Total: " + ODFormat.formatEnergy(
-                    (long) press.getEnergyPerTick() * press.getMaxProgress())));
+                    (long) menu.getEnergyPerTick() * menu.getMaxProgress())));
             g.renderTooltip(font, lines, java.util.Optional.empty(), mouseX, mouseY);
             return;
         }

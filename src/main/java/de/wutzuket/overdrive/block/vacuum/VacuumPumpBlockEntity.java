@@ -3,6 +3,9 @@ package de.wutzuket.overdrive.block.vacuum;
 import de.wutzuket.overdrive.Overdrive;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.menu.VacuumPumpMenu;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.MachineSoundLayout;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -11,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +31,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode {
+public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode, IMachineSound {
     private static final int MAX_ENERGY = 200_000;
     /** Volumen der Pumpe selbst (3x3x3 Blocks). */
     private static final int OWN_VOLUME = 27;
@@ -349,6 +354,25 @@ public class VacuumPumpBlockEntity extends BlockEntity implements IEnergyStorage
 
     public VacuumStatus getStatus() {
         return status;
+    }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.VACUUM_PUMP.get();
+    }
+
+    /** Die Pumpe laeuft, solange sie evakuiert, ein Leck hat oder das Vakuum haelt. */
+    @Override
+    public boolean isMachineRunning() {
+        return status != VacuumStatus.OFFLINE;
+    }
+
+    /** Der Klang kommt von mehreren Stellen des Gehauses, nicht nur vom Controller. */
+    @Override
+    public List<BlockPos> getSoundPositions(BlockPos controllerPos, BlockState state) {
+        Direction back = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+        BlockPos middle = controllerPos.relative(back, 1);
+        return MachineSoundLayout.ring(middle, 1.0D, 4);
     }
 
     public int getVacuumProgress() {

@@ -6,6 +6,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -18,6 +19,14 @@ public class AntimatterTankMenu extends AbstractContainerMenu {
     public static final int OUTPUT_SLOT_Y = 35;
 
     private final AntimatterTankEntity blockEntity;
+    /** Indizes der synchronisierten Werte. */
+    private static final int AMOUNT = 0;
+    private static final int CAPACITY = 1;
+    /**
+     * Die Werte, die der Server schickt. Nur der Client liest daraus, damit
+     * das GUI jeden Tick aktuell ist.
+     */
+    private final int[] data = new int[2];
 
     public AntimatterTankMenu(int id, Inventory inventory, AntimatterTankEntity blockEntity) {
         super(ODMenuTypes.ANTIMATTER_TANK_MENU.get(), id);
@@ -36,6 +45,32 @@ public class AntimatterTankMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) {
             this.addSlot(new Slot(inventory, col, 8 + col * 18, 168));
         }
+
+        data[AMOUNT] = blockEntity.getAmount(0);
+        data[CAPACITY] = blockEntity.getCapacity(0);
+
+        addDataSlots(new ContainerData() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case AMOUNT -> blockEntity.getAmount(0);
+                    case CAPACITY -> blockEntity.getCapacity(0);
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+                if (index >= 0 && index < data.length) {
+                    data[index] = value;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return data.length;
+            }
+        });
     }
 
     public AntimatterTankMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
@@ -80,10 +115,10 @@ public class AntimatterTankMenu extends AbstractContainerMenu {
     }
 
     public int getAmount() {
-        return blockEntity.getAmount(0);
+        return data[AMOUNT];
     }
 
     public int getCapacity() {
-        return blockEntity.getCapacity(0);
+        return data[CAPACITY];
     }
 }

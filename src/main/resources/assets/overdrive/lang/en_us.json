@@ -268,5 +268,15 @@
   "jei.overdrive.antimatter.type.empty": "Empty",
   "message.overdrive.antimatter.pipe.mode": "Antimatter pipe: ",
   "message.overdrive.antimatter.pipe.no_side": "No connected side to configure",
-  "guide.overdrive.can_be_replaced_with": "%s - Can be replaced with:"
+  "guide.overdrive.can_be_replaced_with": "%s - Can be replaced with:",
+  "subtitles.overdrive.machine.coal_generator": "Coal generator running",
+  "subtitles.overdrive.machine.particle_accelerator": "Particle accelerator running",
+  "subtitles.overdrive.machine.ad_ring": "AD ring running",
+  "subtitles.overdrive.machine.elena_ring": "ELENA ring running",
+  "subtitles.overdrive.machine.electron_gun": "Electron gun running",
+  "subtitles.overdrive.machine.cryo_distiller": "Cryo distiller running",
+  "subtitles.overdrive.machine.vacuum_pump": "Vacuum pump running",
+  "subtitles.overdrive.machine.annihilation_reactor": "Annihilation reactor running",
+  "subtitles.overdrive.machine.cooling_tower": "Cooling tower running",
+  "subtitles.overdrive.machine.circuit_press": "Circuit press"
 }

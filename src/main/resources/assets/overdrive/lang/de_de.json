@@ -268,5 +268,15 @@
   "jei.overdrive.antimatter.type.empty": "Leer",
   "message.overdrive.antimatter.pipe.mode": "Antimatterrohr: ",
   "message.overdrive.antimatter.pipe.no_side": "Keine verbundene Seite zum Konfigurieren",
-  "guide.overdrive.can_be_replaced_with": "%s - Kann ersetzt werden durch:"
+  "guide.overdrive.can_be_replaced_with": "%s - Kann ersetzt werden durch:",
+  "subtitles.overdrive.machine.coal_generator": "Kohlekraftwerk laeuft",
+  "subtitles.overdrive.machine.particle_accelerator": "Teilchenbeschleuniger laeuft",
+  "subtitles.overdrive.machine.ad_ring": "AD-Ring laeuft",
+  "subtitles.overdrive.machine.elena_ring": "ELENA-Ring laeuft",
+  "subtitles.overdrive.machine.electron_gun": "Elektronenstrahler laeuft",
+  "subtitles.overdrive.machine.cryo_distiller": "Kryodestiller laeuft",
+  "subtitles.overdrive.machine.vacuum_pump": "Vakuumpumpe laeuft",
+  "subtitles.overdrive.machine.annihilation_reactor": "Annihilationsreaktor laeuft",
+  "subtitles.overdrive.machine.cooling_tower": "Kuehlturm laeuft",
+  "subtitles.overdrive.machine.circuit_press": "Leiterplattenpresse"
 }

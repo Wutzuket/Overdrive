@@ -5,12 +5,14 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.menu.CircuitPressMenu;
 import de.wutzuket.overdrive.recipe.CircuitPressRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -69,6 +71,7 @@ public final class CircuitPressBlockEntity extends BlockEntity implements IEnerg
                 items.setStackInSlot(4, existing);
             }
             progress = 0;
+            playCycleSound();
         }
         setChanged();
         sync(wasActive ? 2 : 3);
@@ -77,6 +80,17 @@ public final class CircuitPressBlockEntity extends BlockEntity implements IEnerg
     private void sync(int flags) {
         if (level != null) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), flags);
+        }
+    }
+
+    /**
+     * Der Press macht am Ende jedes Vorgangs ein Geraeusch, wenn das fertige
+     * Teil aus dem Werkzeug kommt.
+     */
+    private void playCycleSound() {
+        if (level != null) {
+            float volume = ODSounds.PRESS_VOLUME * ODConfig.MACHINE_SOUND_VOLUME.get().floatValue();
+            level.playSound(null, worldPosition, ODSounds.CIRCUIT_PRESS.get(), SoundSource.BLOCKS, volume, 1.0F);
         }
     }
 

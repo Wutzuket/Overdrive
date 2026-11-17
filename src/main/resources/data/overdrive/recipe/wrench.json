@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "c:ingots/iron"
+      "tag": "c:ingots/iridium"
     },
     "S": {
       "tag": "c:rods/wooden"
@@ -11,8 +11,8 @@
   },
   "pattern": [
     " I ",
-    " S ",
-    " S "
+    " SI",
+    "S  "
   ],
   "result": {
     "count": 1,

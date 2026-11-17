@@ -3,7 +3,6 @@
   "values": [
     "overdrive:aluminum_ore",
     "overdrive:deepslate_aluminum_ore",
-    "overdrive:aluminum_block",
-    "overdrive:simple_frame"
+    "overdrive:aluminum_block"
   ]
 }

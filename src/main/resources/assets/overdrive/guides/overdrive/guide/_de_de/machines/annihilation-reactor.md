@@ -27,12 +27,20 @@ Der Annihilationsreaktor ist das Herzstück von Overdrive. Er vernichtet
 ## Bauart
 
 Der Reaktor ist ein **25 x 25 x 25** großer Torus. Der Torus hat einen
-Hauptradius von 8 und einen Rohrradius von 4 Blöcken, daraus ergeben sich 2132
-Wandblöcke in neun Lagen.
+Hauptradius von 8 und einen Rohrradius von 4 Blöcken, daraus ergeben sich 1300
+Wandblöcke in neun Lagen. Die Wand ist rund um das Rohr genau ein Block dick.
 
 * Die **Wand** des Torus besteht aus
   <ItemLink id="overdrive:annihilation_heavy_casing" /> und den unten
   genannten Ports. Kein anderer Block und keine Luft sind auf der Wand erlaubt.
+* Alternativ zum Heavy Casing darf auf der Wand
+  <ItemLink id="overdrive:core_containment_glass" /> benutzt werden. Das Glas wird aber
+  nur dort akzeptiert, wo die Wand flach ist: es muss von 4 Seiten berührt werden, die auf
+  einer Ebene liegen - entweder die 4 waagerechten Seiten (Norden, Süden, Osten, Westen)
+  oder eine der beiden vertikalen Ebenen (oben/unten plus je eine waagerechte Achse).
+  Damit geht Glas auf der Innen- und Außenseite der Wand und auf der Krone des Rings,
+  aber nicht in den Ecken und Kanten, wo die Wand umbiegt. Die Glasfenster sind der
+  einzige Weg, das Plasma im Torus zu sehen.
 * Jede Position der Wand kann durch einen der fünf Ports ersetzt werden. Der
   Reaktor braucht zwei Zellen-Andock-Ports und je einen der anderen Ports.
 * Das **Innere des Rohrs** muss **leer** bleiben.
@@ -52,10 +60,10 @@ also 12 Blöcke vor ihm.
   <BlockAnnotation x="12" y="4" z="12" color="#ff5555">
     **Reaktorkern**<br />5x5x5: 27 Kernblöcke innen, Containment-Glas darum.
   </BlockAnnotation>
-  <BlockAnnotation x="12" y="8" z="4" color="#55ff55">
+  <BlockAnnotation x="11" y="8" z="4" color="#55ff55">
     **Zellen-Andock-Port**<br />Nimmt Antiprotonen oder Positronen auf. Zwei davon sind Pflicht. Kann ersetzt werden durch: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="11" y="8" z="4" color="#55ff55">
+  <BlockAnnotation x="12" y="8" z="4" color="#55ff55">
     **Zellen-Andock-Port**<br />Der zweite Zellen-Andock-Port. Kann ersetzt werden durch: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> oder <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
   <BlockAnnotation x="10" y="8" z="4" color="#55ff55">
@@ -82,7 +90,7 @@ also 12 Blöcke vor ihm.
 | <ItemLink id="overdrive:coolant_input_port" /> | 1 |
 | <ItemLink id="overdrive:steam_output_port" /> | 1 |
 | <ItemLink id="overdrive:annihilation_energy_output" /> | 1 |
-| <ItemLink id="overdrive:annihilation_heavy_casing" /> | der Rest der Wand (2125) |
+| <ItemLink id="overdrive:annihilation_heavy_casing" /> | der Rest der Wand (1294) |
 | <ItemLink id="overdrive:reactor_core_block" /> | 27 |
 | <ItemLink id="overdrive:core_containment_glass" /> | 98 |
 
@@ -105,6 +113,17 @@ Ableitmodi (Idle, Dump, Dump Excess), die sich in seinem GUI umschalten lassen.
 
 Jeder <ItemLink id="overdrive:cell_docking_port" /> fasst 2.000.000 mB. Ein Port
 nimmt Antiprotonen auf, der andere Positronen.
+
+Im Hohlkanal des Torus fließt ein **Plasma** um den Ring, konzentrisch zum Torus,
+gezeichnet wie das Plasma im Fusionsreaktor von Mekanism: ein leuchtender, wirbelnder
+Energiekörper, dessen Oberfläche um die Reaktorachse fließt. Sein Volumen wächst mit
+der Brennrate: linear zur Brennrate (Anzeige in mB/t, 40000 mB/t sind 40 B/t) und ab
+40 B/t bleibt es bei dieser Maximalgröße – in der Überlast-Range wächst es also nicht
+weiter. Die Farbe wird mit steigender Kerntemperatur gesättigter: bei 0 °C ist
+überhaupt kein Plasma zu sehen, bei 5000 °C ist die Farbe voll gesättigt. Läuft der
+Reaktor, leuchtet es kräftig; im Standby nur
+schwach. Der Kanal ist von der Wand geschlossen, das Plasma sieht man deshalb nur
+durch die <ItemLink id="overdrive:core_containment_glass" />-Fenster.
 
 ## Ausfall
 

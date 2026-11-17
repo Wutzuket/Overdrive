@@ -21,7 +21,7 @@ Brennstoff wie ein Vanilla-Ofen und schiebt die Energie in die Nachbarblöcke.
 | Eigenschaft | Wert |
 |---|---|
 | Energiespeicher | 400.000 FE |
-| Ausgabe | 20 FE/t |
+| Ausgabe | 200 FE/t |
 | Brennstoffslots | 1 |
 | Automatisch pushen | ja (konfigurierbar) |
 

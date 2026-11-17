@@ -15,14 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * A cell that can hold antimatter. There are no buckets in this mod - the cell is the only way to
- * move antimatter around by hand. The content of a cell is stored in data components so it can be
- * synced to the client and rendered correctly.
- *
- * <p>The icon of the cell is drawn procedurally, the colour comes from the antimatter type. That
- * way a new type of antimatter automatically gets a fitting cell icon.</p>
- */
+@SuppressWarnings("removal")
 public class AntimatterCellItem extends Item {
 
     private final @Nullable Antimatter defaultType;

@@ -5,6 +5,8 @@ import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.menu.CryoDistillerMenu;
 import de.wutzuket.overdrive.recipe.CryoDistillerRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -36,8 +39,8 @@ import org.jetbrains.annotations.Nullable;
  * Das aktive Rezept kann ueber {@code "catalysator": { "block": "..." }} verlangen, dass ein
  * bestimmter Block direkt darunter liegt.
  */
-public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, MenuProvider {
-    public static final int MAX_ENERGY = 100_000_000;
+public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IMachineSound {
+    public static final int MAX_ENERGY = 1_000_000;
     public static final int TANK_CAPACITY = 32_000;
 
     private int energy = 0;
@@ -238,6 +241,14 @@ public class CryoDistillerEntity extends BlockEntity implements IEnergyStorage, 
         return lastOutputAmount / (double) Math.max(1, lastProcessTime);
     }
     public boolean isActive() { return active; }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.CRYO_DISTILLER.get();
+    }
+
+    @Override
+    public boolean isMachineRunning() { return isActive(); }
 
     /** Block-ID des aktuell geforderten Katalysators, oder null. */
     public @Nullable ResourceLocation getCatalystBlockId() { return catalystBlockId; }

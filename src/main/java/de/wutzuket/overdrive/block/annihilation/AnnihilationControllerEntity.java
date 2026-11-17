@@ -8,6 +8,9 @@ import de.wutzuket.overdrive.index.ODBlocks;
 import de.wutzuket.overdrive.recipe.AnnihilationRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import de.wutzuket.overdrive.recipe.ReactorCoolingRecipe;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.MachineSoundLayout;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,14 +38,31 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class AnnihilationControllerEntity extends BlockEntity implements MenuProvider {
+import java.util.List;
+
+public class AnnihilationControllerEntity extends BlockEntity implements MenuProvider, IMachineSound {
     public static final int SIZE = 25;
     public static final int OUTER = 12; // 2*12+1=25
     public static final int INNER = 6; // legacy inner hole radius (für Fallback)
     public static final int CORE_RADIUS = 2; // core 5x5x5 = radius 2
     public static final int TORUS_MAJOR = 8; // Hauptradius des Torus
-    public static final int TORUS_TUBE = 4;  // Schlauchradius -> Außen 12, Innenloch 4, echte Torus-Geometrie
+    public static final int TORUS_TUBE = 4;  // Schlauchradius -> Außen 12, echte Torus-Geometrie
+    // Halbe Wandstaerke: die Wand ist genau eine Blocklage dick (0.5). Mit 0.9 waere sie
+    // an den Rundungen des Rohrs 2 bis 5 Bloecke dick.
+    public static final double TORUS_WALL_TOLERANCE = 0.5;
     public static final int CORE_TEMP_MAX = 5000;
+    // Plasma-Torus: ein Plasma-Körper, der im Hohlkanal des Reaktor-Torus fließt und
+    // konzentrisch zur Ring-Mittellinie liegt (Hauptradius 8, wie der Torus selbst).
+    // Der Kanal hat Radius ~3,5, das Plasma-Rohr muss deutlich kleiner bleiben.
+    public static final double PLASMA_MAJOR = 8.0;  // Hauptradius (= TORUS_MAJOR, Ring-Mittellinie)
+    public static final double PLASMA_HEIGHT = 0.0; // Höhe = Mitte des Hohlkanals (Höhe des Controllers)
+    // Das Plasma wächst mit der Brennrate: das Volumen ist linear zur Brennrate, der
+    // Rohr-Radius also quadratisch dazu (Volumen = 2*pi²*R*r²). Die Brennrate wird in
+    // mB/t angezeigt, 40000 mB/t sind 40 B/t (1 Bucket = 1000 mB). Ab 40 B/t hat das
+    // Plasma seine volle Größe und wächst nicht weiter.
+    public static final double PLASMA_FULL_BURN = 40000.0; // 40 B/t: volle Größe (Deckel)
+    public static final double PLASMA_TUBE_FULL = 2.0124;  // Rohr-Radius bei voller Größe
+    public static final double PLASMA_TUBE_IDLE = 0.6;     // Standby: dünner Ring
     // Überlast-Gambling: über MELTDOWN_BURN kann der Reaktor jederzeit durchgehen – je weiter darüber,
     // desto wahrscheinlicher (40k bleibt sicher, ~41k knallt im Schnitt nach Minuten). Mit Abweichung,
     // keine exakte Schwelle.
@@ -58,17 +79,18 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
     private static final int ENERGY_PER_ANNIHILATION = 500000; // FE per dose pair
 
     public static boolean isTorusWall(int dx, int dy, int dz){
-        // echter Torus: (sqrt(dx²+dz²)-R)² + dy² = r², Wand bei |dist - r| < 0.9
+        // echter Torus: (sqrt(dx²+dz²)-R)² + dy² = r², Wand bei |dist - r| < 0.5
+        // (0.5 = eine Blocklage dick; mit 0.9 waere die Wand stellenweise 2-5 Bloecke dick)
         double horiz = Math.sqrt((double)dx*dx + (double)dz*dz);
         double distToRing = Math.abs(horiz - TORUS_MAJOR);
         double tubeDist = Math.sqrt(distToRing*distToRing + (double)dy*dy);
-        return Math.abs(tubeDist - TORUS_TUBE) < 0.9;
+        return Math.abs(tubeDist - TORUS_TUBE) < TORUS_WALL_TOLERANCE;
     }
     public static boolean isTorusHollow(int dx, int dy, int dz){
         double horiz = Math.sqrt((double)dx*dx + (double)dz*dz);
         double distToRing = Math.abs(horiz - TORUS_MAJOR);
         double tubeDist = Math.sqrt(distToRing*distToRing + (double)dy*dy);
-        return tubeDist < TORUS_TUBE - 0.9;
+        return tubeDist < TORUS_TUBE - TORUS_WALL_TOLERANCE;
     }
 
     private boolean validStructure=false;
@@ -374,6 +396,36 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
         int cz=controllerPos.getZ()+facing.getStepZ()*OUTER;
         return new BlockPos(cx,cy,cz);
     }
+    /** Ist an der Position ein Wandblock der Torus-Wand (Casing, Glas, Port oder Controller)? */
+    private static boolean isWallBlock(Block b){
+        return b instanceof AnnihilationHeavyCasingBlock
+                || b instanceof CoreContainmentGlassBlock
+                || b instanceof CellDockingPortBlock
+                || b instanceof AnnihilationVacuumPortBlock
+                || b instanceof CoolantInputPortBlock
+                || b instanceof SteamOutputPortBlock
+                || b instanceof EnergyOutputPortBlock
+                || b instanceof AnnihilationControllerBlock;
+    }
+    /**
+     * Core-Containment-Glas ist nur erlaubt, wenn es an einer flachen Stelle der Wand sitzt:
+     * es muss von 4 Seiten beruehrt werden, die auf einer Ebene liegen. Das kann die
+     * waagerechte Ebene sein (N/S/O/W) oder eine der beiden vertikalen Ebenen (oben/unten
+     * plus je eine waagerechte Achse). Damit geht Glas auf der Innen- und Aussenseite der
+     * Wand und auf der Krone des Rings, aber nicht in den Ecken, wo die Wand umbiegt.
+     */
+    public static boolean hasFlatWallNeighbors(Level level, BlockPos pos){
+        return isWallAt(level, pos, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
+                || isWallAt(level, pos, Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH)
+                || isWallAt(level, pos, Direction.UP, Direction.DOWN, Direction.EAST, Direction.WEST);
+    }
+    private static boolean isWallAt(Level level, BlockPos pos, Direction... dirs){
+        for(Direction d : dirs){
+            if(!isWallBlock(level.getBlockState(pos.relative(d)).getBlock())) return false;
+        }
+        return true;
+    }
+
     private boolean checkStructure(Level level, BlockPos controllerPos, BlockState state){
         BlockPos center=getCenter(controllerPos, state);
         int cx=center.getX(), cy=center.getY(), cz=center.getZ();
@@ -437,6 +489,13 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
                     continue;
                 }
                 if(b instanceof AnnihilationHeavyCasingBlock) heavyCasings++;
+                else if(b instanceof CoreContainmentGlassBlock){
+                    // Core-Containment-Glas darf die Heavy Casings in der Wand ersetzen, aber nur
+                    // an flachen Wandstellen: 4 Seiten auf einer Ebene muessen Wandbloecke sein
+                    // (siehe hasFlatWallNeighbors). In Ecken der Wand geht das nicht, dort wird
+                    // das Glas nicht akzeptiert.
+                    if(!hasFlatWallNeighbors(level, p)) return false;
+                }
                 else if(b instanceof CellDockingPortBlock) cellPorts++;
                 else if(b instanceof AnnihilationVacuumPortBlock) vacuumPorts++;
                 else if(b instanceof CoolantInputPortBlock) coolantPorts++;
@@ -554,6 +613,22 @@ public class AnnihilationControllerEntity extends BlockEntity implements MenuPro
 
     public boolean isValidStructure(){ return validStructure; }
     public boolean isActive(){ return active; }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.ANNIHILATION_REACTOR.get();
+    }
+
+    @Override
+    public boolean isMachineRunning(){ return isActive(); }
+
+    /** Der Klang kommt von mehreren Stellen des Torus, nicht nur vom Controller. */
+    @Override
+    public List<BlockPos> getSoundPositions(BlockPos controllerPos, BlockState state){
+        BlockPos center = getCenter(controllerPos, state);
+        return MachineSoundLayout.ring(center, TORUS_MAJOR, 6);
+    }
+
     public double getCoreTemp(){ return coreTemp; }
     // int-Sicht (GUI/Probe, gecappt) + long-Sicht (Logik)
     public int getEnergyStored(){ return (int)Math.min(Integer.MAX_VALUE, energyStored); }

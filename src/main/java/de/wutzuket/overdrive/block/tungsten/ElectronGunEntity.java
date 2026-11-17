@@ -5,6 +5,9 @@ import de.wutzuket.overdrive.fluid.ODFluids;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
 import de.wutzuket.overdrive.recipe.PositronExtractionRecipe;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.MachineSoundLayout;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -13,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +35,9 @@ import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode {
+import java.util.List;
+
+public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IVacuumNode, IMachineSound {
     private static final int MAX_ENERGY = 500_000;
     /** Maximale einstellbare FE/t-Rate, begrenzt durch den internen Puffer. */
     public static final int MAX_ENERGY_RATE = MAX_ENERGY;
@@ -299,6 +305,22 @@ public class ElectronGunEntity extends BlockEntity implements IEnergyStorage, Me
     public int getEnergy() { return energy; }
     public int getMaxEnergy() { return MAX_ENERGY; }
     public boolean isActive() { return active; }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.ELECTRON_GUN.get();
+    }
+
+    @Override
+    public boolean isMachineRunning() { return isActive(); }
+
+    /** Der Klang kommt von der ganzen Strahlrohre, nicht nur vom Controller. */
+    @Override
+    public List<BlockPos> getSoundPositions(BlockPos controllerPos, BlockState state) {
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        return MachineSoundLayout.line(controllerPos, facing, 3);
+    }
+
     public AntimatterTank getAntimatterTank() { return fluidTank; }
 
     public int getEnergyRate() { return energyRate; }

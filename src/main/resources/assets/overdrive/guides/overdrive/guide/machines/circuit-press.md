@@ -30,7 +30,7 @@ not have to build a cable network around it.
 
 | Property | Value |
 |---|---|
-| Energy buffer | 1,000,000 FE |
+| Energy buffer | 10,000 FE |
 | Energy per tick | 100 FE (circuit board), 300 FE (scanner panels) |
 | Process time | 100 ticks (circuit board), 120 ticks (scanner panels) |
 | Slot capacity | 64 items |

@@ -3,6 +3,8 @@ package de.wutzuket.overdrive.block.coalgenerator;
 import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.menu.CoalGeneratorMenu;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +29,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, MenuProvider {
+public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IMachineSound {
     private final ItemStackHandler fuelHandler = new ItemStackHandler(1) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -43,6 +46,8 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
     private int energy = 0;
     private int burnTime = 0;
     private int currentBurnTime = 0;
+    /** Der Generator brennt nur, wenn er noch Energie erzeugen oder abgeben kann. */
+    private boolean running = false;
 
     public CoalGeneratorEntity(BlockPos pos, BlockState state) {
         super(ODBlockEntities.COAL_GENERATOR_BLOCK_ENTITY.get(), pos, state);
@@ -52,7 +57,6 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
         if (level.isClientSide) return;
 
         boolean changed = false;
-        boolean active = isActive();
 
         if (burnTime > 0) {
             int maxEnergy = getMaxEnergyStored();
@@ -80,18 +84,36 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
             }
         }
 
-        if (active != isActive()) changed = true;
-
         // Energie automatisch an angrenzende Bloecke weitergeben (Pipes, Ports, ...)
+        int pushed = 0;
         if (ODConfig.COAL_GENERATOR_AUTO_PUSH.get()) {
-            int pushed = pushEnergyToNeighbors(level, pos, ODConfig.COAL_GENERATOR_FE_PER_TICK.get());
+            pushed = pushEnergyToNeighbors(level, pos, ODConfig.COAL_GENERATOR_FE_PER_TICK.get());
             if (pushed > 0) changed = true;
         }
+
+        // Ist der Speicher voll und geht keine Energie mehr raus, hoert der
+        // Generator auf zu brennen. Die Kohle bleibt erhalten und laeuft weiter,
+        // sobald wieder Platz ist.
+        boolean wasRunning = running;
+        running = isRunning(burnTime, energy, getMaxEnergyStored(), pushed);
+        if (running != wasRunning) changed = true;
 
         if (changed) {
             setChanged();
             level.sendBlockUpdated(pos, state, state, 3);
         }
+    }
+
+    /**
+     * Der Generator brennt nur, wenn er noch Energie erzeugen oder abgeben kann.
+     *
+     * @param burnTime die restliche Brennzeit der Kohle
+     * @param energy die gerade gespeicherte Energie
+     * @param maxEnergy der Platz im Energiespeicher
+     * @param pushed die Energie, die in diesem Tick an Nachbarn abgegeben wurde
+     */
+    public static boolean isRunning(int burnTime, int energy, int maxEnergy, int pushed) {
+        return burnTime > 0 && (energy < maxEnergy || pushed > 0);
     }
 
     /**
@@ -142,8 +164,23 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
         return false;
     }
 
+    /**
+     * Der Generator brennt nur, wenn er noch Energie erzeugen oder abgeben kann.
+     * Ist der Energiespeicher voll und kann nichts abgegeben werden, meldet der
+     * Generator Pause, die Kohle bleibt aber fuer spaeter erhalten.
+     */
     public boolean isActive() {
-        return burnTime > 0;
+        return running;
+    }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.COAL_GENERATOR.get();
+    }
+
+    @Override
+    public boolean isMachineRunning() {
+        return isActive();
     }
 
     public int getBurnTime() {
@@ -166,13 +203,7 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
         return fuelHandler;
     }
 
-    /**
-     * Brenndauer exakt wie im Vanilla-Ofen (RecipeType.SMELTING = ungekuerzt).
-     * Nutzt NeoForge-Data-Map + FurnaceFuelBurnTimeEvent, damit auch Mod-Brennstoffe,
-     * Datapack-Werte und selbst registrierte Fuels funktionieren.
-     * Zusaetzlich koennen ueber die Config eigene Brennstoffe definiert werden.
-     * 0 = kein Brennstoff.
-     */
+
     public static int getBurnTime(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
@@ -264,6 +295,7 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
         tag.putInt("energy", energy);
         tag.putInt("burnTime", burnTime);
         tag.putInt("currentBurnTime", currentBurnTime);
+        tag.putBoolean("running", running);
         tag.put("fuel", fuelHandler.serializeNBT(registries));
     }
 
@@ -273,6 +305,7 @@ public class CoalGeneratorEntity extends BlockEntity implements IEnergyStorage, 
         energy = tag.getInt("energy");
         burnTime = tag.getInt("burnTime");
         currentBurnTime = tag.getInt("currentBurnTime");
+        running = tag.getBoolean("running");
         fuelHandler.deserializeNBT(registries, tag.getCompound("fuel"));
     }
 

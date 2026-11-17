@@ -117,7 +117,8 @@ def is_torus_wall(dx: int, dy: int, dz: int, major: int = 8, tube: int = 4) -> b
     horiz = math.sqrt(float(dx * dx + dz * dz))
     dist_to_ring = abs(horiz - major)
     tube_dist = math.sqrt(dist_to_ring * dist_to_ring + float(dy * dy))
-    return abs(tube_dist - tube) < 0.9
+    # 0.5 = eine Blocklage dick (in der Mod: TORUS_WALL_TOLERANCE)
+    return abs(tube_dist - tube) < 0.5
 
 
 def torus_wall_cells(outer: int = 12, major: int = 8, tube: int = 4
@@ -230,21 +231,19 @@ def build_particle_accelerator() -> Tuple[Dict[Pos, Block], Dict[str, Pos]]:
     # Controller sitzt auf der aeusseren Wand, zeigt zum Ringzentrum (0,0,0).
     blocks[(0, 0, 25)] = ("overdrive:particle_accelerator_controller", {"facing": "north"})
     notes["controller"] = (0, 0, 25)
-    # Target und Output muessen auf der inneren Wand liegen, dort trifft sie der
-    # Strahl. Die beiden Versorgungsports stehen direkt neben dem Controller auf
-    # der aeusseren Wand. So stehen die Ports nah bei dem, was sie versorgen.
-    inner_wall = [(dx, 0, dz) for (dx, dz) in band if dx * dx + dz * dz <= 506]
+    # Alle vier Ports stehen direkt neben dem Controller auf der aeusseren Wand.
+    # Der Target und der Ausgang liegen im Radius, in dem der Beschleuniger sie
+    # sucht (21,5 bis 25,5 um die Ringmitte), dort ist auch Platz neben dem
+    # Controller.
     ports = [
-        ("target", (0, 0, -22), "overdrive:iridium_target"),
-        ("ausgang", (1, 0, -22), "overdrive:accelerator_output"),
-        ("energie-port", (1, 0, 25), "overdrive:accelerator_energy_input_port"),
-        ("vakuum-port", (-1, 0, 25), "overdrive:accelerator_vacuum_input_port"),
+        ("target", (1, 0, 25), "overdrive:iridium_target"),
+        ("ausgang", (2, 0, 25), "overdrive:accelerator_output"),
+        ("energie-port", (-1, 0, 25), "overdrive:accelerator_energy_input_port"),
+        ("vakuum-port", (-2, 0, 25), "overdrive:accelerator_vacuum_input_port"),
     ]
     for name, pos, block in ports:
         if (pos[0], pos[2]) not in band:
             raise ValueError("Beschleuniger: %s liegt nicht im Ring" % (pos,))
-        if name in ("target", "ausgang") and pos not in inner_wall:
-            raise ValueError("Beschleuniger: %s liegt nicht auf der inneren Wand" % (pos,))
         blocks[pos] = (block, None)
         notes[name] = pos
     return blocks, notes
@@ -484,8 +483,8 @@ def validate_reactor(blocks: Dict[Pos, str]) -> None:
                     wall += 1
                     if pos not in blocks:
                         raise ValueError("Reaktor: Wandzelle %s leer" % (pos,))
-    if wall != 2132:
-        raise ValueError("Reaktor: %d Wandzellen statt 2132" % wall)
+    if wall != 1300:
+        raise ValueError("Reaktor: %d Wandzellen statt 1300" % wall)
     core = [p for p in blocks if abs(p[0] - 12) <= 2 and abs(p[1] - 4) <= 2 and abs(p[2] - 12) <= 2]
     if len(core) != 125:
         raise ValueError("Reaktor: %d Core-Zellen statt 125" % len(core))

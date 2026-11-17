@@ -54,7 +54,7 @@ Der komplette Ring besteht aus **168 Blöcken**.
   <BlockAnnotation x="6" y="1" z="8" color="#55ff55">
     **AD-Eingangs-Port**<br />Antimatter-Rohre enden hier und füllen den Tank im Controller. Kann ersetzt werden durch: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_vacuum_port" /> oder <ItemLink id="overdrive:ad_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="8" y="1" z="8" color="#55ff55">
+  <BlockAnnotation x="2" y="1" z="8" color="#55ff55">
     **AD-Ausgangs-Port**<br />Rohre entnehmen hier die abgebremsten Antiprotonen. Kann ersetzt werden durch: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_vacuum_port" /> oder <ItemLink id="overdrive:ad_input_port" />.
   </BlockAnnotation>
 </GameScene>

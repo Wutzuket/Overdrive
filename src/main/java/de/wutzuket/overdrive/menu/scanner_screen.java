@@ -43,7 +43,7 @@ public final class scanner_screen extends AbstractContainerScreen<scanner_menu> 
 
         GuiStyle.panel(g, x, y, WIDTH, HEIGHT);
         GuiStyle.metricGauge(g, font, x + ENERGY_X, y + ENERGY_Y, ENERGY_W, ENERGY_H,
-                scanner.getEnergyStored() / (float) Math.max(1, scanner.getMaxEnergyStored()),
+                menu.getMaxEnergy() > 0 ? menu.getEnergy() / (float) menu.getMaxEnergy() : 0.0F,
                 GuiStyle.COL_GREEN, null);
         GuiStyle.slotFrames(g, menu, x, y);
         GuiStyle.slotFrame(g, x + RESULT_X, y + RESULT_Y);
@@ -98,7 +98,7 @@ public final class scanner_screen extends AbstractContainerScreen<scanner_menu> 
             List<Component> lines = new ArrayList<>();
             lines.add(Component.translatable("container.overdrive.scanner.energy"));
             lines.add(Component.literal(ODFormat.formatEnergyPair(
-                    scanner.getEnergyStored(), scanner.getMaxEnergyStored())));
+                    menu.getEnergy(), menu.getMaxEnergy())));
             g.renderTooltip(font, lines, Optional.empty(), mouseX, mouseY);
             return;
         }

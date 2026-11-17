@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -15,7 +16,19 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
     public static final int FUEL_SLOT_X = 28;
     public static final int FUEL_SLOT_Y = 34;
 
+    /** Indizes der synchronisierten Werte. */
+    private static final int ENERGY = 0;
+    private static final int MAX_ENERGY = 1;
+    private static final int ACTIVE = 2;
+    private static final int BURN_TIME = 3;
+    private static final int CURRENT_BURN_TIME = 4;
+
     private final CoalGeneratorEntity blockEntity;
+    /**
+     * Die Werte, die der Server schickt. Nur der Client liest daraus, damit
+     * das GUI jeden Tick aktuell ist.
+     */
+    private final int[] data = new int[5];
 
     public CoalGeneratorMenu(int id, Inventory inv, CoalGeneratorEntity blockEntity) {
         super(ODMenuTypes.COAL_GENERATOR_MENU.get(), id);
@@ -31,6 +44,38 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) {
             this.addSlot(new Slot(inv, col, 8 + col * 18, 168));
         }
+
+        data[ENERGY] = blockEntity.getEnergyStored();
+        data[MAX_ENERGY] = blockEntity.getMaxEnergyStored();
+        data[ACTIVE] = blockEntity.isActive() ? 1 : 0;
+        data[BURN_TIME] = blockEntity.getBurnTime();
+        data[CURRENT_BURN_TIME] = blockEntity.getCurrentBurnTime();
+
+        addDataSlots(new ContainerData() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case ENERGY -> blockEntity.getEnergyStored();
+                    case MAX_ENERGY -> blockEntity.getMaxEnergyStored();
+                    case ACTIVE -> blockEntity.isActive() ? 1 : 0;
+                    case BURN_TIME -> blockEntity.getBurnTime();
+                    case CURRENT_BURN_TIME -> blockEntity.getCurrentBurnTime();
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+                if (index >= 0 && index < data.length) {
+                    data[index] = value;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return data.length;
+            }
+        });
     }
 
     public CoalGeneratorMenu(int id, Inventory inv, RegistryFriendlyByteBuf buffer) {
@@ -65,23 +110,23 @@ public class CoalGeneratorMenu extends AbstractContainerMenu {
     }
 
     public int getEnergy() {
-        return blockEntity.getEnergyStored();
+        return data[ENERGY];
     }
 
     public int getMaxEnergy() {
-        return blockEntity.getMaxEnergyStored();
+        return data[MAX_ENERGY];
     }
 
     public boolean isActive() {
-        return blockEntity.isActive();
+        return data[ACTIVE] == 1;
     }
 
     public int getBurnTime() {
-        return blockEntity.getBurnTime();
+        return data[BURN_TIME];
     }
 
     public int getCurrentBurnTime() {
-        return blockEntity.getCurrentBurnTime();
+        return data[CURRENT_BURN_TIME];
     }
 
     public int getEnergyPerTick() {

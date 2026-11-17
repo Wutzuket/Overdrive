@@ -42,6 +42,7 @@
     "overdrive:cooling_tower_controller",
     "overdrive:cooling_tower_input_port",
     "overdrive:cooling_tower_output_port",
-    "overdrive:cryo_distiller"
+    "overdrive:cryo_distiller",
+    "overdrive:circuit_press"
   ]
 }

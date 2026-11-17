@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "overdrive:aluminum_ore",
+    "overdrive:deepslate_aluminum_ore",
+    "overdrive:aluminum_block",
+    "overdrive:iridium_ore",
+    "overdrive:deepslate_iridium_ore",
+    "overdrive:iridium_block",
+    "overdrive:tungsten_ore",
+    "overdrive:deepslate_tungsten_ore",
+    "overdrive:tungsten_block",
+    "overdrive:corium_block"
+  ]
+}

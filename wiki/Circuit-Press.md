@@ -65,7 +65,7 @@ The common configuration file contains a `circuit_press` section:
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
-| `maxEnergy` | `1000000` FE | Internal energy capacity |
+| `maxEnergy` | `10000` FE | Internal energy capacity |
 | `energyPerTick` | `100` FE/t | Default energy consumption while processing |
 | `processTime` | `100` ticks | Default processing time |
 | `slotCapacity` | `64` items | Maximum stack size in each machine slot |

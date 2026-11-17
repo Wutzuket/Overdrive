@@ -30,7 +30,7 @@ du brauchst also kein Kabelnetz um sie herum.
 
 | Eigenschaft | Wert |
 |---|---|
-| Energiespeicher | 1.000.000 FE |
+| Energiespeicher | 10.000 FE |
 | Energie pro Tick | 100 FE (Circuit Board), 300 FE (Scanner-Panels) |
 | Prozesszeit | 100 Ticks (Circuit Board), 120 Ticks (Scanner-Panels) |
 | Slotkapazität | 64 Gegenstände |

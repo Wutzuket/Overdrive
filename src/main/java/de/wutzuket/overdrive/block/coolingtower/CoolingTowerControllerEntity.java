@@ -3,6 +3,9 @@ package de.wutzuket.overdrive.block.coolingtower;
 import de.wutzuket.overdrive.index.ODBlockEntities;
 import de.wutzuket.overdrive.recipe.CoolingTowerRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.MachineSoundLayout;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -12,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +32,9 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class CoolingTowerControllerEntity extends BlockEntity implements MenuProvider {
+import java.util.List;
+
+public class CoolingTowerControllerEntity extends BlockEntity implements MenuProvider, IMachineSound {
     public static final int W=5, H=9;
     // Controller sits in the base wall (radius 2), facing inward. Center is 2 blocks in front of controller.
     // Port slots relative to CENTER: Input at (2, 1, 0), Output at (-2, 7, 0) in center coordinates
@@ -332,6 +338,23 @@ public class CoolingTowerControllerEntity extends BlockEntity implements MenuPro
     }
     public boolean isValid(){ return valid; }
     public boolean isActive(){ return active; }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.COOLING_TOWER.get();
+    }
+
+    @Override
+    public boolean isMachineRunning(){ return isActive(); }
+
+    /** Der Klang kommt vom Rand des Turms, nicht nur vom Controller. */
+    @Override
+    public List<BlockPos> getSoundPositions(BlockPos controllerPos, BlockState state){
+        BlockPos center = getCenter(controllerPos, state);
+        BlockPos top = new BlockPos(center.getX(), center.getY() + H - 1, center.getZ());
+        return MachineSoundLayout.ring(top, 2.0D, 4);
+    }
+
     public boolean isHologramEnabled(){
         if(level!=null && level.isClientSide && de.wutzuket.overdrive.Overdrive.isClientHologramEnabled(worldPosition)) return true;
         return hologramEnabled;

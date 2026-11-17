@@ -1,0 +1,62 @@
+{
+  "machine.coal_generator": {
+    "subtitle": "subtitles.overdrive.machine.coal_generator",
+    "sounds": [
+      { "name": "overdrive:machine/coal_generator", "attenuation_distance": 32 }
+    ]
+  },
+  "machine.particle_accelerator": {
+    "subtitle": "subtitles.overdrive.machine.particle_accelerator",
+    "sounds": [
+      { "name": "overdrive:machine/particle_accelerator", "attenuation_distance": 40 }
+    ]
+  },
+  "machine.ad_ring": {
+    "subtitle": "subtitles.overdrive.machine.ad_ring",
+    "sounds": [
+      { "name": "overdrive:machine/ad_ring", "attenuation_distance": 40 }
+    ]
+  },
+  "machine.elena_ring": {
+    "subtitle": "subtitles.overdrive.machine.elena_ring",
+    "sounds": [
+      { "name": "overdrive:machine/elena_ring", "attenuation_distance": 40 }
+    ]
+  },
+  "machine.electron_gun": {
+    "subtitle": "subtitles.overdrive.machine.electron_gun",
+    "sounds": [
+      { "name": "overdrive:machine/electron_gun", "attenuation_distance": 32 }
+    ]
+  },
+  "machine.cryo_distiller": {
+    "subtitle": "subtitles.overdrive.machine.cryo_distiller",
+    "sounds": [
+      { "name": "overdrive:machine/cryo_distiller", "attenuation_distance": 32 }
+    ]
+  },
+  "machine.vacuum_pump": {
+    "subtitle": "subtitles.overdrive.machine.vacuum_pump",
+    "sounds": [
+      { "name": "overdrive:machine/vacuum_pump", "attenuation_distance": 32 }
+    ]
+  },
+  "machine.annihilation_reactor": {
+    "subtitle": "subtitles.overdrive.machine.annihilation_reactor",
+    "sounds": [
+      { "name": "overdrive:machine/annihilation_reactor", "attenuation_distance": 40 }
+    ]
+  },
+  "machine.cooling_tower": {
+    "subtitle": "subtitles.overdrive.machine.cooling_tower",
+    "sounds": [
+      { "name": "overdrive:machine/cooling_tower", "attenuation_distance": 40 }
+    ]
+  },
+  "machine.circuit_press": {
+    "subtitle": "subtitles.overdrive.machine.circuit_press",
+    "sounds": [
+      { "name": "overdrive:machine/circuit_press", "attenuation_distance": 24 }
+    ]
+  }
+}

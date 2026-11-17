@@ -27,12 +27,19 @@ antiprotons** and **positrons** and converts them into raw energy.
 ## Structure
 
 The reactor is a **25 x 25 x 25** torus. The torus has a main radius of 8
-blocks and a tube radius of 4 blocks, which results in 2132 wall blocks in
-nine layers.
+blocks and a tube radius of 4 blocks, which results in 1300 wall blocks in
+nine layers. The wall is exactly one block thick all around the tube.
 
 * The **wall** of the torus consists of
   <ItemLink id="overdrive:annihilation_heavy_casing" /> and the ports listed
   below. No other block and no air is allowed on the wall.
+* As an alternative to the heavy casing, <ItemLink id="overdrive:core_containment_glass" />
+  may be used on the wall. The glass is only accepted where the wall is flat: it has to be
+  touched on four sides that lie in one plane - either the four horizontal sides
+  (north, south, east, west) or one of the two vertical planes (up and down plus one
+  horizontal axis). So the glass works on the inner and outer side of the wall and on the
+  crown of the ring, but not on the corners and edges where the wall bends. The glass
+  windows are the only way to see the plasma inside the torus.
 * Every position of the wall can be replaced with one of the five ports. The
   reactor needs two cell docking ports and one of every other port.
 * The **inside of the tube** must stay **empty**.
@@ -52,10 +59,10 @@ is 12 blocks in front of it.
   <BlockAnnotation x="12" y="4" z="12" color="#ff5555">
     **Reactor Core**<br />5x5x5: 27 core blocks inside, containment glass around it.
   </BlockAnnotation>
-  <BlockAnnotation x="12" y="8" z="4" color="#55ff55">
+  <BlockAnnotation x="11" y="8" z="4" color="#55ff55">
     **Cell Docking Port**<br />Loads antiprotons or positrons. Two of them are required. Can be replaced with: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
-  <BlockAnnotation x="11" y="8" z="4" color="#55ff55">
+  <BlockAnnotation x="12" y="8" z="4" color="#55ff55">
     **Cell Docking Port**<br />The second cell docking port. Can be replaced with: <ItemLink id="overdrive:annihilation_vacuum_port" />, <ItemLink id="overdrive:coolant_input_port" />, <ItemLink id="overdrive:steam_output_port" /> or <ItemLink id="overdrive:annihilation_energy_output" />.
   </BlockAnnotation>
   <BlockAnnotation x="10" y="8" z="4" color="#55ff55">
@@ -82,7 +89,7 @@ is 12 blocks in front of it.
 | <ItemLink id="overdrive:coolant_input_port" /> | 1 |
 | <ItemLink id="overdrive:steam_output_port" /> | 1 |
 | <ItemLink id="overdrive:annihilation_energy_output" /> | 1 |
-| <ItemLink id="overdrive:annihilation_heavy_casing" /> | the rest of the wall (2125) |
+| <ItemLink id="overdrive:annihilation_heavy_casing" /> | the rest of the wall (1294) |
 | <ItemLink id="overdrive:reactor_core_block" /> | 27 |
 | <ItemLink id="overdrive:core_containment_glass" /> | 98 |
 
@@ -105,6 +112,17 @@ mB. The <ItemLink id="overdrive:steam_output_port" /> has three dump modes
 
 Each <ItemLink id="overdrive:cell_docking_port" /> holds 2,000,000 mB. One port
 takes antiprotons, the other positrons.
+
+In the hollow channel of the torus a **plasma** flows around the ring, concentric
+to the torus, drawn like the plasma of the Mekanism fusion reactor: a glowing,
+swirling body of energy whose surface flows around the reactor axis. Its volume
+grows with the burn rate: it is linear to the burn rate (shown in mB/t, so 40000
+mB/t are 40 B/t) and from 40 B/t on it stays at that maximum, so it does not grow
+any further in the overload range. The colour gets more saturated the hotter the
+core is: at 0 °C there is no plasma at all, at 5000 °C the colour is fully
+saturated. It shines brightly while the reactor runs and only faintly in standby.
+The channel is closed by the wall, so the plasma is only visible through the
+<ItemLink id="overdrive:core_containment_glass" /> windows.
 
 ## Failure
 

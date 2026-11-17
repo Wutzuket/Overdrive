@@ -26,11 +26,11 @@ catalyst is expected.
 
 ## Operation
 
-| Property | Value |
-|---|---|
-| Energy buffer | 100,000,000 FE |
-| Energy per tick | 10,000 FE |
-| Input / output tank | 32,000 mB each |
+| Property | Value                                      |
+|---|--------------------------------------------|
+| Energy buffer | 1,000,000 FE                               |
+| Energy per tick | 10,000 FE                                  |
+| Input / output tank | 32,000 mB each                             |
 | Process time | 20 ticks (blue ice), 60 ticks (packed ice) |
 
 The standard recipe turns 250 mB of water into 100 mB of cryofluid with a

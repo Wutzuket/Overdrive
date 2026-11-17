@@ -5,6 +5,9 @@ import de.wutzuket.overdrive.menu.AcceleratorControllerMenu;
 import de.wutzuket.overdrive.config.ODConfig;
 import de.wutzuket.overdrive.recipe.CollisionRecipe;
 import de.wutzuket.overdrive.recipe.ODRecipeTypes;
+import de.wutzuket.overdrive.sound.IMachineSound;
+import de.wutzuket.overdrive.sound.MachineSoundLayout;
+import de.wutzuket.overdrive.sound.ODSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -13,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +36,9 @@ import de.wutzuket.overdrive.antimatter.AntimatterTank;
 import org.joml.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
-public class ParticleAcceleratorControllerEntity extends BlockEntity implements IEnergyStorage, MenuProvider {
+import java.util.List;
+
+public class ParticleAcceleratorControllerEntity extends BlockEntity implements IEnergyStorage, MenuProvider, IMachineSound {
     // Energie-Puffer als long (IEnergyStorage bleibt int-basiert): ~10 s Vollast bei Default-Rate.
     public static final long MAX_ENERGY_STORED = 50_000_000_000L;
     // Max. einstellbare Rate (Deckel, int).
@@ -813,6 +819,24 @@ public class ParticleAcceleratorControllerEntity extends BlockEntity implements 
 
     public boolean isActive() {
         return active;
+    }
+
+    @Override
+    public SoundEvent getMachineSound() {
+        return ODSounds.PARTICLE_ACCELERATOR.get();
+    }
+
+    @Override
+    public boolean isMachineRunning() {
+        return isActive();
+    }
+
+    /** Der Klang kommt von mehreren Stellen des Rings, nicht nur vom Controller. */
+    @Override
+    public List<BlockPos> getSoundPositions(BlockPos controllerPos, BlockState state) {
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockPos center = controllerPos.relative(facing, OUTER_RADIUS);
+        return MachineSoundLayout.ring(center, OUTER_RADIUS, 8);
     }
 
     public int getProgressTicks() {

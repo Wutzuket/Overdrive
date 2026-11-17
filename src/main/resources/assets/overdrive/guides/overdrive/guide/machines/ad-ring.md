@@ -54,7 +54,7 @@ The complete ring consists of **168 blocks**.
   <BlockAnnotation x="6" y="1" z="8" color="#55ff55">
     **AD Input Port**<br />Antimatter pipes end here and fill the controller tank. Can be replaced with: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_vacuum_port" /> or <ItemLink id="overdrive:ad_output_port" />.
   </BlockAnnotation>
-  <BlockAnnotation x="8" y="1" z="8" color="#55ff55">
+  <BlockAnnotation x="2" y="1" z="8" color="#55ff55">
     **AD Output Port**<br />Pipes pull the decelerated antiprotons out of the controller tank. Can be replaced with: <ItemLink id="overdrive:ad_energy_input_port" />, <ItemLink id="overdrive:ad_vacuum_port" /> or <ItemLink id="overdrive:ad_input_port" />.
   </BlockAnnotation>
 </GameScene>

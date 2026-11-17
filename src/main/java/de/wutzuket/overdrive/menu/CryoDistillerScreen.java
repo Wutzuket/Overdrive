@@ -80,7 +80,7 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
 
         CryoDistillerEntity be = menu.getBlockEntity();
         if (be != null) {
-            double energyPct = be.getEnergyStored() / (double) be.getMaxEnergyStored();
+            double energyPct = menu.getMaxEnergy() > 0 ? menu.getEnergy() / (double) menu.getMaxEnergy() : 0.0;
             GuiStyle.metricGauge(g, font, x + ENERGY_X, y + BAR_Y, BAR_W, BAR_H, (float) energyPct, GuiStyle.COL_GREEN, null);
             GuiStyle.fluidGauge(g, font, be.getInputTank().getFluid(), CryoDistillerEntity.TANK_CAPACITY,
                     x + INPUT_X, y + BAR_Y, BAR_W, BAR_H, null);
@@ -94,7 +94,7 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
 
         GuiStyle.screenArea(g, x + SCREEN_X, y + SCREEN_Y, SCREEN_W, SCREEN_H);
 
-        double prog = be != null ? Math.min(1.0, be.getProgress() / (double) be.getMaxProgress()) : 0.0;
+        double prog = menu.getMaxProgress() > 0 ? Math.min(1.0, menu.getProgress() / (double) menu.getMaxProgress()) : 0.0;
         int progressColor = be != null && be.needsCatalyst() && !be.isCatalystPresent() ? GuiStyle.COL_RED : GuiStyle.COL_CYAN;
         GuiStyle.hBar(g, x + 6, y + PROGRESS_Y, WIDTH - 12, 8, prog, progressColor);
     }
@@ -112,11 +112,11 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
         boolean catalystMissing = be.needsCatalyst() && !be.isCatalystPresent();
         String status;
         if (catalystMissing) {
-            status = "§cCatalyst missing";
-        } else if (be.isActive()) {
-            status = "§aRunning";
+            status = "Â§cCatalyst missing";
+        } else if (menu.isActive()) {
+            status = "Â§aRunning";
         } else {
-            status = "§eIdle";
+            status = "Â§eIdle";
         }
         g.drawString(font, "Status: " + status, sx, sy, GuiStyle.COL_TEXT, false);
 
@@ -125,17 +125,17 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
         if (!be.needsCatalyst()) {
             catalystLine = "Catalyst: none required";
         } else if (catalyst.isEmpty()) {
-            catalystLine = "§cCatalyst: unknown block";
+            catalystLine = "Â§cCatalyst: unknown block";
         } else {
-            catalystLine = (be.isCatalystPresent() ? "§aCatalyst: " : "§cCatalyst: ") + catalyst.getHoverName().getString();
+            catalystLine = (be.isCatalystPresent() ? "Â§aCatalyst: " : "Â§cCatalyst: ") + catalyst.getHoverName().getString();
         }
         g.drawString(font, catalystLine, sx, sy + 10, GuiStyle.COL_TEXT_DIM, false);
 
-        g.drawString(font, "Progress: " + be.getProgress() + " / " + be.getMaxProgress() + " t",
+        g.drawString(font, "Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " t",
                 sx, sy + 20, GuiStyle.COL_TEXT_DIM, false);
         g.drawString(font, "Rate: " + ODFormat.formatEnergyPerTick(be.getEnergyPerTick()),
                 sx, sy + 30, be.getEnergyPerTick() > 0 ? GuiStyle.COL_CYAN : GuiStyle.COL_TEXT_DIM, false);
-        g.drawString(font, "Time: " + be.getMaxProgress() + " t (" + String.format(java.util.Locale.ROOT, "%.1f", be.getMaxProgress() / 20.0) + " s)",
+        g.drawString(font, "Time: " + menu.getMaxProgress() + " t (" + String.format(java.util.Locale.ROOT, "%.1f", menu.getMaxProgress() / 20.0) + " s)",
                 sx, sy + 40, GuiStyle.COL_TEXT_DIM, false);
 
         if (currentTab == 0) {
@@ -151,24 +151,24 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
             g.drawString(font, "      " + ODFormat.formatFluidPair(be.getOutputTank().getFluidAmount(), CryoDistillerEntity.TANK_CAPACITY),
                     108, 100, GuiStyle.COL_TEXT_DIM, false);
 
-            g.drawString(font, "Energy: " + ODFormat.formatEnergyPair(be.getEnergyStored(), be.getMaxEnergyStored()),
+            g.drawString(font, "Energy: " + ODFormat.formatEnergyPair(menu.getEnergy(), menu.getMaxEnergy()),
                     8, 114, GuiStyle.COL_GREEN, false);
             g.drawString(font, Component.translatable("container.overdrive.production",
-                            ODFormat.formatFluidPerTick(be.isActive() ? be.getProductionPerTick() : 0.0)),
-                    108, 114, be.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
+                            ODFormat.formatFluidPerTick(menu.isActive() ? be.getProductionPerTick() : 0.0)),
+                    108, 114, menu.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
         } else {
             int iy = 90;
             g.drawString(font, "Input: " + ODFormat.formatFluid(be.getInputTank().getFluidAmount()),
                     8, iy, GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, "Output: " + ODFormat.formatFluid(be.getOutputTank().getFluidAmount()),
                     8, iy + 9, GuiStyle.COL_TEXT_DIM, false);
-            g.drawString(font, "Total/op: " + ODFormat.formatEnergy((long) be.getEnergyPerTick() * be.getMaxProgress()),
+            g.drawString(font, "Total/op: " + ODFormat.formatEnergy((long) be.getEnergyPerTick() * menu.getMaxProgress()),
                     8, iy + 18, GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, "Tank cap: " + ODFormat.formatFluid(CryoDistillerEntity.TANK_CAPACITY) + " each",
                     8, iy + 27, GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, Component.translatable("container.overdrive.production",
-                            ODFormat.formatFluidPerTick(be.isActive() ? be.getProductionPerTick() : 0.0)),
-                    8, iy + 36, be.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
+                            ODFormat.formatFluidPerTick(menu.isActive() ? be.getProductionPerTick() : 0.0)),
+                    8, iy + 36, menu.isActive() ? GuiStyle.COL_GREEN : GuiStyle.COL_TEXT_DIM, false);
             g.drawString(font, "Energy input only (no extract)", 8, iy + 45, GuiStyle.COL_TEXT_DIM, false);
         }
     }
@@ -189,7 +189,7 @@ public class CryoDistillerScreen extends AbstractContainerScreen<CryoDistillerMe
         if (mx >= x + ENERGY_X && mx <= x + ENERGY_X + BAR_W && my >= y + BAR_Y && my <= y + BAR_Y + BAR_H) {
             List<Component> lines = new ArrayList<>();
             lines.add(Component.literal("Energy"));
-            lines.add(Component.literal(ODFormat.formatEnergyPair(be.getEnergyStored(), be.getMaxEnergyStored())));
+            lines.add(Component.literal(ODFormat.formatEnergyPair(menu.getEnergy(), menu.getMaxEnergy())));
             lines.add(Component.literal("Usage: " + ODFormat.formatEnergyPerTick(be.getEnergyPerTick())));
             g.renderTooltip(font, lines, java.util.Optional.empty(), mx, my);
             return;

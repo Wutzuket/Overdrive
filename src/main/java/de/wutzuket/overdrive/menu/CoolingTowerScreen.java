@@ -73,7 +73,7 @@ public class CoolingTowerScreen extends AbstractContainerScreen<CoolingTowerMenu
         GuiStyle.screenArea(g, sx, sy, sw, sh);
         // Progress bar
         int hx=x+5, hy=y+78, hw=WIDTH-10, hh=7;
-        double prog = be!=null ? Math.min(1.0, be.getProgress()/(double)Math.max(1,be.getMaxProgress())) : 0.0;
+        double prog = be!=null ? Math.min(1.0, menu.getProgress()/(double)Math.max(1,menu.getMaxProgress())) : 0.0;
         GuiStyle.hBar(g, hx, hy, hw, hh, prog, GuiStyle.COL_CYAN);
     }
 
@@ -81,10 +81,10 @@ public class CoolingTowerScreen extends AbstractContainerScreen<CoolingTowerMenu
         g.drawString(font, title, 8,4, GuiStyle.COL_TEXT,false);
         var be=menu.getBlockEntity();
         int sx=22, sy=15;
-        String status = be==null? "?" : !be.isValid()? "§cInvalid" : be.isActive()? "§aCooling" : "§eIdle";
+        String status = be==null? "?" : !menu.isValid()? "Â§cInvalid" : menu.isActive()? "Â§aCooling" : "Â§eIdle";
         g.drawString(font, "Status: "+status, sx+4, sy+4, GuiStyle.COL_TEXT,false);
         if(be!=null){
-            String detail = !be.isValid()? be.getFailReason().isEmpty()? "Structure" : be.getFailReason() : be.isActive()? "Cooling "+be.getProgress()+"/"+be.getMaxProgress() : "Idle";
+            String detail = !menu.isValid()? be.getFailReason().isEmpty()? "Structure" : be.getFailReason() : menu.isActive()? "Cooling "+menu.getProgress()+"/"+menu.getMaxProgress() : "Idle";
             g.drawString(font, detail, sx+4, sy+14, GuiStyle.COL_TEXT_DIM,false);
             String inName = fluidName(be.getInputTank().getFluid(), "Empty");
             g.drawString(font, "In: "+inName, sx+4, sy+24, GuiStyle.COL_CYAN,false);
@@ -99,13 +99,13 @@ public class CoolingTowerScreen extends AbstractContainerScreen<CoolingTowerMenu
                 String outName = fluidName(be.getOutputFluidForDisplay(), "Empty");
                 g.drawString(font, outName+": "+ODFormat.formatFluidPair(be.getOutputTotalAmount(), be.getOutputTotalCapacity()), 8,104, GuiStyle.COL_TEXT_DIM,false);
                 // Im Leerlauf wird nichts produziert -> 0 B/t anzeigen.
-                double production = be.isActive() ? be.getProductionPerTick() : 0.0;
+                double production = menu.isActive() ? be.getProductionPerTick() : 0.0;
                 g.drawString(font, Component.translatable("container.overdrive.production",
                         ODFormat.formatFluidPerTick(production)), 8,114, production>0? GuiStyle.COL_GREEN: GuiStyle.COL_TEXT_DIM,false);
             } else {
                 drawPortLine(g, "Steam In:"+be.getLastInputPorts()+"/1", be.getLastInputPorts()>=1? GuiStyle.COL_GREEN: GuiStyle.COL_RED, 8,94);
                 drawPortLine(g, "Water Out:"+be.getLastOutputPorts()+"/1", be.getLastOutputPorts()>=1? GuiStyle.COL_GREEN: GuiStyle.COL_RED, 100,94);
-                if(!be.isValid() && !be.getFailReason().isEmpty()){
+                if(!menu.isValid() && !be.getFailReason().isEmpty()){
                     String posTxt = "";
                     if(be.getFailPos()!=null && be.getBlockPos()!=null){
                         net.minecraft.core.BlockPos rel = be.getFailPos().subtract(be.getBlockPos());
